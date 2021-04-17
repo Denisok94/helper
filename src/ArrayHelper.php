@@ -35,7 +35,7 @@ class ArrayHelper
     }
 
     /**
-     * Заменить в массиве
+     * Добавить/заменить в массиве
      */
     public static function set(&$array, $path, &$value)
     {
