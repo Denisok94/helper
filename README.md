@@ -8,7 +8,7 @@ ___
 
 Run:
 ```
-php composer.phar require --prefer-dist denisok94/helper
+php composer require --prefer-dist denisok94/helper
 ```
 
 or add to the `require` section of your `composer.json` file:
@@ -17,8 +17,9 @@ or add to the `require` section of your `composer.json` file:
 "denisok94/helper": "*"
 ```
 ```
-composer update
+php composer update
 ```
+___
 
 0. [Helper](#Helper)
 1. [ArrayHelper](#ArrayHelper)
@@ -112,6 +113,9 @@ ___
 
 ====
 ## MetaTag
+```php
+use \denisok94\helper\yii2\MetaTag as HH;
+```
 
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
@@ -119,6 +123,9 @@ ___
 
 ___
 ## H
+```php
+use \denisok94\helper\yii2\H as HH;
+```
 
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
