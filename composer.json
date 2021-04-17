@@ -1,8 +1,7 @@
 {
     "name": "denisok94/helper",
-    "type": "yii2-extension",
-    "description": "",
-    "keywords": [],
+    "description": "A class with a set of functions to facilitate programming",
+    "keywords": ["php helper"],
     "license": "BSD-3-Clause",
     "support": {
         "issues": "https://github.com/Denisok94/helper/issues",
