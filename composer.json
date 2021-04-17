@@ -9,7 +9,7 @@
     "authors": [{
         "name": "Denisok94",
         "email": "denisok94@inbox.ru",
-        "homepage": "https://s-denis.ru/"
+        "homepage": "https://s-denis.ru/git/helper"
     }],
     "autoload": {
         "psr-4": {
