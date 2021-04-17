@@ -12,7 +12,6 @@
         "email": "denisok94@inbox.ru",
         "homepage": "https://s-denis.ru/"
     }],
-    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "denisok94\\helper\\": "src/"
