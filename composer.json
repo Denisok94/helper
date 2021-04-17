@@ -1,0 +1,27 @@
+{
+    "name": "denisok94/helper",
+    "type": "yii2-extension",
+    "description": "",
+    "keywords": [],
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/Denisok94/helper/issues",
+        "source": "https://github.com/Denisok94/"
+    },
+    "authors": [{
+        "name": "Denisok94",
+        "email": "denisok94@inbox.ru",
+        "homepage": "https://s-denis.ru/"
+    }],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "denisok94\\helper\\": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "v0.1"
+        }
+    }
+}
