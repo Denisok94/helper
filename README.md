@@ -114,7 +114,7 @@ ___
 ====
 ## MetaTag
 ```php
-use \denisok94\helper\yii2\MetaTag as HH;
+use \denisok94\helper\yii2\MetaTag as MetaTag;
 ```
 
 | Имя | Параметры | Описание |
@@ -124,7 +124,7 @@ use \denisok94\helper\yii2\MetaTag as HH;
 ___
 ## H
 ```php
-use \denisok94\helper\yii2\H as HH;
+use \denisok94\helper\yii2\H as H;
 ```
 
 | Имя | Параметры | Описание |
