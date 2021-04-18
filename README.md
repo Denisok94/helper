@@ -22,6 +22,7 @@ php composer update
 ___
 
 0. [Helper](#Helper)
+0. [FHelper](#FHelper)
 1. [ArrayHelper](#ArrayHelper)
 2. [DataHelper](#DataHelper)
 3. [StringHelper](#StringHelper)
@@ -40,7 +41,7 @@ use \denisok94\helper\Helper as H;
 
 Можно создать в своём приложении папку `componets` с файлом `H.php` и унаследовать его от `Helper`.
 
-Внутри класса `H` добавить свои функции с повторяющемся действиями или отредактировать имеющиеся в `Helper`
+Внутри класса `H` добавить свои функции с повторяющемся действиями или перезаписать имеющиеся в `Helper`
 
 ```php
 namespace app\componets;
@@ -50,6 +51,22 @@ class H extends Helper {}
 
 ```php
 use app\componets\H;
+```
+
+___
+## FHelper
+
+Если вы скачали репозиторий архивом.
+
+Можно создать в любом удобном месте своего приложения файл `H.php` с класом `H` и унаследовать его от `FHelper`.
+
+Внутри класса `H` добавить свои функции с повторяющемся действиями или перезаписать имеющиеся в `FHelper`.
+
+И в дальнейшем использовать его.
+
+```php
+include_once '{path to repository}/src/FHelper.php';
+class H extends FHelper {}
 ```
 
 ___
