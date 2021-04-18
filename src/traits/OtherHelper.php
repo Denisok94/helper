@@ -6,7 +6,7 @@ namespace denisok94\helper\traits;
  * OtherHelper trait
  * @author Denisok94
  * @link https://s-denis.ru/git/helper
- * @version 0.2
+ * @version 0.3
  */
 trait OtherHelper
 {
@@ -18,8 +18,14 @@ trait OtherHelper
      * @param array|string $header шапка запроса,
      * @param string $cookie_file файл для кук,
      * @param string $auth HTTP авторизация ~('login:password'),
-     * @param string $proxy запрос через прокси ~('1.1.1.1:80'),
-     * @return array ['url','code','headers','error,'response']
+     * @param string $proxy запрос через прокси ~('1.1.1.1:80').
+     * @return array return:
+     * - `url`: url запроса.
+     * - `code`: код ответа.
+     * - `headers`: заголовки ответа.
+     * - `error`: ошибки, если есть.
+     * - `response`: тело ответа.
+     * - `request`: тело запроса, если code не 200.
      */
     static public function curl($url, $params = null, $method = 'GET', $timeout = 2, $header = null, $cookie_file = null, $auth = null, $proxy = null)
     {
@@ -109,7 +115,7 @@ trait OtherHelper
 
     /**
      * Получить IP пользователя
-     * @return string
+     * @return string the user ip
      */
     public static function getUserIp()
     {
@@ -133,40 +139,56 @@ trait OtherHelper
 
     /**
      * Эта функция будет проверять, является ли посетитель роботом
-     * @param string &$botname если хотите хнать, имя бота
-     * @param array $myBots ваш сисок ботов
-     * @return bool true|false
-     * @return string $botname - вернёт, если true
+     * 
+     * ```php
+     * $user = (H::isBot()) ? ('bot') : ('user');
+     * 
+     * $bname = '';
+     * $user = (H::isBot($bname)) ? ('bot') : ('user');
+     * if ($user == 'bot') echo $bname;
+     * ```
+     * 
+     * @param string &$botname имя бота, если `true`,
+     * @param array $myBots ваш сисок ботов, если текущий устарел.
+     * @return bool результат:
+     * - `true`: если !HTTP_USER_AGENT(нету у разных спам ботов) или выявлен бот.
+     * - `false` (default).
      */
     public static function isBot(&$botname = '', $myBots = null)
     {
-        $bots = [
-            // список известных ботов
-            'rambler', 'googlebot', 'aport', 'yahoo', 'msnbot', 'turtle', 'mail.ru', 'omsktele',
-            'yetibot', 'picsearch', 'sape.bot', 'sape_context', 'gigabot', 'snapbot', 'alexa.com',
-            'megadownload.net', 'askpeter.info', 'igde.ru', 'ask.com', 'qwartabot', 'yanga.co.uk',
-            'scoutjet', 'similarpages', 'oozbot', 'shrinktheweb.com', 'aboutusbot', 'followsite.com',
-            'dataparksearch', 'google-sitemaps', 'appEngine-google', 'feedfetcher-google', 'bing.com',
-            'liveinternet.ru', 'xml-sitemaps.com', 'agama', 'metadatalabs.com', 'h1.hrn.ru',
-            'googlealert.com', 'seo-rus.com', 'yaDirectBot', 'yandeG', 'yandex', 'dotnetdotcom',
-            'yandexSomething', 'Copyscape.com', 'AdsBot-Google', 'domaintools.com', 'Nigma.ru',
-            // Выявленные самостоятельно
-            'vkShare', 'facebookexternalhit', 'Twitterbot', 'Applebot', 'StatOnlineRuBot', 'Yeti', 'Purebot',
-            'TrendsmapResolver', 'SemrushBot', 'Nimbostratus-Bot', 'YandexBot', 'mj12bot', 'YandexImages',
-            'BackupLand', 'backupland', 'DotBot', 'BuiltWith', 'python-requests', 'NetcraftSurveyAgent',
-            'Ezooms', 'AhrefsBot', 'aiohttp', 'CCBot', 'Konturbot', 'statdom', 'PetalBot', 'LetsearchBot',
-            'SafeDNSBot', 'oBot', 'LinkpadBot',
-            // всякая фигня
-            'libwww-perl', 'libwww', 'perl', 'zgrab', 'curl', 'ApiTool', 'masscan', 'Python',
-            // Другие
-            'bot', 'bots', 'Bot', 'http', '@'
-        ];
-        if ($myBots != null) $bots = array_merge($myBots, $bots);
-        foreach ($bots as $bot)
-            if (stripos($_SERVER['HTTP_USER_AGENT'], $bot) !== false) {
-                $botname = $bot;
-                return true;
+        // если есть USER_AGENT (нету у разных спам ботов)
+        if (isset($_SERVER['HTTP_USER_AGENT'])) {
+            $bots = [
+                // список известных ботов
+                'rambler', 'googlebot', 'aport', 'yahoo', 'msnbot', 'turtle', 'mail.ru', 'omsktele',
+                'yetibot', 'picsearch', 'sape.bot', 'sape_context', 'gigabot', 'snapbot', 'alexa.com',
+                'megadownload.net', 'askpeter.info', 'igde.ru', 'ask.com', 'qwartabot', 'yanga.co.uk',
+                'scoutjet', 'similarpages', 'oozbot', 'shrinktheweb.com', 'aboutusbot', 'followsite.com',
+                'dataparksearch', 'google-sitemaps', 'appEngine-google', 'feedfetcher-google', 'bing.com',
+                'liveinternet.ru', 'xml-sitemaps.com', 'agama', 'metadatalabs.com', 'h1.hrn.ru',
+                'googlealert.com', 'seo-rus.com', 'yaDirectBot', 'yandeG', 'yandex', 'dotnetdotcom',
+                'yandexSomething', 'Copyscape.com', 'AdsBot-Google', 'domaintools.com', 'Nigma.ru',
+                // Выявленные самостоятельно
+                'vkShare', 'facebookexternalhit', 'Twitterbot', 'Applebot', 'StatOnlineRuBot', 'Yeti', 'Purebot',
+                'TrendsmapResolver', 'SemrushBot', 'Nimbostratus-Bot', 'YandexBot', 'mj12bot', 'YandexImages',
+                'BackupLand', 'backupland', 'DotBot', 'BuiltWith', 'python-requests', 'NetcraftSurveyAgent',
+                'Ezooms', 'AhrefsBot', 'aiohttp', 'CCBot', 'Konturbot', 'statdom', 'PetalBot', 'LetsearchBot',
+                'SafeDNSBot', 'oBot', 'LinkpadBot',
+                // всякая фигня
+                'libwww-perl', 'libwww', 'perl', 'zgrab', 'curl', 'ApiTool', 'masscan', 'Python',
+                // Другие
+                'bot', 'bots', 'Bot', 'http', '@'
+            ];
+            if ($myBots != null) $bots = array_merge($myBots, $bots);
+            foreach ($bots as $bot) {
+                if (stripos($_SERVER['HTTP_USER_AGENT'], $bot) !== false) {
+                    $botname = $bot;
+                    return true;
+                }
             }
-        return false;
+            return false;
+        } else {
+            return true;
+        }
     }
 }
