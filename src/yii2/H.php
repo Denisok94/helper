@@ -5,10 +5,6 @@ namespace denisok94\helper\yii2;
 use Yii;
 use denisok94\helper\ArrayHelper;
 use denisok94\helper\DataHelper;
-use denisok94\helper\HtmlHelper;
-use denisok94\helper\OtherHelper;
-use denisok94\helper\StringHelper;
-
 /**
  * @author Denisok94
  * @link https://s-denis.ru/git/helper
@@ -27,16 +23,16 @@ class H
     public static function exec($path, $params, $sync = true, $out = '../runtime/consoleOut', $error = '../runtime/consoleError')
     {
         $dir = Yii::$app->getBasePath();
-		$dt = DataHelper::currentDate("d.m.Y");
-		$syncStr = $sync ? '&' : '';
-		$json = json_encode($params);
-		$json = addcslashes($json, '"');
-		$command = "php $dir/yii $path --json=\"$json\" >> $out.$dt 2>> $error.$dt $syncStr";
-		exec($command);
+        $dt = DataHelper::currentDate("d.m.Y");
+        $syncStr = $sync ? '&' : '';
+        $json = json_encode($params);
+        $json = addcslashes($json, '"');
+        $command = "php $dir/yii $path --json=\"$json\" >> $out.$dt 2>> $error.$dt $syncStr";
+        exec($command);
     }
-    
+
     /**
-     * Создать кэш
+     * Создать/Добавить/обновить кэш
      * @param string $name имя кэша,
      * @param array $array данные, которые надо закэшировать,
      * @return bool успех записи
@@ -44,27 +40,18 @@ class H
     public static function setCache($name, $array)
     {
         $fileCache = Yii::$app->getBasePath() . "/cache/$name.json";
-        $fpc = file_put_contents($fileCache, ArrayHelper::toJson($array), LOCK_EX);
-        return ($fpc === false) ? false : true;
-    }
-
-    /**
-     * Добавить/обновить кэш
-     * @param string $name имя кэша,
-     * @param array $array данные
-     * @return bool успех записи
-     */
-    public static function addCache($name, $array)
-    {
-        $fileCache = Yii::$app->getBasePath() . "/cache/$name.json";
-        $oldArray = (file_exists($fileCache)) ? ArrayHelper::toArray(file_get_contents($fileCache)) : [];
-        $newArray = array_merge($oldArray, $array);
+        if ((file_exists($fileCache))) {
+            $oldArray = ArrayHelper::toArray(file_get_contents($fileCache));
+            $newArray = array_merge($oldArray, $array);
+        } else {
+            $newArray = $array;
+        }
         $fpc = file_put_contents($fileCache, ArrayHelper::toJson($newArray), LOCK_EX);
         return ($fpc === false) ? false : true;
     }
 
     /**
-     * Получить из кэша
+     * Получить кэш
      * @param string $name имя кэша,
      * @return array|bool
      */
