@@ -1,6 +1,6 @@
 <?php
 
-namespace denisok94\helper\yii2;
+namespace denisok94\helper\traits\yii2;
 
 use Yii;
 use denisok94\helper\ArrayHelper;
@@ -10,7 +10,7 @@ use denisok94\helper\DataHelper;
  * @link https://s-denis.ru/git/helper
  * @version 0.1
  */
-class H
+trait Other
 {
     /**
      * консольная команда

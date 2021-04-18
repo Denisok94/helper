@@ -1,19 +1,19 @@
 <?php
 
-namespace denisok94\helper\yii2;
+namespace denisok94\helper\traits\yii2;
 
 use Yii;
 use yii\helpers\Url;
 use yii\helpers\Html;
 
 /**
- * MetaTag Class
+ * MetaTag trait
  * @author Denisok94
  * @link https://s-denis.ru/git/helper
  * @version 0.1.0
  * @link https://developers.facebook.com/tools/debug/
  */
-class MetaTag
+trait MetaTag
 {
     private $view,
         $defaultTag,

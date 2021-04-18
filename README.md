@@ -29,7 +29,7 @@ ___
 5. [HtmlHelper](#HtmlHelper)
 6. [Yii2](#Yii2)
     1. [MetaTag](#MetaTag)
-    2. [H](#H)
+    2. [Other](#Other)
 
 ___
 ## Helper
@@ -37,17 +37,8 @@ ___
 use \denisok94\helper\Helper as H;
 ```
 
-| Имя | Параметры | Описание |
-|----------------|:---------:|:----------------|
-|  |  |  |
-___
-
-
 ___
 ## ArrayHelper
-```php
-use \denisok94\helper\ArrayHelper as A;
-```
 
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
@@ -61,9 +52,6 @@ use \denisok94\helper\ArrayHelper as A;
 ___
 
 ## DataHelper
-```php
-use \denisok94\helper\DataHelper as D;
-```
 
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
@@ -78,9 +66,6 @@ use \denisok94\helper\DataHelper as D;
 
 ___
 ## StringHelper
-```php
-use \denisok94\helper\StringHelper as S;
-```
 
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
@@ -89,9 +74,6 @@ use \denisok94\helper\StringHelper as S;
 
 ___
 ## OtherHelper
-```php
-use \denisok94\helper\OtherHelper as O;
-```
 
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
@@ -99,33 +81,28 @@ use \denisok94\helper\OtherHelper as O;
 
 ___
 ## HtmlHelper
-```php
-use \denisok94\helper\HtmlHelper as HH;
-```
 
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
 | video |  |  |
 
-
 ___
 ### Yii2
-
-====
-## MetaTag
 ```php
-use \denisok94\helper\yii2\MetaTag;
+use \denisok94\helper\YiiHelper as YH;
 ```
+
+YiiHelper наследует все от Helper.
+
+___
+## MetaTag
 
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
 | tag |  |  |
 
 ___
-## H
-```php
-use \denisok94\helper\yii2\H;
-```
+## Other
 
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|

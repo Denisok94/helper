@@ -1,15 +1,15 @@
 <?php
 
-namespace denisok94\helper;
+namespace denisok94\helper\traits;
 
 /**
- * ArrayHelper Class
+ * ArrayHelper trait
  * @author vitaliy-pashkov 
  * @author Denisok94
  * @link https://s-denis.ru/git/helper
  * @version 0.1
  */
-class ArrayHelper
+trait ArrayHelper
 {
 
     /**

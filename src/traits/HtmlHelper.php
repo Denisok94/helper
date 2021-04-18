@@ -1,14 +1,14 @@
 <?php
 
-namespace denisok94\helper;
+namespace denisok94\helper\traits;
 
 /**
- * HtmlHelper Class
+ * HtmlHelper trait
  * @author Denisok94
  * @link https://s-denis.ru/git/helper
  * @version 0.1
  */
-class HtmlHelper
+trait HtmlHelper
 {
     /**
      * HTML тэг видео
