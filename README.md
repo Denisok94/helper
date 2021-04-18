@@ -33,8 +33,26 @@ ___
 
 ___
 ## Helper
+Использование:
 ```php
 use \denisok94\helper\Helper as H;
+```
+
+Можно создать в своём приложении папку `componets` с файлом `H.php` и унаследовать его от `Helper`.
+
+Внутри класса `H` добавить свои функции с повторяющемся действиями или отредактировать имеющиеся в `Helper`
+
+```php
+namespace app\componets;
+
+use \denisok94\helper\Helper;
+
+class H extends Helper
+{}
+```
+
+```php
+use app\componets\H;
 ```
 
 ___
@@ -92,20 +110,35 @@ ___
 use \denisok94\helper\YiiHelper as YH;
 ```
 
-YiiHelper наследует все от Helper.
+`YiiHelper` наследует все от `Helper`.
+
+| Имя | Параметры | Описание |
+|----------------|:---------:|:----------------|
+| exec |  | Выполнить консольную команду |
+| setCache |  |  |
+| getCache |  |  |
+
+Можно создать в папке `componets` файл `H.php` и унаследовать его от `YiiHelper`.
+
+```php
+namespace app\componets;
+
+use \denisok94\helper\YiiHelper;
+
+class H extends YiiHelper
+{}
+```
+И подключать его более лаконичным путём )
+```php
+use app\componets\H;
+```
 
 ___
 ## MetaTag
+```php
+use \denisok94\helper\yii2\MetaTag;
+```
 
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
-| tag |  |  |
-
-___
-## Other
-
-| Имя | Параметры | Описание |
-|----------------|:---------:|:----------------|
-| exec |  |  |
-| setCache |  |  |
-| getCache |  |  |
+| tag |  | Установить MetaTag на страницу |
