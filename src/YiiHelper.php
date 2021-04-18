@@ -2,7 +2,6 @@
 
 namespace denisok94\helper;
 
-use denisok94\helper\traits\yii2\MetaTag;
 use denisok94\helper\traits\yii2\Other;
 use denisok94\helper\Helper;
 
@@ -14,5 +13,5 @@ use denisok94\helper\Helper;
  */
 class YiiHelper extends Helper
 {
-    use MetaTag, Other;
+    use Other;
 }
