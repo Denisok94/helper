@@ -16,11 +16,12 @@ trait OtherHelper
      * @param string $method тип/метод запроса,
      * @param int $timeout ожидание ответа,
      * @param array|string $header шапка запроса,
+     * @param string $cookie_file файл для кук,
      * @param string $auth HTTP авторизация ~('login:password'),
-     * @param string $proxy запрос через прокси ~('1.1.1.1:80').
-     * @return array ['url', 'code','error','response']
+     * @param string $proxy запрос через прокси ~('1.1.1.1:80'),
+     * @return array ['url','code','headers','error,'response']
      */
-    static public function curl($url, $params = null, $method = 'GET', $timeout = 2, $header = null, $auth = null, $proxy = null)
+    static public function curl($url, $params = null, $method = 'GET', $timeout = 2, $header = null, $cookie_file = null, $auth = null, $proxy = null)
     {
         $curl_header = ($header != null) ? (is_array($header) ? $header : [$header]) : [
             "User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:71.0) Gecko/20100101 Firefox/71.0",
@@ -61,6 +62,32 @@ trait OtherHelper
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         // ----------------------------------
+        if ($cookie_file != null) {
+            curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_file); // файл, откуда читаются куки
+            curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_file); // файл, куда пишутся куки
+        }
+        // ----------------------------------
+        $headers = [];
+        // this function is called by curl for each header received
+        curl_setopt(
+            $ch,
+            CURLOPT_HEADERFUNCTION,
+            function ($curl, $header) use (&$headers) {
+                $len = strlen($header);
+                $header = explode(':', $header, 2);
+                if (count($header) < 2) // ignore invalid headers
+                    return $len;
+
+                $name = strtolower(trim($header[0]));
+                if (!array_key_exists($name, $headers))
+                    $headers[$name] = [trim($header[1])];
+                else
+                    $headers[$name][] = trim($header[1]);
+
+                return $len;
+            }
+        );
+        // ----------------------------------
         // подключение к прокси-серверу
         if ($proxy != null) {
             curl_setopt($ch, CURLOPT_PROXY, $proxy);
@@ -74,7 +101,7 @@ trait OtherHelper
         $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
         // ----------------------------------
-        $response = ['url' => $url, 'code' => $code, 'error' => $error, 'response' => $data];
+        $response = ['url' => $url, 'code' => $code, 'headers' => $headers, 'error' => $error, 'response' => $data];
         if ($code != 200) $response['request'] = $params;
         // ----------------------------------
         return $response;
