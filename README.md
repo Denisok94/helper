@@ -44,11 +44,8 @@ use \denisok94\helper\Helper as H;
 
 ```php
 namespace app\componets;
-
 use \denisok94\helper\Helper;
-
-class H extends Helper
-{}
+class H extends Helper {}
 ```
 
 ```php
@@ -96,6 +93,8 @@ ___
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
 | curl |  | curl для большинства простых запросов |
+| getUserIp |  | получить IP пользователя |
+| isBot |  | Проверка пользователя на бота |
 
 ___
 ## HtmlHelper
@@ -122,11 +121,8 @@ use \denisok94\helper\YiiHelper as YH;
 
 ```php
 namespace app\componets;
-
 use \denisok94\helper\YiiHelper;
-
-class H extends YiiHelper
-{}
+class H extends YiiHelper {}
 ```
 И подключать его более лаконичным путём )
 ```php
