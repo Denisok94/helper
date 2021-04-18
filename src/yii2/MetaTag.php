@@ -8,7 +8,6 @@ use yii\helpers\Html;
 
 /**
  * MetaTag Class
- * @param f tag добавить meta теги на страницу
  * @author Denisok94
  * @link https://s-denis.ru/git/helper
  * @version 0.1.0
