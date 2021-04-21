@@ -27,6 +27,7 @@ ___
 2. [DataHelper](#DataHelper)
 3. [StringHelper](#StringHelper)
 4. [OtherHelper](#OtherHelper)
+4. [FileHelper](#FileHelper)
 5. [HtmlHelper](#HtmlHelper)
 6. [Yii2](#Yii2)
     1. [MetaTag](#MetaTag)
@@ -81,6 +82,7 @@ ___
 | implodeWith |  |  Объединяет элементы массива в строку, с пред обработкой |
 | toJson |  |  |
 | toArray |  |  |
+| arrayOrderBy |  |  |
 ___
 
 ## DataHelper
@@ -94,7 +96,8 @@ ___
 | toRuDate |  |  |
 | toRuDt |  |  |
 | getTodayDb |  |  |
-| toMysqlDtU |  |  |
+| stampToDtU |  |  |
+| stampToDt |  |  |
 
 ___
 ## StringHelper
@@ -112,6 +115,16 @@ ___
 | curl |  | curl для большинства простых запросов |
 | getUserIp |  | получить IP пользователя |
 | isBot |  | Проверка пользователя на бота |
+| msleep |  | уснуть на N сек |
+
+___
+## FileHelper
+
+| Имя | Параметры | Описание |
+|----------------|:---------:|:----------------|
+| readFile |  |  |
+| getFileDt |  |  |
+| dirSize |  |  |
 
 ___
 ## HtmlHelper
