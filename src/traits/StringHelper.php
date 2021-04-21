@@ -4,8 +4,6 @@ namespace denisok94\helper\traits;
 
 /**
  * StringHelper trait
- * @link https://s-denis.ru/git/helper
- * @version 0.1
  */
 trait StringHelper
 {
