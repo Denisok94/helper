@@ -5,8 +5,6 @@ namespace denisok94\helper\traits;
 /**
  * HtmlHelper trait
  * @author Denisok94
- * @link https://s-denis.ru/git/helper
- * @version 0.1
  */
 trait HtmlHelper
 {
@@ -21,7 +19,7 @@ trait HtmlHelper
     {
         $video = ' ';
         // ----------------------------------
-        // базавые параметры
+        // базовые параметры
         $default = [
             'width' => '500px',
             'height' => "300px",
@@ -45,18 +43,18 @@ trait HtmlHelper
         if ($attribution) {
             // это массив
             if (is_array($attribution)) {
-                // совмещаем с базавыми
+                // совмещаем с базовыми
                 $default = array_merge($default, $attribution);
-                // генерем строку
+                // генерируем строку
                 foreach ($default as $Key => $Value) {
                     $video .= $Key . '="' . $Value . '" ';
                 }
             } else {
-                // генерем строку
+                // генерируем строку
                 $video .= "$attribution ";
             }
         } else {
-            // генерем строку из базавых параметров
+            // генерируем строку из базовых параметров
             foreach ($default as $Key => $Value) {
                 $video .= $Key . '="' . $Value . '" ';
             }
