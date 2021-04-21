@@ -4,9 +4,6 @@ namespace denisok94\helper\traits;
 
 /**
  * OtherHelper trait
- * @author Denisok94
- * @link https://s-denis.ru/git/helper
- * @version 0.3
  */
 trait OtherHelper
 {
@@ -26,6 +23,8 @@ trait OtherHelper
      * - `error`: ошибки, если есть.
      * - `response`: тело ответа.
      * - `request`: тело запроса, если code не 200.
+     * @author Denisok94
+     * @version 0.3
      */
     static public function curl($url, $params = null, $method = 'GET', $timeout = 2, $header = null, $cookie_file = null, $auth = null, $proxy = null)
     {
@@ -126,7 +125,7 @@ trait OtherHelper
         } else {
             $ip = $_SERVER['REMOTE_ADDR'];
         }
-        //делим на состовляющии
+        //делим на составляющие
         $ipr = '';
         if ($ip != "::1") {
             $ips = explode(":", $ip); //ip:port
@@ -138,21 +137,32 @@ trait OtherHelper
     }
 
     /**
-     * Эта функция будет проверять, является ли посетитель роботом
+     * Эта функция будет проверять, является ли посетитель роботом.
+     * Она не даёт 100% гарантии. 
+     * -------
      * 
      * ```php
      * $user = (H::isBot()) ? ('bot') : ('user');
      * 
      * $bname = '';
-     * $user = (H::isBot($bname)) ? ('bot') : ('user');
-     * if ($user == 'bot') echo $bname;
+     * $user = (H::isBot($bname)) ? ($bname) : ('user');
      * ```
      * 
      * @param string &$botname имя бота, если `true`,
-     * @param array $myBots ваш сисок ботов, если текущий устарел.
+     * @param array $myBots ваш список ботов, если текущий устарел.
      * @return bool результат:
      * - `true`: если !HTTP_USER_AGENT(нету у разных спам ботов) или выявлен бот.
      * - `false` (default).
+     * 
+     * Можно выявить:
+     * - `поисковых`: google, rambler, bing, yandex и др.
+     * - `социальных`: facebook, Twitter, telegram, vk и др.
+     * - `рекламных`: kontur, komodia, linkpad и др.
+     * - `сканеры`: dot, SafeDNS, oBot и др.
+     * 
+     * Кому разрешить/запретить, решать Вам.
+     * 
+     * Запрещая всё и всем, Вы можете лишится продвижения сайта в поисковых ресурсах и/или красивых привью в соц сетях. 
      */
     public static function isBot(&$botname = '', $myBots = null)
     {
@@ -173,11 +183,11 @@ trait OtherHelper
                 'TrendsmapResolver', 'SemrushBot', 'Nimbostratus-Bot', 'YandexBot', 'mj12bot', 'YandexImages',
                 'BackupLand', 'backupland', 'DotBot', 'BuiltWith', 'python-requests', 'NetcraftSurveyAgent',
                 'Ezooms', 'AhrefsBot', 'aiohttp', 'CCBot', 'Konturbot', 'statdom', 'PetalBot', 'LetsearchBot',
-                'SafeDNSBot', 'oBot', 'LinkpadBot',
+                'SafeDNSBot', 'oBot', 'LinkpadBot', 'bingbot', 'Googlebot', 
                 // всякая фигня
                 'libwww-perl', 'libwww', 'perl', 'zgrab', 'curl', 'ApiTool', 'masscan', 'Python',
                 // Другие
-                'bot', 'bots', 'Bot', 'http', '@'
+                'bot', 'bots', 'Bot', 'http', '+http', '@'
             ];
             if ($myBots != null) $bots = array_merge($myBots, $bots);
             foreach ($bots as $bot) {
@@ -191,4 +201,16 @@ trait OtherHelper
             return true;
         }
     }
+    
+	/**
+	 * Delays execution of the script by the given time.
+	 * @param mixed $time Time to pause script execution. Can be expressed
+	 * as an integer or a decimal.
+	 * @example msleep(1.5); // delay for 1.5 seconds
+	 * @example msleep(.1); // delay for 100 milliseconds
+	 */
+	public static function msleep($time)
+	{
+		usleep($time * 1000000);
+	}
 }
