@@ -9,8 +9,6 @@ use yii\helpers\Html;
 /**
  * MetaTag class
  * @author Denisok94
- * @link https://s-denis.ru/git/helper
- * @version 0.1.0
  * @link https://developers.facebook.com/tools/debug/
  */
 class MetaTag
