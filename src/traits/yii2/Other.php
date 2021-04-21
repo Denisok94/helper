@@ -10,9 +10,7 @@ class YHH {
     use ArrayHelper, DataHelper;
 }
 /**
- * @author Denisok94
- * @link https://s-denis.ru/git/helper
- * @version 0.1
+ * Other trait
  */
 trait Other
 {
@@ -20,18 +18,17 @@ trait Other
      * консольная команда
      * @param string $path commands Controller/action,
      * @param array $params параметры команды,
-     * @param bool $sync фоновыя задача или нет,
+     * @param bool $sync фоновая задача или нет,
      * @param string $out путь лог файла с результатом команды,
      * @param string $error путь лог файла с ошибками,
      */
-    public static function exec($path, $params, $sync = true, $out = '../runtime/consoleOut', $error = '../runtime/consoleError')
+    public static function exec($path, $params, $sync = true, $out = '../runtime/logs/consoleOut', $error = '../runtime/logs/consoleError')
     {
         $dir = Yii::$app->getBasePath();
         $dt = YHH::currentDate("d.m.Y");
         $syncStr = $sync ? '&' : '';
-        $json = json_encode($params);
-        $json = addcslashes($json, '"');
-        $command = "php $dir/yii $path --json=\"$json\" >> $out.$dt 2>> $error.$dt $syncStr";
+        $json = addcslashes(YHH::toJson($params), '"');
+        $command = "php $dir/yii $path --json=\"$json\" >> $out.$dt.log 2>> $error.$dt.log $syncStr";
         exec($command);
     }
 
