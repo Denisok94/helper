@@ -6,8 +6,6 @@ namespace denisok94\helper\traits;
  * ArrayHelper trait
  * @author vitaliy-pashkov 
  * @author Denisok94
- * @link https://s-denis.ru/git/helper
- * @version 0.1
  */
 trait ArrayHelper
 {
@@ -132,5 +130,39 @@ trait ArrayHelper
         return json_decode($json, true);
     }
 
+    /**
+     * array order by
+     * 
+     * ```php
+     * $data = [
+     *  ['volume' => 67, 'edition' => 2],
+     *  ['volume' => 86, 'edition' => 1],
+     *  ['volume' => 85, 'edition' => 6],
+     *  ['volume' => 98, 'edition' => 2],
+     *  ['volume' => 86, 'edition' => 6],
+     *  ['volume' => 67, 'edition' => 7]
+     * ];
+     * // v1
+     * $sorted = H::arrayOrderBy($data, 'volume', SORT_DESC);
+     * // v2
+     * $sorted = H::arrayOrderBy($data, 'volume', SORT_DESC, 'edition', SORT_ASC);
+     * ```
+     */
+    public static function arrayOrderBy()
+    {
+        $args = func_get_args();
+        $data = array_shift($args);
+        foreach ($args as $n => $field) {
+            if (is_string($field)) {
+                $tmp = array();
+                foreach ($data as $key => $row)
+                    $tmp[$key] = $row[$field];
+                $args[$n] = $tmp;
+            }
+        }
+        $args[] = &$data;
+        call_user_func_array('array_multisort', $args);
+        return array_pop($args);
+    }
 
 }
