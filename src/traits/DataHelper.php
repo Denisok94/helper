@@ -5,8 +5,6 @@ namespace denisok94\helper\traits;
 /**
  * DataHelper trait
  * @author vitaliy-pashkov 
- * @link https://s-denis.ru/git/helper
- * @version 0.1
  */
 trait DataHelper
 {
@@ -29,15 +27,15 @@ trait DataHelper
         return (\DateTime::createFromFormat($fromFormat, $date))->format($toFormat);
     }
 
-    public static function toRuDate($date, $fromFormat = 'Y-m-d', $toFormat = 'd.m.Y')
+    public static function toMysqlDt($date, $fromFormat = 'd.m.Y H:i', $toFormat = 'Y-m-d H:i:s')
     {
         if ($date == null) {
-            return '';
+            return null;
         }
         return (\DateTime::createFromFormat($fromFormat, $date))->format($toFormat);
     }
 
-    public static function toMysqlDt($date, $fromFormat = 'd.m.Y H:i', $toFormat = 'Y-m-d H:i:s')
+    public static function toRuDate($date, $fromFormat = 'Y-m-d', $toFormat = 'd.m.Y')
     {
         if ($date == null) {
             return null;
@@ -63,10 +61,23 @@ trait DataHelper
      */
     public static function toMysqlDtU($timestamp, $toFormat = 'Y-m-d H:i:s')
     {
+        DataHelper::stampToDtU($timestamp, $toFormat);
+    }
+
+    /**
+     * 
+     */
+    public static function stampToDtU($timestamp, $toFormat = 'Y-m-d H:i:s')
+    {
         $dtu = explode(".", $timestamp);
-        $dt = new \DateTime();
-        $dt->setTimestamp($dtu[0]);
-        $dt->format($toFormat);
-        return $dt->format($toFormat) . "." . (isset($dtu[1]) ? substr($dtu[1], 0, 6) : "000000");
+        return (new \DateTime())->setTimestamp($dtu[0])->format($toFormat) . "." . (isset($dtu[1]) ? substr($dtu[1], 0, 6) : "000000");
+    }
+
+    /**
+     * 
+     */
+    public static function stampToDt($timestamp, $toFormat = 'Y-m-d H:i:s')
+    {
+        return (new \DateTime())->setTimestamp($timestamp)->format($toFormat);
     }
 }
