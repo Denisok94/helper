@@ -4,6 +4,7 @@ namespace denisok94\helper;
 
 use denisok94\helper\traits\ArrayHelper;
 use denisok94\helper\traits\DataHelper;
+use denisok94\helper\traits\FileHelper;
 use denisok94\helper\traits\HtmlHelper;
 use denisok94\helper\traits\OtherHelper;
 use denisok94\helper\traits\StringHelper;
@@ -16,5 +17,5 @@ use denisok94\helper\traits\StringHelper;
  */
 class Helper
 {
-    use ArrayHelper, DataHelper, HtmlHelper, OtherHelper, StringHelper;
+    use ArrayHelper, DataHelper, FileHelper, HtmlHelper, OtherHelper, StringHelper;
 }
