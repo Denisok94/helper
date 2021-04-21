@@ -4,6 +4,20 @@
 
 ![https://img.shields.io/badge/license-BSD-green](https://img.shields.io/badge/license-BSD-green)
 ___
+
+0. [Установка](#Установка)
+1. [Helper](#Helper)
+2. [ArrayHelper](#ArrayHelper)
+3. [DataHelper](#DataHelper)
+4. [StringHelper](#StringHelper)
+5. [FileHelper](#FileHelper)
+6. [HtmlHelper](#HtmlHelper)
+7. [OtherHelper](#OtherHelper)
+8. [Yii2](#Yii2)
+    1. [MetaTag](#MetaTag)
+    2. [Other](#Other)
+
+___
 ## Установка
 
 Run:
@@ -19,30 +33,15 @@ or add to the `require` section of your `composer.json` file:
 ```
 php composer update
 ```
-___
 
-0. [Helper](#Helper)
-0. [FHelper](#FHelper)
-1. [ArrayHelper](#ArrayHelper)
-2. [DataHelper](#DataHelper)
-3. [StringHelper](#StringHelper)
-4. [OtherHelper](#OtherHelper)
-4. [FileHelper](#FileHelper)
-5. [HtmlHelper](#HtmlHelper)
-6. [Yii2](#Yii2)
-    1. [MetaTag](#MetaTag)
-    2. [Other](#Other)
-
-___
-## Helper
-Использование:
+# Использование:
 ```php
 use \denisok94\helper\Helper as H;
 ```
 
-Можно создать в своём приложении папку `componets` с файлом `H.php` и унаследовать его от `Helper`.
+Можно создать в любом удобном месте своего приложения файл `H.php` с классом `H` и унаследовать его от `Helper`.
 
-Внутри класса `H` добавить свои функции с повторяющемся действиями или перезаписать имеющиеся в `Helper`
+Внутри класса `H` добавить свои функции с повторяющемся действиями или перезаписать имеющиеся в `Helper`.
 
 ```php
 namespace app\componets;
@@ -50,20 +49,17 @@ use \denisok94\helper\Helper;
 class H extends Helper {}
 ```
 
+И в дальнейшем использовать его.
+
 ```php
 use app\componets\H;
 ```
 
-___
-## FHelper
+# include
 
-Если вы скачали репозиторий архивом.
+Если вы скачали репозиторий архивом (zip/tar).
 
-Можно создать в любом удобном месте своего приложения файл `H.php` с класом `H` и унаследовать его от `FHelper`.
-
-Внутри класса `H` добавить свои функции с повторяющемся действиями или перезаписать имеющиеся в `FHelper`.
-
-И в дальнейшем использовать его.
+Можно создать в любом удобном месте своего приложения файл `H.php` с классом `H` и унаследовать его от `FHelper`.
 
 ```php
 include_once '{path to repository}/src/FHelper.php';
@@ -108,16 +104,6 @@ ___
 | random |  | Рандомная строка |
 
 ___
-## OtherHelper
-
-| Имя | Параметры | Описание |
-|----------------|:---------:|:----------------|
-| curl |  | curl для большинства простых запросов |
-| getUserIp |  | получить IP пользователя |
-| isBot |  | Проверка пользователя на бота |
-| msleep |  | уснуть на N секунд |
-
-___
 ## FileHelper
 
 | Имя | Параметры | Описание |
@@ -125,11 +111,6 @@ ___
 | readFile |  | Показать содержимое файла |
 | getFileDt |  | Получить дату последнего изменения |
 | dirSize |  | Получить размер папки |
-
-`FileHelper` extends `FileTypeIcons`
-
-| Имя | Параметры | Описание |
-|----------------|:---------:|:----------------|
 | ext |  | Получить расширение файла |
 | fileType |  | Получить тип файла |
 | fileIcon |  | Получить название иконки для файла |
@@ -141,6 +122,16 @@ ___
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
 | video |  |  |
+
+___
+## OtherHelper
+
+| Имя | Параметры | Описание |
+|----------------|:---------:|:----------------|
+| curl |  | curl для большинства простых запросов |
+| getUserIp |  | получить IP пользователя |
+| isBot |  | Проверка пользователя на бота |
+| msleep |  | уснуть на N секунд |
 
 ___
 ### Yii2
