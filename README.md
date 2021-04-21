@@ -49,9 +49,7 @@ namespace app\componets;
 use \denisok94\helper\Helper;
 class H extends Helper {}
 ```
-
 И в дальнейшем использовать его.
-
 ```php
 use app\componets\H;
 ```
@@ -83,7 +81,7 @@ ___
 
 ___
 # DataHelper
-
+sadas
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
 | currentDate |  |  |
@@ -149,14 +147,16 @@ use \denisok94\helper\YiiHelper;
 | setCache |  |  |
 | getCache |  |  |
 
-Можно создать в папке `componets` файл `H.php` и унаследовать его от `YiiHelper`.
+Можно создать в папке `componets` файл `H.php` с классом `H` и унаследовать его от `YiiHelper`.
+
+Внутри класса `H` добавить свои функции с повторяющемся действиями или перезаписать имеющиеся в `YiiHelper`.
 
 ```php
 namespace app\componets;
 use \denisok94\helper\YiiHelper;
 class H extends YiiHelper {}
 ```
-И подключать его более лаконичным путём )
+И в дальнейшем использовать его.
 ```php
 use app\componets\H;
 ```
