@@ -6,7 +6,8 @@
 ___
 
 0. [Установка](#Установка)
-1. [Helper](#Helper)
+    1. [Использование](#Использование)
+    2. [include](#include)
 2. [ArrayHelper](#ArrayHelper)
 3. [DataHelper](#DataHelper)
 4. [StringHelper](#StringHelper)
@@ -14,11 +15,11 @@ ___
 6. [HtmlHelper](#HtmlHelper)
 7. [OtherHelper](#OtherHelper)
 8. [Yii2](#Yii2)
-    1. [MetaTag](#MetaTag)
-    2. [Other](#Other)
+    1. [YiiHelper](#YiiHelper)
+    2. [MetaTag](#MetaTag)
 
 ___
-## Установка
+# Установка
 
 Run:
 ```
@@ -34,7 +35,7 @@ or add to the `require` section of your `composer.json` file:
 php composer update
 ```
 
-# Использование:
+## Использование
 ```php
 use \denisok94\helper\Helper as H;
 ```
@@ -55,7 +56,7 @@ class H extends Helper {}
 use app\componets\H;
 ```
 
-# include
+## include
 
 Если вы скачали репозиторий архивом (zip/tar).
 
@@ -67,7 +68,7 @@ class H extends FHelper {}
 ```
 
 ___
-## ArrayHelper
+# ArrayHelper
 
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
@@ -81,7 +82,7 @@ ___
 | arrayOrderBy |  |  |
 
 ___
-## DataHelper
+# DataHelper
 
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
@@ -96,7 +97,7 @@ ___
 | stampToDt |  |  |
 
 ___
-## StringHelper
+# StringHelper
 
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
@@ -104,7 +105,7 @@ ___
 | random |  | Рандомная строка |
 
 ___
-## FileHelper
+# FileHelper
 
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
@@ -117,14 +118,14 @@ ___
 | fileIconFa |  | Получить название иконки для файла в формате Font Awesome 4/5 |
 
 ___
-## HtmlHelper
+# HtmlHelper
 
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
 | video |  |  |
 
 ___
-## OtherHelper
+# OtherHelper
 
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
@@ -134,7 +135,8 @@ ___
 | msleep |  | уснуть на N секунд |
 
 ___
-### Yii2
+# Yii2
+## YiiHelper
 ```php
 use \denisok94\helper\YiiHelper;
 ```
