@@ -1,3 +1,5 @@
+<h1 align = "center"> Helper Class </h1>
+
 Класс с набором полезных функций.
 
 Доки чуть позже)
@@ -8,21 +10,23 @@ ___
 0. [Установка](#Установка)
     1. [Использование](#Использование)
     2. [include](#include)
-2. [ArrayHelper](#ArrayHelper)
-3. [DataHelper](#DataHelper)
-4. [StringHelper](#StringHelper)
-5. [FileHelper](#FileHelper)
-6. [HtmlHelper](#HtmlHelper)
-7. [OtherHelper](#OtherHelper)
-8. [Yii2](#Yii2)
+1. [ArrayHelper](#ArrayHelper)
+2. [DataHelper](#DataHelper)
+3. [StringHelper](#StringHelper)
+4. [FileHelper](#FileHelper)
+5. [HtmlHelper](#HtmlHelper)
+6. [OtherHelper](#OtherHelper)
+7. [Yii2](#Yii2)
     1. [YiiHelper](#YiiHelper)
     2. [MetaTag](#MetaTag)
 
 ___
+
 # Установка
 
 Run:
-```
+
+```bash
 php composer require --prefer-dist denisok94/helper
 ```
 
@@ -31,11 +35,13 @@ or add to the `require` section of your `composer.json` file:
 ```json
 "denisok94/helper": "*"
 ```
-```
+
+```bash
 php composer update
 ```
 
 ## Использование
+
 ```php
 use \denisok94\helper\Helper as H;
 ```
@@ -49,7 +55,9 @@ namespace app\componets;
 use \denisok94\helper\Helper;
 class H extends Helper {}
 ```
+
 И в дальнейшем использовать его.
+
 ```php
 use app\componets\H;
 ```
@@ -66,6 +74,7 @@ class H extends FHelper {}
 ```
 
 ___
+
 # ArrayHelper
 
 | Имя | Параметры | Описание |
@@ -77,9 +86,10 @@ ___
 | implodeWith |  |  Объединяет элементы массива в строку, с пред обработкой |
 | toJson |  |  |
 | toArray |  |  |
-| arrayOrderBy |  |  |
+| arrayOrderBy |  | Сортировка массива |
 
 ___
+
 # DataHelper
 
 | Имя | Параметры | Описание |
@@ -95,6 +105,7 @@ ___
 | stampToDt |  |  |
 
 ___
+
 # StringHelper
 
 | Имя | Параметры | Описание |
@@ -103,6 +114,7 @@ ___
 | random |  | Рандомная строка |
 
 ___
+
 # FileHelper
 
 | Имя | Параметры | Описание |
@@ -116,13 +128,15 @@ ___
 | fileIconFa |  | Получить название иконки для файла в формате Font Awesome 4/5 |
 
 ___
+
 # HtmlHelper
 
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
-| video |  |  |
+| video |  | Сгенерировать видео тег |
 
 ___
+
 # OtherHelper
 
 | Имя | Параметры | Описание |
@@ -133,8 +147,11 @@ ___
 | msleep |  | уснуть на N секунд |
 
 ___
+
 # Yii2
+
 ## YiiHelper
+
 ```php
 use \denisok94\helper\YiiHelper;
 ```
@@ -156,13 +173,17 @@ namespace app\componets;
 use \denisok94\helper\YiiHelper;
 class H extends YiiHelper {}
 ```
+
 И в дальнейшем использовать его.
+
 ```php
 use app\componets\H;
 ```
 
 ___
+
 ## MetaTag
+
 ```php
 use \denisok94\helper\yii2\MetaTag;
 ```
