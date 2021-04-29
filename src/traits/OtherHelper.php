@@ -183,11 +183,11 @@ trait OtherHelper
                 'TrendsmapResolver', 'SemrushBot', 'Nimbostratus-Bot', 'YandexBot', 'mj12bot', 'YandexImages',
                 'BackupLand', 'backupland', 'DotBot', 'BuiltWith', 'python-requests', 'NetcraftSurveyAgent',
                 'Ezooms', 'AhrefsBot', 'aiohttp', 'CCBot', 'Konturbot', 'statdom', 'PetalBot', 'LetsearchBot',
-                'SafeDNSBot', 'oBot', 'LinkpadBot', 'bingbot', 'Googlebot', 
+                'SafeDNSBot', 'oBot', 'LinkpadBot', 'bingbot', 'Googlebot',
                 // всякая фигня
-                'libwww-perl', 'libwww', 'perl', 'zgrab', 'curl', 'ApiTool', 'masscan', 'Python',
+                'libwww-perl', 'libwww', 'perl', 'zgrab', 'curl', 'ApiTool', 'masscan', 'Apache', 'Python', 'Java', 'Go',
                 // Другие
-                'bot', 'bots', 'Bot', 'http', '+http', '@'
+                'bot', 'bots', 'Bot', 'http', 'Http','+http', '@'
             ];
             if ($myBots != null) $bots = array_merge($myBots, $bots);
             foreach ($bots as $bot) {
@@ -201,16 +201,16 @@ trait OtherHelper
             return true;
         }
     }
-    
-	/**
-	 * Delays execution of the script by the given time.
-	 * @param mixed $time Time to pause script execution. Can be expressed
-	 * as an integer or a decimal.
-	 * @example msleep(1.5); // delay for 1.5 seconds
-	 * @example msleep(.1); // delay for 100 milliseconds
-	 */
-	public static function msleep($time)
-	{
-		usleep($time * 1000000);
-	}
+
+    /**
+     * Delays execution of the script by the given time.
+     * @param mixed $time Time to pause script execution. Can be expressed
+     * as an integer or a decimal.
+     * @example msleep(1.5); // delay for 1.5 seconds
+     * @example msleep(.1); // delay for 100 milliseconds
+     */
+    public static function msleep($time)
+    {
+        usleep($time * 1000000);
+    }
 }
