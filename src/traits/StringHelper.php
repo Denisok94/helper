@@ -49,4 +49,17 @@ trait StringHelper
         }
         return $text;
     }
+
+    /**
+     * 
+	 * @param int $num count
+	 * @param array $titles ['', 'персона', 'персоны', 'персон']
+	 * @return 
+     */
+    public static function spell($num, $titles)
+    {
+        $cases = [2, 0, 1, 1, 1, 2];
+
+        return $titles[($num % 100 > 4 && $num % 100 < 20) ? 2 : $cases[min($num % 10, 5)]];
+    }
 }

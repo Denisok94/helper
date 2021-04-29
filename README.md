@@ -16,9 +16,9 @@ ___
 4. [FileHelper](#FileHelper)
 5. [HtmlHelper](#HtmlHelper)
 6. [OtherHelper](#OtherHelper)
-7. [Yii2](#Yii2)
-    1. [YiiHelper](#YiiHelper)
-    2. [MetaTag](#MetaTag)
+7. [Framework Integration](#Framework-Integration)
+    1. [Yii2](#Yii2)
+        - [MetaTag](#MetaTag)
 
 ___
 
@@ -112,6 +112,7 @@ ___
 |----------------|:---------:|:----------------|
 | uuid |  | Сгенерировать uuid v4 |
 | random |  | Рандомная строка |
+| spell |  | падежи к числительным |
 
 ___
 
@@ -148,9 +149,9 @@ ___
 
 ___
 
-# Yii2
+# Framework Integration
 
-## YiiHelper
+## Yii2
 
 ```php
 use \denisok94\helper\YiiHelper;
@@ -182,7 +183,7 @@ use app\componets\H;
 
 ___
 
-## MetaTag
+### **MetaTag**
 
 ```php
 use \denisok94\helper\yii2\MetaTag;
