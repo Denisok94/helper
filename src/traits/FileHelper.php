@@ -194,7 +194,7 @@ trait FileHelper
 		if ($search) $fa = $search[1];
 		return (($fa != 'file') ? ('file-' . $fa) : ($fa)) . ((!$pro) ? ('-o') : (''));
 	}
-	
+
 	/**
 	 * Получить название иконки для файла
 	 * @param string $file файл,
@@ -255,7 +255,7 @@ trait FileHelper
 	 * }
 	 * ```
 	 */
-	public static function readFile($file_path)
+	public static function fileRead($file_path)
 	{
 		if (!file_exists($file_path)) {
 			$fname = basename($file_path); // берём имя файла (name.ext)
@@ -280,7 +280,7 @@ trait FileHelper
 	/**
 	 * 
 	 */
-	public static function getFileDt($file_path, $toFormat = 'd.m.Y H:i:s')
+	public static function fileGetDt($file_path, $toFormat = 'd.m.Y H:i:s')
 	{
 		if (file_exists($file_path)) {
 			return (new \DateTime())->setTimestamp(filectime($file_path))->format($toFormat);
@@ -290,18 +290,45 @@ trait FileHelper
 	}
 
 	/**
-	 * 
+	 * короткий размер файла
 	 */
-	public static function shortSize($file_path, $si_prefix = ['B', 'KB', 'MB', 'GB', 'TB', 'EB', 'ZB', 'YB'])
+	public static function fileShortSize($file_path, $si_prefix = ['B', 'KB', 'MB', 'GB', 'TB', 'EB', 'ZB', 'YB'])
 	{
 		if (file_exists($file_path)) {
 			$value = filesize($file_path);
-			$base = 1024;
-			$class = min((int)log($value, $base), count($si_prefix) - 1);
-			$value = sprintf('%1.2f', $value / pow($base, $class)) . ' ' . $si_prefix[$class];
-			return $value;
+			return FileHelper::shortSize($value, $si_prefix);
 		} else {
 			return null;
+		}
+	}
+
+	/**
+	 * 2048 → 2.00 KB
+	 */
+	public static function shortSize($size, $si_prefix = ['B', 'KB', 'MB', 'GB', 'TB', 'EB', 'ZB', 'YB'])
+	{
+		$base = 1024;
+		$class = min((int)log($size, $base), count($si_prefix) - 1);
+		$size = sprintf('%1.2f', $size / pow($base, $class)) . ' ' . $si_prefix[$class];
+		return $size;
+	}
+
+	/**
+	 * 2.00 KB → 2048
+	 * @link https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Component%21Utility%21Bytes.php/function/Bytes%3A%3AtoInt/8.2.x
+	 */
+	public static function parseSize($size)
+	{
+		// Remove the non-unit characters from the size.
+		$unit = preg_replace('/[^bkmgtpezy]/i', '', $size);
+		// Remove the non-numeric characters from the size.
+		$size = preg_replace('/[^0-9\.]/', '', $size);
+		if ($unit) {
+			// Find the position of the unit in the ordered string which is the power
+			// of magnitude to multiply a kilobyte by.
+			return round($size * pow(1024, stripos('bkmgtpezy', $unit[0])));
+		} else {
+			return round($size);
 		}
 	}
 
