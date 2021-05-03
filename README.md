@@ -66,11 +66,12 @@ use app\componets\H;
 
 Если вы скачали репозиторий архивом (zip/tar).
 
-Можно создать в любом удобном месте своего приложения файл `H.php` с классом `H` и унаследовать его от `FHelper`.
+Можно создать в любом удобном месте своего приложения файл `H.php` с классом `H` и унаследовать его от `Helper`.
 
 ```php
-include_once '{path to repository}/src/FHelper.php';
-class H extends FHelper {}
+include_once '{path to repository}/src/Helper.php';
+use \denisok94\helper\Helper;
+class H extends Helper {}
 ```
 
 ___
