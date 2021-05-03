@@ -7,7 +7,6 @@ use denisok94\helper\Helper as H;
 
 /**
  * 
- * @author vitaliy-pashkov 
  */
 class StatusController extends Controller
 {
@@ -27,6 +26,7 @@ class StatusController extends Controller
 
     /**
      * 
+     * @param string $path
      */
     public function getPost($path)
     {
@@ -35,6 +35,12 @@ class StatusController extends Controller
 
     /**
      * custom responses
+     * 
+     * ```php
+     * $responses = [];
+     * // ...
+     * return $this->send($responses);
+     * ```
      */
     protected function send($data = [])
     {
@@ -42,7 +48,14 @@ class StatusController extends Controller
     }
 
     /**
-     * 
+     * success responses
+     * @param array|string $data
+     * @return array
+     *
+     * ```php
+     * return $this->success(); // ['status' => 'OK', 'data' => []];
+     * return $this->success($data); // ['status' => 'OK', 'data' => $data];
+     * ```
      */
     protected function success($data = [])
     {
@@ -50,7 +63,29 @@ class StatusController extends Controller
     }
 
     /**
+     * error responses
+     * @param array|string $error что не так
+     * @param array|string $text где не так
+     * @param array|string $data ~тело запроса
+     * @return array ['status'=>'FAIL', 'error', 'errorText', 'data']
+     * ```php
+     * \Yii::$app->response->statusCode = 400; // or status http code
+     * return $this->error($error, $text, $data);
+     * ```
      * 
+	 * @example Пример:
+     * ```php
+     * $messages = $this->post;
+     * if ($messages === null) {
+     *  $jsonError = json_last_error();
+     *  $jsonErrorMsg = json_last_error_msg();
+     *  \Yii::$app->response->statusCode = 400;
+     *  return $this->error('messages is null', "json error: " . $jsonError, [
+     *      'raw' => \Yii::$app->request->rawBody,
+     *      'error_msg' => $jsonErrorMsg
+     *  ]);
+     * }
+     * ```
      */
     protected function error($error = 'customError', $text = '', $data = [])
     {
