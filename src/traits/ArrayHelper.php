@@ -12,6 +12,10 @@ trait ArrayHelper
 
     /**
      * Найти в массиве
+     * @param array $array
+     * @param string $path
+     * @param bool $nullValue
+     * @return array|string|bool
      */
     public static function get($array, $path, $nullValue = null)
     {
@@ -34,8 +38,11 @@ trait ArrayHelper
 
     /**
      * Добавить/заменить в массиве
+     * @param array $array
+     * @param string $path
+     * @param mixed $value
      */
-    public static function set(&$array, $path, &$value)
+    public static function set(&$array, $path, $value)
     {
         $parts = explode('.', $path);
         $key = $parts[0];
@@ -48,7 +55,7 @@ trait ArrayHelper
             }
         } else {
             $array[$key] = [];
-            ArrayHelper::set($array[$key], implode('.', $parts), $value);
+            ArrayHelper::set($array, implode('.', $parts), $value);
         }
     }
 
@@ -84,33 +91,33 @@ trait ArrayHelper
      */
     public static function implodeWrap($glue, $array, $wrapper)
     {
-		$result = [];
-		foreach ($array as $key => $value) {
-			if (is_numeric($key) && $value != null) {
-				$result[] = $wrapper . $value . $wrapper;
-			} else {
-				$result[] = "null";
-			}
-		}
-		return implode($glue, $result);
+        $result = [];
+        foreach ($array as $key => $value) {
+            if (is_numeric($key) && $value != null) {
+                $result[] = $wrapper . $value . $wrapper;
+            } else {
+                $result[] = "null";
+            }
+        }
+        return implode($glue, $result);
     }
 
-	/**
-	 * Объединяет элементы массива в строку, с пред обработкой
+    /**
+     * Объединяет элементы массива в строку, с пред обработкой
      * @param string $glue делитель
      * @param array $array 
      * @param mixed $callback функция обработки
      * @return string
-	 */
-	public static function implodeWith($glue, $array, $callback)
-	{
-		$clear = [];
-		foreach ($array as $value) {
-			$callbackReturn = $callback($value);
-			if ($callbackReturn != null) $clear[] = $callbackReturn;
-		}
-		return implode($glue, $clear);
-	}
+     */
+    public static function implodeWith($glue, $array, $callback)
+    {
+        $clear = [];
+        foreach ($array as $value) {
+            $callbackReturn = $callback($value);
+            if ($callbackReturn != null) $clear[] = $callbackReturn;
+        }
+        return implode($glue, $clear);
+    }
 
     /**
      * @param array $array массив,
@@ -164,5 +171,4 @@ trait ArrayHelper
         call_user_func_array('array_multisort', $args);
         return array_pop($args);
     }
-
 }
