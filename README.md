@@ -19,6 +19,7 @@ ___
 7. [Framework Integration](#Framework-Integration)
     1. [Yii2](#Yii2)
         - [MetaTag](#MetaTag)
+        - [StatusController](#StatusController)
 
 ___
 
@@ -196,3 +197,69 @@ use \denisok94\helper\yii2\MetaTag;
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
 | tag |  | Установить MetaTag на страницу |
+
+
+```php
+namespace app\controllers;
+use app\componets\MetaTag;
+
+class SiteController extends Controller
+{
+    // ...
+    public function actionAbout()
+    {
+        MetaTag::tag($this->view, [
+            'title' => "About My site",
+            'description' => "About my site",
+            'url' => "https://s-denis.ru/site/about",
+        ]);
+        return $this->render('about');
+    }
+    // ...
+}
+```
+___
+
+### **StatusController**
+
+```php
+namespace app\controllers;
+use \denisok94\helper\yii2\StatusController;
+
+class MyController extends StatusController
+{
+    // code
+}
+```
+
+```php
+// получить всё сообщение
+$message = $this->post;
+// получить значение из сообщения
+$phone = $this->getPost('phone');
+```
+
+Сообщить об успехе
+
+```php
+// Сообщить об успешной обработки
+return $this->success(); // ['status' => 'OK', 'data' => []];
+// Вернуть результат
+return $this->success($data); // ['status' => 'OK', 'data' => $data];
+```
+
+Сообщить об ошибке
+
+```php
+\Yii::$app->response->statusCode = 400; // or status http code
+return $this->error($error, $text, $data);
+```
+
+
+Свой ответ 
+```php
+// custom responses
+$responses = [];
+// code
+return $this->send($responses);
+```
