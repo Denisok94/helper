@@ -183,9 +183,10 @@ trait OtherHelper
                 'TrendsmapResolver', 'SemrushBot', 'Nimbostratus-Bot', 'YandexBot', 'mj12bot', 'YandexImages',
                 'BackupLand', 'backupland', 'DotBot', 'BuiltWith', 'python-requests', 'NetcraftSurveyAgent',
                 'Ezooms', 'AhrefsBot', 'aiohttp', 'CCBot', 'Konturbot', 'statdom', 'PetalBot', 'LetsearchBot',
-                'SafeDNSBot', 'oBot', 'LinkpadBot', 'bingbot', 'Googlebot',
+                'SafeDNSBot', 'oBot', 'LinkpadBot', 'bingbot', 'Googlebot', 'CensysInspect', 'paloaltonetworks',
                 // всякая фигня
                 'libwww-perl', 'libwww', 'perl', 'zgrab', 'curl', 'ApiTool', 'masscan', 'Apache', 'Python', 'Java', 'Go',
+                'HTTP Banner Detection', 'netsystemsresearch', 'gdnplus', 'fasthttp',
                 // Другие
                 'bot', 'bots', 'Bot', 'http', 'Http','+http', '@'
             ];
