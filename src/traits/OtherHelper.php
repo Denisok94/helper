@@ -207,8 +207,10 @@ trait OtherHelper
      * Delays execution of the script by the given time.
      * @param mixed $time Time to pause script execution. Can be expressed
      * as an integer or a decimal.
-     * @example msleep(1.5); // delay for 1.5 seconds
-     * @example msleep(.1); // delay for 100 milliseconds
+     * ```php
+     * H::msleep(1.5); // delay for 1.5 seconds
+     * H::msleep(.1); // delay for 100 milliseconds
+     * ```
      */
     public static function msleep($time)
     {
