@@ -9,6 +9,7 @@ trait StringHelper
 {
     /**
      * Сгенерировать uuid v4
+	 * @return string
      */
     public static function uuid()
     {
@@ -40,6 +41,16 @@ trait StringHelper
 
     /**
      * 
+	 * @param int $length
+	 * @param string $chars
+     * @return string
+     * 
+	 * @example Пример:
+	 * ```php
+	 * $random = H::random(12);
+	 * $random = H::random(12, "abcdefghijklmnopqrstuvwxyzABCDEFGHI JKLMNOPRQSTUVWXYZ0123456789");
+	 * $random = H::random(12, "0123456789");
+	 * ```
      */
     public static function random($length, $chars = "abcdefghijklmnopqrstuvwxyz")
     {
@@ -54,7 +65,7 @@ trait StringHelper
      * 
 	 * @param int $num count
 	 * @param array $titles ['', 'персона', 'персоны', 'персон']
-	 * @return 
+	 * @return string
      */
     public static function spell($num, $titles)
     {
