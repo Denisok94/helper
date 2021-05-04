@@ -6,9 +6,6 @@ use Yii;
 use denisok94\helper\traits\ArrayHelper;
 use denisok94\helper\traits\DataHelper;
 
-class YHH {
-    use ArrayHelper, DataHelper;
-}
 /**
  * Other trait
  */
@@ -25,9 +22,9 @@ trait Other
     public static function exec($path, $params, $sync = true, $out = '../runtime/logs/consoleOut', $error = '../runtime/logs/consoleError')
     {
         $dir = Yii::$app->getBasePath();
-        $dt = YHH::currentDate("d.m.Y");
+        $dt = DataHelper::currentDate("d.m.Y");
         $syncStr = $sync ? '&' : '';
-        $json = addcslashes(YHH::toJson($params), '"');
+        $json = addcslashes(ArrayHelper::toJson($params), '"');
         $command = "php $dir/yii $path --json=\"$json\" >> $out.$dt.log 2>> $error.$dt.log $syncStr";
         exec($command);
     }
@@ -42,12 +39,12 @@ trait Other
     {
         $fileCache = Yii::$app->getBasePath() . "/cache/$name.json";
         if ((file_exists($fileCache))) {
-            $oldArray = YHH::toArray(file_get_contents($fileCache));
+            $oldArray = ArrayHelper::toArray(file_get_contents($fileCache));
             $newArray = array_merge($oldArray, $array);
         } else {
             $newArray = $array;
         }
-        $fpc = file_put_contents($fileCache, YHH::toJson($newArray), LOCK_EX);
+        $fpc = file_put_contents($fileCache, ArrayHelper::toJson($newArray), LOCK_EX);
         return ($fpc === false) ? false : true;
     }
 
@@ -60,7 +57,7 @@ trait Other
     {
         $fileCache = Yii::$app->getBasePath() . "/cache/$name.json";
         if (file_exists($fileCache)) {
-            return YHH::toArray(file_get_contents($fileCache));
+            return ArrayHelper::toArray(file_get_contents($fileCache));
         } else {
             return false;
         }
