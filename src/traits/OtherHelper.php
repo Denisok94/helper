@@ -40,7 +40,12 @@ trait OtherHelper
         ];
         $method = strtoupper($method);
         // ----------------------------------
-        if ($method == 'GET' and $params != null) $url = $url . '?' . (is_array($params) ? http_build_query($params) : $params);
+        if ($params != null) {
+            $params = is_array($params) ? http_build_query($params) : $params;
+            if ($method == 'GET') {
+                $url = $url . '?' . $params;
+            }
+        }
         // ----------------------------------
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_ENCODING, "");
@@ -50,7 +55,7 @@ trait OtherHelper
         switch ($method) {
             case 'POST':
                 curl_setopt($ch, CURLOPT_POST, true);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, is_array($params) ? http_build_query($params) : $params);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
                 break;
             case 'PUT':
                 curl_setopt($ch, CURLOPT_PUT, true);
@@ -188,7 +193,7 @@ trait OtherHelper
                 'libwww-perl', 'libwww', 'perl', 'zgrab', 'curl', 'ApiTool', 'masscan', 'Apache', 'Python', 'Java', 'Go',
                 'HTTP Banner Detection', 'netsystemsresearch', 'gdnplus', 'fasthttp',
                 // Другие
-                'bot', 'bots', 'Bot', 'http', 'Http','+http', '@'
+                'bot', 'bots', 'Bot', 'http', 'Http', '+http', '@'
             ];
             if ($myBots != null) $bots = array_merge($myBots, $bots);
             foreach ($bots as $bot) {
