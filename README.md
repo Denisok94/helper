@@ -20,6 +20,7 @@ ___
     1. [Yii2](#Yii2)
         - [MetaTag](#MetaTag)
         - [StatusController](#StatusController)
+        - [ConsoleController](#ConsoleController)
 
 ___
 
@@ -233,7 +234,7 @@ class MyController extends StatusController
 ```
 
 ```php
-// получить всё сообщение
+// получить все сообщения
 $message = $this->post;
 // получить значение из сообщения
 $phone = $this->getPost('phone');
@@ -262,4 +263,40 @@ return $this->error($error, $text, $data);
 $responses = [];
 // code
 return $this->send($responses);
+```
+___
+
+### **ConsoleController**
+
+```php
+namespace app\commands;
+use \denisok94\helper\yii2\ConsoleController;
+
+class MyController extends ConsoleController
+{
+    // code
+}
+```
+Получить переданные параметры
+```php
+$init = $this->params;
+```
+Вызвать `action` консольного контроллера:
+```php
+H::exec('сontroller/action', [params]);
+```
+Консольный контроллер, не подразумевает ответ. Вся выводящая информация (echo, print и тд) будет записана в лог файл.
+
+
+Пример:
+```php
+class MyController extends ConsoleController
+{
+	public function actionTest()
+	{
+		$init = $this->params;
+    }
+}
+
+H::exec('my/test', ['test' => 'test']);
 ```
