@@ -1,6 +1,8 @@
 <h1 align = "center"> Helper Class </h1>
 
-Класс с набором полезных функций.
+Класс с набором полезных функций, по мнению автора.
+
+Не претендует на идеальность и единственное верное решение.
 
 Доки чуть позже)
 
@@ -295,7 +297,7 @@ class MyController extends ConsoleController
 	public function actionTest()
 	{
 		$init = $this->params;
-    }
+	}
 }
 
 H::exec('my/test', ['test' => 'test']);
