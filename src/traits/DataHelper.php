@@ -51,17 +51,20 @@ trait DataHelper
         return (\DateTime::createFromFormat($fromFormat, $date))->format($toFormat);
     }
 
+    /**
+     * @deprecated Не актуален, используйте: `currentDate()`
+     */
     public static function getTodayDb($toFormat = 'Y-m-d')
     {
         return (new \DateTime())->format($toFormat);
     }
 
     /**
-     * 
+     * @deprecated Не актуален, используйте: `stampToDtU()`
      */
     public static function toMysqlDtU($timestamp, $toFormat = 'Y-m-d H:i:s')
     {
-        DataHelper::stampToDtU($timestamp, $toFormat);
+        return DataHelper::stampToDtU($timestamp, $toFormat);
     }
 
     /**
