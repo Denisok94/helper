@@ -24,7 +24,7 @@ class MetaTag
         'title', 'description', 'url', 'domain', 'site', 'image', 'image:src', 'creator', 'card'
     ];
     private $ogTag = [
-        'title', 'description', 'url', 'image', 'image:src', 'image:width', 'image:height', 'site_name', 'locale', 'type',
+        'title', 'description', 'url', 'locale', 'image', 'image:src', 'image:type', 'image:width', 'image:height', 'site_name', 'locale', 'type',
     ];
 
     /**
@@ -57,6 +57,7 @@ class MetaTag
             'title' => $this->title,
             // 'description' => "",
             // 'keywords' => "",
+            'locale' => Yii::$app->language,
             'url' => Url::to([], true), // Url::base(true) ,
             'domain' => $this->domain, // 
             'site' => "@" . ucwords($this->name),
@@ -97,7 +98,7 @@ class MetaTag
     private function setTeg($name, $content)
     {
         $this->view->registerMetaTag(
-            ['name' => $name, 'content' => $content]
+            ['property' => $name, 'content' => $content]
         );
     }
 
