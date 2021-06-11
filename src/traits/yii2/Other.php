@@ -62,4 +62,15 @@ trait Other
             return false;
         }
     }
+
+    /**
+     * Записать логи
+     * @param string $name имя файла
+     * @param string $value текст лога
+     */
+    public static function log($name, $value)
+	{
+		$dt = DataHelper::currentDate("d.m.Y");
+		file_put_contents(Yii::$app->getBasePath() . "/runtime/logs/$name.$dt.log", DataHelper::currentDt() . ' | ' . $value . "\n", FILE_APPEND);
+	}
 }
