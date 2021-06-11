@@ -82,15 +82,17 @@ ___
 
 # ArrayHelper
 
+Работа с массивами
+
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
-| get |  | Найти в массиве |
-| set |  | Добавить/заменить в массиве |
+| get |  | Найти в массиве по пути |
+| set |  | Добавить/заменить элемент в массиве |
 | parse |  | Заменить шаблон |
-| implodeWrap |  |  Объединяет элементы массива в строку, обернуть текст в кавычки |
-| implodeWith |  |  Объединяет элементы массива в строку, с пред обработкой |
-| toJson |  |  |
-| toArray |  |  |
+| implodeWrap |  | Объединяет элементы массива в строку + обернуть текст в кавычки |
+| implodeWith |  | Объединяет элементы массива в строку, с предпользовательской обработкой |
+| toJson |  | Преобразовать массив в json |
+| toArray |  | Преобразовать json в массив |
 | arrayOrderBy |  | Сортировка массива |
 
 ___
@@ -99,15 +101,14 @@ ___
 
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
-| currentDate |  |  |
-| currentDt |  |  |
-| toMysqlDate |  |  |
-| toMysqlDt |  |  |
-| toRuDate |  |  |
-| toRuDt |  |  |
-| getTodayDb |  |  |
-| stampToDtU |  |  |
-| stampToDt |  |  |
+| currentDate |  | Сегодняшняя дата |
+| currentDt |  | Сегодняшняя дата и время |
+| toMysqlDate |  | Преобразовать дату в формат Mysql |
+| toMysqlDt |  | Преобразовать дату и время в формат Mysql |
+| toRuDate |  | Русский формат даты |
+| toRuDt |  | Русский формат даты и времени |
+| stampToDt |  | Преобразовать timestamp в формат даты и времени |
+| stampToDtU |  | Преобразовать timestamp в формат даты и времени с миллисекундами |
 
 ___
 
@@ -116,12 +117,14 @@ ___
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
 | uuid |  | Сгенерировать uuid v4 |
-| random |  | Рандомная строка |
+| random |  | Сгенерировать рандомную строка |
 | spell |  | падежи к числительным |
 
 ___
 
 # FileHelper
+
+Работа с файлами
 
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
@@ -140,9 +143,12 @@ ___
 
 # HtmlHelper
 
+Генерация html тегов
+> в разработке... 
+
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
-| video |  | Сгенерировать видео тег |
+| video |  | видео тег |
 
 ___
 
@@ -193,16 +199,18 @@ ___
 
 ### **MetaTag**
 
+Генерация мета тегов.
+
 ```php
 use \denisok94\helper\yii2\MetaTag;
 ```
-> Пока, реализованы простые теги, позже, доработаю
+> Пока, реализованы простые теги, позже, доработаю.
 
 | Имя | Параметры | Описание |
 |----------------|:---------:|:----------------|
 | tag |  | Установить MetaTag на страницу |
 
-
+Указываются в `action` контроллере, перед `render()`.
 ```php
 namespace app\controllers;
 use app\componets\MetaTag;
@@ -226,6 +234,8 @@ ___
 
 ### **StatusController**
 
+Для общения по формату json. (REST API)
+
 ```php
 namespace app\controllers;
 use \denisok94\helper\yii2\StatusController;
@@ -237,9 +247,9 @@ class MyController extends StatusController
 ```
 
 ```php
-// получить все сообщения
+// получить всё сообщение полностью
 $message = $this->post;
-// получить значение из сообщения
+// получить параметр из сообщения
 $phone = $this->getPost('phone');
 ```
 
@@ -248,7 +258,7 @@ $phone = $this->getPost('phone');
 ```php
 // Сообщить об успешной обработки
 return $this->success(); // ['status' => 'OK', 'data' => []];
-// Вернуть результат
+// Вернуть результат работы
 return $this->success($data); // ['status' => 'OK', 'data' => $data];
 ```
 
@@ -256,11 +266,10 @@ return $this->success($data); // ['status' => 'OK', 'data' => $data];
 
 ```php
 \Yii::$app->response->statusCode = 400; // or status http code
-return $this->error($error, $text, $data);
+return $this->error($error, $text, $data); // ['status' => 'FAIL', ...]
 ```
 
-
-Свой ответ 
+Собственный формат ответа 
 ```php
 // custom responses
 $responses = [];
@@ -280,16 +289,17 @@ class MyController extends ConsoleController
     // code
 }
 ```
-Получить переданные параметры
-```php
-$init = $this->params;
-```
+
 Вызвать `action` консольного контроллера:
 ```php
 H::exec('сontroller/action', [params]);
 ```
-Консольный контроллер, не подразумевает ответ. Вся выводящая информация (echo, print и тд) будет записана в лог файл.
+> Консольный контроллер, не подразумевает ответ. Вся выводящая информация (echo, print и тд) будут записана в лог файл. При вызове через `H::exec()`, по умолчанию логи находятся в `/runtime/logs/consoleOut.XXX.log` (можно переопределить)
 
+Получить переданные параметры
+```php
+$init = $this->params;
+```
 
 Пример:
 ```php
@@ -298,6 +308,7 @@ class MyController extends ConsoleController
 	public function actionTest()
 	{
 		$init = $this->params;
+		$test = $this->params['test'];
 	}
 }
 
