@@ -2,7 +2,7 @@
 
 namespace denisok94\helper;
 
-use denisok94\helper\traits\yii2\Other;
+use denisok94\helper\yii2\traits\Other;
 use denisok94\helper\Helper;
 
 /**

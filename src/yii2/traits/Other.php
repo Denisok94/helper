@@ -1,6 +1,6 @@
 <?php
 
-namespace denisok94\helper\traits\yii2;
+namespace denisok94\helper\yii2\traits;
 
 use Yii;
 use denisok94\helper\traits\ArrayHelper;
