@@ -118,6 +118,50 @@ trait OtherHelper
     }
 
     /**
+     * параметры запроса
+     * @return array request
+     * - `method`: основной метод запроса.
+     * - `get`: get параметры, если есть или `null`.
+     * - `post`: post параметры, если есть или `null`.
+     * - `put`: put параметры, если есть.
+     * - `delete`: delete параметры, если есть.
+     * - `headers`: заголовки запроса.
+     * - `php://input`: если есть put или delete.
+     */
+    public static function getRequest()
+    {
+        $a = [];
+        $method = strtolower($_SERVER['REQUEST_METHOD']);
+        $a["method"] = $method;
+        // ----------------------------------
+        foreach ($_GET as $key => $val) {
+            $a['get'][$key] = $val;
+        }
+        if (!isset($a['get'])) $a['get'] = null;
+        // ----------------------------------
+        foreach ($_POST as $key => $val) {
+            $a['post'][$key] = $val;
+        }
+        if (!isset($a['post'])) $a['post'] = null;
+        // ----------------------------------
+        if ($method == 'put' or $method == 'delete') {
+            $a['php://input'] = file_get_contents('php://input');
+            $urldecode = urldecode($a['php://input']);
+            $urldecode = explode("&", $urldecode);
+            foreach ($urldecode as $value) {
+                $value = explode("=", $value);
+                $a[$method][$value[0]] = $value[1];
+            }
+        }
+        // ----------------------------------
+        foreach (getallheaders() as $name => $value) {
+            $a['headers'][$name] = $value;
+        }
+        // ----------------------------------
+        return $a;
+    }
+
+    /**
      * Получить IP пользователя
      * @return string the user ip
      */
