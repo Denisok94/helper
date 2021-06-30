@@ -5,7 +5,7 @@ namespace denisok94\helper\yii2;
 use yii\console\Controller;
 
 /**
- * 
+ * @author vitaliy-pashkov 
  */
 class ConsoleController extends Controller
 {

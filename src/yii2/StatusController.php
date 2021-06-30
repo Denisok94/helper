@@ -6,7 +6,7 @@ use yii\web\Controller;
 use denisok94\helper\Helper as H;
 
 /**
- * 
+ * @author vitaliy-pashkov 
  */
 class StatusController extends Controller
 {
