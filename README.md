@@ -10,15 +10,16 @@
 ___
 
 0. [Установка](#Установка)
-    1. [Использование](#Использование)
-    2. [include](#include)
-1. [ArrayHelper](#ArrayHelper)
-2. [DataHelper](#DataHelper)
-3. [StringHelper](#StringHelper)
-4. [FileHelper](#FileHelper)
-5. [HtmlHelper](#HtmlHelper)
-6. [OtherHelper](#OtherHelper)
-7. [Framework Integration](#Framework-Integration)
+    1. [include](#include)
+1. [Использование](#Использование)
+    1. [ArrayHelper](#ArrayHelper)
+    2. [DataHelper](#DataHelper)
+    3. [StringHelper](#StringHelper)
+    4. [FileHelper](#FileHelper)
+    5. [HtmlHelper](#HtmlHelper)
+    6. [OtherHelper](#OtherHelper)
+2. [MicroTimer](#MicroTimer)
+3. [Framework Integration](#Framework-Integration)
     1. [Yii2](#Yii2)
         - [MetaTag](#MetaTag)
         - [StatusController](#StatusController)
@@ -44,6 +45,18 @@ or add to the `require` section of your `composer.json` file:
 php composer update
 ```
 
+## include
+
+Если вы скачали репозиторий архивом (zip/tar).
+
+Можно создать в любом удобном месте своего приложения файл `H.php` с классом `H` и унаследовать его от `Helper`.
+
+```php
+include_once '{path to repository}/src/Helper.php';
+use \denisok94\helper\Helper;
+class H extends Helper {}
+```
+
 ## Использование
 
 ```php
@@ -65,19 +78,6 @@ class H extends Helper {}
 ```php
 use app\componets\H;
 ```
-
-## include
-
-Если вы скачали репозиторий архивом (zip/tar).
-
-Можно создать в любом удобном месте своего приложения файл `H.php` с классом `H` и унаследовать его от `Helper`.
-
-```php
-include_once '{path to repository}/src/Helper.php';
-use \denisok94\helper\Helper;
-class H extends Helper {}
-```
-
 ___
 
 # ArrayHelper
@@ -165,6 +165,24 @@ ___
 > isBot() не даёт 100% гарантии.
 Кому разрешить/запретить доступ/функционал - решать исключительно Вам.
 Запрещая всё и всем, Вы можете лишится продвижения сайта в поисковых ресурсах и/или красивых привью в соц сетях =). 
+___
+
+# MicroTimer
+
+Узнать, сколько времени выполняется код
+
+```php
+use \denisok94\helper\MicroTimer;
+$queryTimer = new MicroTimer(); // start
+// code ...
+$queryTimer->stop();
+
+// result:
+$time = $queryTimer->elapsed(); 
+// or/and
+printf($queryTimer);
+```
+> взято у [phpliteadmin](https://bitbucket.org/phpliteadmin/public/src/master/classes/MicroTimer.php)
 ___
 
 # Framework Integration
