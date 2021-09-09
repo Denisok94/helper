@@ -1,10 +1,10 @@
 <h1 align = "center"> Helper Class </h1>
 
 Класс с набором полезных функций, по мнению автора.
-
 Не претендует на идеальность и единственное верное решение.
 
-Доки чуть позже)
+A class with a set of useful functions, according to the author.
+It does not pretend to be ideal and the only correct solution.
 
 ![https://img.shields.io/badge/license-BSD-green](https://img.shields.io/badge/license-BSD-green)
 ___
