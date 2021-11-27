@@ -57,7 +57,7 @@ class MetaTag
             'title' => $this->title,
             // 'description' => "",
             // 'keywords' => "",
-            'locale' => Yii::$app->language,
+            'locale' => $this->language,
             'url' => Url::to([], true), // Url::base(true) ,
             'domain' => $this->domain, // 
             'site' => "@" . ucwords($this->name),
@@ -69,7 +69,6 @@ class MetaTag
             'site_name' =>  ucwords($this->name), // 
             'card' => 'summary_large_image', // summary
             'type' => 'website', //website, profile
-            'locale' => $this->language,
         ];
     }
     /**
@@ -132,7 +131,51 @@ class MetaTag
 
     /**
      * @param mixed $view $this->view
-     * @param array $tags [name => content]
+     * @param array $tags ['name' => 'content', 'name' => 'content', ...]
+     * 
+     * names: 
+     * - title - default: `$this->view->title` or `Yii::$app->name`
+     * - description
+     * - keywords
+     * - author/creator
+     * - image, image:src, image:width, image:height
+     * 
+     * ```php
+     * list($width, $height, $type, $attr) = getimagesize(Yii::$app->getBasePath() . "/web/image.jpg");
+     * 'image' => Url::to('image.jpg', true),
+     * 'image:src' => Url::to('image.jpg', true),
+     * 'image:width' => $width,
+     * 'image:height' => $height,
+     * ```
+     * - card - summary or summary_large_image - default: `summary_large_image`
+     * - url - default: `Url::to([], true)`
+     * - locale - default: `Yii::$app->language` or `'en-EN'`
+     * - site - default: `Yii::$app->name`
+     * - domain - default: `Yii::$app->domain` or `Url::home(true)`
+     * - type - website or profile - default: `website`
+     * @example 1:
+     * in web.php or config.php
+     * ```php
+     *  $config = [
+     *      'name' => 'Site Name',
+     *      'language' => 'Site Base Language',
+     * ```
+     * 
+     * @example 2:
+     * ```php
+     * use \denisok94\helper\yii2\MetaTag;
+     * class NewsController extends Controller {
+     * public function actionView($id) {
+     *    $model = $this->findModel($id);
+     *    MetaTag::tag($this->view, [
+     *        'title' => $model->title,
+     *        'description' => substr($model->text, 0, 100),
+     *        'keywords' => $model->tagsToString,
+     *        'image' => $model->image->url,
+     *    ]);
+     *    return $this->render('view', ['model' => $model]);
+     * }}
+     * ```
      */
     static function tag($view, $tags = [])
     {
