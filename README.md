@@ -236,19 +236,23 @@ use \denisok94\helper\yii2\MetaTag;
 Указываются в `action` контроллере, перед `render()`.
 ```php
 namespace app\controllers;
-use app\componets\MetaTag;
+use \denisok94\helper\yii2\MetaTag;
 
-class SiteController extends Controller
+class NewsController extends Controller
 {
     // ...
-    public function actionAbout()
+    public function actionView($id)
     {
+        $model = $this->findModel($id);
         MetaTag::tag($this->view, [
-            'title' => "About My site",
-            'description' => "About my site",
-            'url' => "https://s-denis.ru/site/about",
+            'title' => $model->title,
+            'description' => substr($model->text, 0, 100),
+            'keywords' => $model->tags, // string
+            'image' => $model->image->url,
         ]);
-        return $this->render('about');
+        return $this->render('view', [
+            'model' => $model,
+        ]);
     }
     // ...
 }
