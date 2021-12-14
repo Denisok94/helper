@@ -1,12 +1,12 @@
 {
     "name": "denisok94/helper",
     "description": "A class with a set of functions to facilitate programming",
-    "keywords": ["php helper class"],
+    "keywords": ["php helper class", "yii2-extension"],
     "license": "BSD-3-Clause",
     "support": {
         "source": "https://github.com/Denisok94/"
     },
-    "version": "0.6",
+    "version": "0.7",
     "authors": [{
         "name": "Denisok94",
         "email": "denisok94@inbox.ru",
