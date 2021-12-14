@@ -42,7 +42,9 @@ or add to the `require` section of your `composer.json` file:
 ```
 
 ```bash
-php composer update
+composer update
+# or
+php composer.phar update
 ```
 
 ## include
