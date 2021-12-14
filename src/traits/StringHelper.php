@@ -127,6 +127,7 @@ trait StringHelper
     }
 
     /**
+     * человекопонятный URL
      * @param string $source
      * @return string
      */
