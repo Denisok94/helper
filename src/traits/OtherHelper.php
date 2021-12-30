@@ -126,7 +126,8 @@ trait OtherHelper
      * - `put`: put параметры, если есть.
      * - `delete`: delete параметры, если есть.
      * - `headers`: заголовки запроса.
-     * - `php://input`: если есть put или delete.
+     * - `raw`: все request параметры.
+     * - `php://input`(old): все request параметры, если есть put или delete.
      */
     public static function getRequest()
     {
@@ -153,6 +154,8 @@ trait OtherHelper
                 $a[$method][$value[0]] = $value[1];
             }
         }
+        // ----------------------------------
+        $a['raw'] = file_get_contents('php://input');
         // ----------------------------------
         foreach (getallheaders() as $name => $value) {
             $a['headers'][$name] = $value;
