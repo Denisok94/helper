@@ -19,14 +19,21 @@ trait Other
      * @param string $out путь лог файла с результатом команды,
      * @param string $error путь лог файла с ошибками,
      */
-    public static function exec($path, $params, $sync = true, $out = '../runtime/logs/consoleOut', $error = '../runtime/logs/consoleError')
+    public static function exec($path, $params, $sync = true, $out = 'runtime/logs/consoleOut', $error = 'runtime/logs/consoleError')
     {
         $dir = Yii::$app->getBasePath();
         $dt = DataHelper::currentDate("d.m.Y");
         $syncStr = $sync ? '&' : '';
         $json = addcslashes(ArrayHelper::toJson($params), '"');
-        $command = "php $dir/yii $path --json=\"$json\" >> $out.$dt.log 2>> $error.$dt.log $syncStr";
-        exec($command);
+        $command = "php $dir/yii $path --json=\"$json\" >> $dir/$out.$dt.log 2>> $dir/$error.$dt.log $syncStr";
+		// exec($command);
+		exec($command, $output, $return_val); 
+		if ($return_val != 0) 
+		{
+			$id = microtime(true);
+			Other::log('execError', "$id | error code: $return_val, command: $command, out: ". ArrayHelper::toJson($output));
+			return "ERROR in exec '$path', code: $return_val, id: $id\n. learn more in '/runtime/logs/execError.$dt.log'";
+		}
     }
 
     /**
@@ -70,7 +77,8 @@ trait Other
      */
     public static function log($name, $value)
 	{
+        $dir = Yii::$app->getBasePath();
 		$dt = DataHelper::currentDate("d.m.Y");
-		file_put_contents(Yii::$app->getBasePath() . "/runtime/logs/$name.$dt.log", DataHelper::currentDt() . ' | ' . $value . "\n", FILE_APPEND);
+		file_put_contents(Yii::$app->getBasePath() . "$dir/runtime/logs/$name.$dt.log", DataHelper::currentDt() . ' | ' . $value . "\n", FILE_APPEND);
 	}
 }
