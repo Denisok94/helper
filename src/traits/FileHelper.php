@@ -115,11 +115,20 @@ trait FileHelper
 	 */
 	public static function ext($file)
 	{
-		$fname = basename($file); // берём имя файла (name.ext)
-		$fileType = pathinfo($fname); // берём о нём информацию
-		$fileName = $fileType['filename']; // filename - имя файла
-		$extension = isset($fileType['extension']) ? $fileType['extension'] : ''; // extension - расширение файла
-		return strtolower($extension); // нижний регистр (PNG → png)
+		$extension = pathinfo(basename($file), PATHINFO_EXTENSION);
+		return strtolower($extension ?? ''); // нижний регистр (PNG → png)
+	}
+
+	/**
+	 * to do
+	 * @param string $file_path
+	 *
+	 * https://www.iana.org/assignments/media-types/media-types.xhtml
+	 * https://www.php.net/manual/ru/function.mime-content-type.php
+	 */
+	public static function mimeType($file_path)
+	{
+		
 	}
 
 	/**
@@ -257,12 +266,11 @@ trait FileHelper
 	 */
 	public static function fileRead($file_path)
 	{
+		$fname = basename($file_path); // берём имя файла (name.ext)
 		if (!file_exists($file_path)) {
-			$fname = basename($file_path); // берём имя файла (name.ext)
 			throw new \Exception("Ошибка: файл $fname не существует!");
 		}
 		if (!filesize($file_path)) {
-			$fname = basename($file_path); // берём имя файла (name.ext)
 			throw new \Exception("Файл $fname пустой!");
 		}
 		// Открываем поток и получаем его дескриптор
