@@ -28,17 +28,14 @@ trait HtmlHelper
         ];
         // ----------------------------------
         //  информация о файле
-        $fname = basename($src);
-        $filetupe = pathinfo($fname);
-        $ftupe = strtolower($filetupe['extension']); //расширение файла в нижнем регистре
+        $f_type = FileHelper::ext(basename($src)); //расширение файла в нижнем регистре
         // указываем тип файла и кодек, если известен
         $a_type = [
             'mp4' => 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"',
             'webm' => 'video/webm; codecs="vp8, vorbis"',
             'ogv' => 'video/ogg; codecs="theora, vorbis"'
         ];
-        $type = isset($a_type[$ftupe]) ? 'type="' . $a_type[$ftupe] . '"' : '';
-
+        $type = isset($a_type[$f_type]) ? "type='" . $a_type[$f_type] . "'" : '';
         // если заданы параметры
         if ($attribution) {
             // это массив
