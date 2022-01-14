@@ -11,7 +11,7 @@ trait ArrayHelper
 {
 
     /**
-     * Найти в массиве
+     * Взять в массиве элемент по ключу
      * @param array $array
      * @param string $path
      * @param bool $nullValue
@@ -37,7 +37,7 @@ trait ArrayHelper
     }
 
     /**
-     * Добавить/заменить в массиве
+     * Добавить/заменить элемент в массиве
      * @param array $array
      * @param string $path
      * @param mixed $value
@@ -88,6 +88,12 @@ trait ArrayHelper
      * @param array $array 
      * @param string $wrapper кавычки
      * @return string
+     * 
+     * @example Пример:
+     * ```php
+     * $items = H::implodeWrap(',', $ids, "'");  // '1','2','3'
+     * ```
+     * 
      */
     public static function implodeWrap($glue, $array, $wrapper)
     {
@@ -108,6 +114,13 @@ trait ArrayHelper
      * @param array $array 
      * @param mixed $callback функция обработки
      * @return string
+     * 
+     * @example Пример:
+     * ```php
+     * $ids = H::implodeWith(", ", $items, function ($item) {
+     *  return "{$item['id']}";
+     * }); // 1, 2, 3
+     * ```
      */
     public static function implodeWith($glue, $array, $callback)
     {
@@ -120,8 +133,49 @@ trait ArrayHelper
     }
 
     /**
-     * @param array $array массив,
-     * @return string
+     *
+     * @param string $glue делитель
+     * @param array $array 
+     * @param string $key
+     *
+     * @example Пример:
+     * ```php
+     * $ids = H::implodeByKey(', ', $items, 'id');  // 1, 2, 3
+     * ```
+     */
+    public static function implodeByKey($glue, $array, $key)
+    {
+        $clear = [];
+        foreach ($array as $value) {
+            $clear[] = ArrayHelper::get($value, $key);
+        }
+        return implode($glue, $clear);
+    }
+
+    /**
+     *
+     * @param string $glue делитель
+     * @param array $array 
+     * @param string $key
+     * @param string $wrapper кавычки
+     *
+     * @example Пример:
+     * ```php
+     * $ids = H::implodeByKeyWrap(', ', $items, 'id', "'");  // '1', '2', '3'
+     * ```
+     */
+    public static function implodeByKeyWrap($glue, $array, $key, $wrapper)
+    {
+        $clear = [];
+        foreach ($array as $value) {
+            $clear[] = $wrapper . ArrayHelper::get($value, $key) . $wrapper;
+        }
+        return implode($glue, $clear);
+    }
+
+    /**
+     * @param array $array
+     * @return string json
      */
     public static function toJson($array)
     {
@@ -129,7 +183,7 @@ trait ArrayHelper
     }
 
     /**
-     * @param string $json json,
+     * @param string $json
      * @return array
      */
     public static function toArray($json)
