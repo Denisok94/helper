@@ -135,4 +135,42 @@ trait StringHelper
     {
         return StringHelper::slug(StringHelper::ru2Lat($source));
     }
+
+    /**
+     * Поиск слова в тексте (строке) и вывод части текста вокруг искомого слова
+     * 
+     * ```php
+     * H::strchop($text, $word, 50, function ($word) {
+     *  return "<span class=\"word\">" . $word . "</span>";
+     * });
+     * ```
+     * 
+     * @param string $data строка в которой ищем
+     * @param string $word что ищем
+     * @param integer $interval интервал символов до и символов после
+     * @param mixed $callback функция обработки, для выделения слова из текста
+     * @param bool $ci нечувствителен к регистру, по умолчанию `true`
+     * 
+     * @return string|false результат, если нет вхождения - `false`
+     * @author almix
+     * 
+     */
+    public static function strchop($data, $word, $interval, $callback, $ci = true)
+    {
+        $position = $ci ? mb_stripos($data, $word) : mb_strpos($data, $word);
+        //ничего нет - вернули false
+        if (!$position) return false;
+        //Определяем стартовую позицию новой строки
+        $start_position = $position - $interval;
+        //От конца слова определили конечный интервал
+        $end_position = $position + mb_strlen($word) + $interval;
+        //Если стартовая позиция отрицательная делаем в 0
+        if ($start_position < 0) $start_position = 0;
+        //определяем длину новой строки 
+        $len = $end_position - $start_position;
+        $length = (mb_strlen($data) > $len) ? mb_strripos(mb_substr($data, 0, $len), ' ') : $len;
+        //вернули результат
+        $kusok = '...' . mb_substr($data, $start_position, $length, 'UTF-8') . '...';
+        return str_replace($word, $callback($word), $kusok);
+    }
 }
