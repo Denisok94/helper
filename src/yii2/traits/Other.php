@@ -26,14 +26,13 @@ trait Other
         $syncStr = $sync ? '&' : '';
         $json = addcslashes(ArrayHelper::toJson($params), '"');
         $command = "php $dir/yii $path --json=\"$json\" >> $dir/$out.$dt.log 2>> $dir/$error.$dt.log $syncStr";
-		// exec($command);
-		exec($command, $output, $return_val); 
-		if ($return_val != 0) 
-		{
-			$id = microtime(true);
-			Other::log('execError', "$id | error code: $return_val, command: $command, out: ". ArrayHelper::toJson($output));
-			return "ERROR in exec '$path', code: $return_val, id: $id\n. learn more in '/runtime/logs/execError.$dt.log'";
-		}
+        // exec($command);
+        exec($command, $output, $return_val);
+        if ($return_val != 0) {
+            $id = microtime(true);
+            Other::log('execError', "$id | error code: $return_val, command: $command, out: " . ArrayHelper::toJson($output));
+            return "ERROR in exec '$path', code: $return_val, id: $id\n. learn more in '/runtime/logs/execError.$dt.log'";
+        }
     }
 
     /**
@@ -49,6 +48,7 @@ trait Other
             $oldArray = ArrayHelper::toArray(file_get_contents($fileCache));
             $newArray = array_merge($oldArray, $array);
         } else {
+            if (!is_dir(Yii::$app->getBasePath() . "/cache")) self::createDirCache();
             $newArray = $array;
         }
         $fpc = file_put_contents($fileCache, ArrayHelper::toJson($newArray), LOCK_EX);
@@ -71,14 +71,32 @@ trait Other
     }
 
     /**
+     * Удалить кэш
+     * @param string $name имя кэша,
+     * @return bool
+     */
+    public static function clearCache($name)
+    {
+        $fileCache = Yii::$app->getBasePath() . "/cache/$name.json";
+        return \yii\helpers\FileHelper::unlink($fileCache);
+    }
+
+    private static function createDirCache()
+    {
+        $dirCache = Yii::$app->getBasePath() . "/cache";
+        \yii\helpers\FileHelper::createDirectory($dirCache);
+        file_put_contents($dirCache . "/.gitignore", "*\n!.gitignore\n");
+    }
+
+    /**
      * Записать логи
      * @param string $name имя файла
      * @param string $value текст лога
      */
     public static function log($name, $value)
-	{
+    {
         $dir = Yii::$app->getBasePath();
-		$dt = DataHelper::currentDate("d.m.Y");
-		file_put_contents(Yii::$app->getBasePath() . "$dir/runtime/logs/$name.$dt.log", DataHelper::currentDt() . ' | ' . $value . "\n", FILE_APPEND);
-	}
+        $dt = DataHelper::currentDate("d.m.Y");
+        file_put_contents("$dir/runtime/logs/$name.$dt.log", DataHelper::currentDt() . ' | ' . $value . "\n", FILE_APPEND);
+    }
 }
