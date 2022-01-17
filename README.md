@@ -32,7 +32,9 @@ ___
 Run:
 
 ```bash
-php composer require --prefer-dist denisok94/helper
+composer require --prefer-dist denisok94/helper
+# or
+php composer.phar require --prefer-dist denisok94/helper
 ```
 
 or add to the `require` section of your `composer.json` file:
@@ -70,7 +72,7 @@ use \denisok94\helper\Helper as H;
 Внутри класса `H` добавить свои функции с повторяющемся действиями или перезаписать имеющиеся в `Helper`.
 
 ```php
-namespace app\componets;
+namespace app\components;
 use \denisok94\helper\Helper;
 class H extends Helper {}
 ```
@@ -78,7 +80,7 @@ class H extends Helper {}
 И в дальнейшем использовать его.
 
 ```php
-use app\componets\H;
+use app\components\H;
 ```
 ___
 
@@ -208,12 +210,12 @@ use \denisok94\helper\YiiHelper;
 | setCache |  |  |
 | getCache |  |  |
 
-Можно создать в папке `componets` файл `H.php` с классом `H` и унаследовать его от `YiiHelper`.
+Можно создать в папке `components` файл `H.php` с классом `H` и унаследовать его от `YiiHelper`.
 
 Внутри класса `H` добавить свои функции с повторяющемся действиями или перезаписать имеющиеся в `YiiHelper`.
 
 ```php
-namespace app\componets;
+namespace app\components;
 use \denisok94\helper\YiiHelper;
 class H extends YiiHelper {}
 ```
@@ -221,7 +223,7 @@ class H extends YiiHelper {}
 И в дальнейшем использовать его.
 
 ```php
-use app\componets\H;
+use app\components\H;
 ```
 
 ___
