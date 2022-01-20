@@ -137,6 +137,19 @@ trait StringHelper
     }
 
     /**
+     * экранирование
+     * @param string $value
+     * @return string
+     */
+    public static function slashes($value)
+    {
+        $value = htmlspecialchars($value); // Заменяем символы ‘<’ и ‘>’на ASCII-код
+        $value = trim($value); // Удаляем лишние пробелы
+        $value = addslashes($value); // Экранируем запрещенные символы
+        return $value;
+    }
+
+    /**
      * Поиск слова в тексте (строке) и вывод части текста вокруг искомого слова
      * 
      * ```php
