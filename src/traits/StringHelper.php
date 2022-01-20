@@ -137,6 +137,18 @@ trait StringHelper
     }
 
     /**
+     * Get the class through basename
+     *
+     * @param string|object $class
+     * @return string
+     */
+    public static function getClassName($class)
+    {
+        $class = is_object($class) ? get_class($class) : $class;
+        return basename(str_replace('\\', '/', $class));
+    }
+
+    /**
      * экранирование
      * @param string $value
      * @return string
