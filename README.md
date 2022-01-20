@@ -127,6 +127,8 @@ ___
 | ru2Lat |  | Транслитирование, ГОСТ 7.79-2000, схема А |
 | ruToLat |  | Транслитирование, ГОСТ 7.79-2000, схема Б |
 | ru2Slug |  | преобразовать строку, на русском (схема А), в человекопонятный url |
+| getClassName |  | Получить имя класса |
+| slashes |  | экранирование |
 
 ___
 
@@ -207,8 +209,9 @@ use \denisok94\helper\YiiHelper;
 |----------------|:---------:|:----------------|
 | exec |  | Выполнить консольную команду |
 | log |  | Записать данные в лог файл. Файлы хранятся в `runtime/logs/` |
-| setCache |  |  |
-| getCache |  |  |
+| setCache |  | Запомнить массив в кэш |
+| getCache |  | Взять массив из кэша |
+| clearCache |  | Удалить кэш |
 
 Можно создать в папке `components` файл `H.php` с классом `H` и унаследовать его от `YiiHelper`.
 
@@ -226,6 +229,39 @@ class H extends YiiHelper {}
 use app\components\H;
 ```
 
+В кэш можно сохранить результат запроса из бд, который часто запрашивается, например для фильтра.
+К тому же, этот фильтр, может быть, использоваться несколько раз на странице или сама страница с ним, может, многократно обновляться/перезагружаться.
+
+```php
+use app\components\H;
+
+class Filter
+{
+    //.....
+    /**
+     * @return array
+     */
+    public static function getTypes()
+    {
+        $types = H::getCache('types'); // dir: app/cache/types.json
+        if ($types) {
+            return $types;
+        } else {
+            $types = \app\models\Types::find()
+                ->select(['id', 'name'])
+                ->asArray()
+                ->all();
+            $array = [];
+            foreach ($types as $key => $value) {
+                $array[$value['id']] = ucfirst($value['name']);
+            }
+
+            H::setCache('types', $array);
+            return $array;
+        }
+    }
+}
+```
 ___
 
 ### **MetaTag**
