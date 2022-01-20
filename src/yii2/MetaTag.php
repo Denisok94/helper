@@ -60,7 +60,7 @@ class MetaTag
             'locale' => $this->language,
             'url' => Url::to([], true), // Url::base(true) ,
             'domain' => $this->domain, // 
-            'site' => "@" . ucwords($this->name),
+            'site' => "@" . str_replace(' ', '_', ucwords($this->name)),
             // 'image' => Url::to('30.jpg', true),
             // 'image:src' => Url::to('30.jpg', true),
             // 'image:width' => $width,
