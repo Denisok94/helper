@@ -48,7 +48,8 @@ trait Other
             $oldArray = ArrayHelper::toArray(file_get_contents($fileCache));
             $newArray = array_merge($oldArray, $array);
         } else {
-            if (!is_dir(Yii::$app->getBasePath() . "/cache")) self::createDirCache();
+            $dirCache = pathinfo($fileCache, PATHINFO_DIRNAME);
+            if (!is_dir($dirCache)) self::createDirCache($dirCache);
             $newArray = $array;
         }
         $fpc = file_put_contents($fileCache, ArrayHelper::toJson($newArray), LOCK_EX);
@@ -81,9 +82,8 @@ trait Other
         return \yii\helpers\FileHelper::unlink($fileCache);
     }
 
-    private static function createDirCache()
+    private static function createDirCache($dirCache)
     {
-        $dirCache = Yii::$app->getBasePath() . "/cache";
         \yii\helpers\FileHelper::createDirectory($dirCache);
         file_put_contents($dirCache . "/.gitignore", "*\n!.gitignore\n");
     }
