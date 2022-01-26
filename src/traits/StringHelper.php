@@ -162,6 +162,103 @@ trait StringHelper
     }
 
     /**
+     * Парсинг BB-кодов
+     * 
+     * @param string $text
+     * @return string
+     * 
+     * ```php
+     * $this->text = H::slashes($this->text);
+     * $this->text = H::replaceBBCode($this->text);
+     * ```
+     * Поддержка:
+     * - [b]жирный[/b]
+     * - \*\*жирный\*\*
+     * - [i]курсив[/i]
+     * - [u]подчеркнутый[/u]
+     * - \_\_Подчеркнутый\_\_
+     * - [s]зачеркнутый[/s]
+     * - \~\~зачеркнутый\~\~
+     * - [code]code[/code]
+     * - [code=php]code[/code]
+     * - \`\`\`code\`\`\`
+     * - ||spoiler||
+     * - ​[spoiler=спойлер]спойлер[/spoiler]
+     * - [quote][/quote]
+     * - [quote=][/quote]
+     * - [url=][/url]
+     * - [url][/url]
+     * - [img][/img]
+     * - [img=]
+     * - [size=2][/size] в %
+     * - [color=][/color]
+     * - [list][/list] - ul
+     * - [listn][/listn] - ol
+     * - [\*][\*] - li
+     * 
+     * https://myrusakov.ru/php-parsing-bb.html
+     */
+    public static function replaceBBCode($text_post)
+    {
+        $str_search = array(
+            "#\\\n#is",  // 1
+            "#\[b\](.+?)\[\/b\]#is", // 2
+            "#\*\*(.+?)\*\*#is", // 2.2
+            "#\[i\](.+?)\[\/i\]#is", // 3
+            "#\[u\](.+?)\[\/u\]#is", // 4
+            "#\_\_(.+?)\_\_#is", // 4.2
+            "#\[s\](.+?)\[\/s\]#is", // 5
+            "#\~\~(.+?)\~\~#is", // 5.2
+            "#\[code\](.+?)\[\/code\]#is", // 6
+            "#\[code=(.+?)\](.+?)\[\/code\]#is", // 6.2
+            "#\`\`\`(.+?)\`\`\`#is", // 6.3
+            "#\|\|(.+?)\|\|#is", // 6.4
+            "#\[spoiler=(.+?)\](.+?)\[\/spoiler\]#is", // 6.5
+            "#\[quote\](.+?)\[\/quote\]#is", // 7
+            "#\[quote=(.+?)\](.+?)\[\/quote\]#is", // 8
+            "#\[url=(.+?)\](.+?)\[\/url\]#is", // 9
+            "#\[url\](.+?)\[\/url\]#is", // 10
+            "#\[img\](.+?)\[\/img\]#is", // 11
+            "#\[img=(.+?)\]#is", // 12
+            "#\[size=(.+?)\](.+?)\[\/size\]#is", // 13
+            "#\[color=(.+?)\](.+?)\[\/color\]#is", // 14
+            "#\[list\](.+?)\[\/list\]#is", // 15
+            "#\[listn\](.+?)\[\/listn\]#is", // 16
+            "#\[\*\](.+?)\[\/\*\]#" // 17
+        );
+        $str_replace = array(
+            "<br />",  // 1
+            "<b>\\1</b>", // 2
+            "<b>\\1</b>", // 2.2
+            "<i>\\1</i>", // 3
+            "<span style='text-decoration:underline'>\\1</span>", // 4
+            "<span style='text-decoration:underline'>\\1</span>", // 4.2
+            "<span style='text-decoration:line-through'>\\1</span>", // 5
+            "<span style='text-decoration:line-through'>\\1</span>", // 5.2
+            "<code class='code'>\\1</code>", // 6
+            "<code class='code \\1'>\\2</code>", // 6.2
+            "<code class='code'>\\1</code>", // 6.3
+            // "<span class='spoiler'>\\1</span>", // 6.4
+            "<details class=\"spoiler\"><summary class=\"spoiler-title\"><span>спойлер</span></summary><p class=\"spoiler-text\">\\1</p></details>", // 6.4
+            "<details class=\"spoiler\"><summary class=\"spoiler-title\"><span>\\1</span></summary><p class=\"spoiler-text\">\\2</p></details>", // 6.5
+            // '<input type="checkbox" id="1" class="del" /><label for="1" class="del" align="left">спойлер</label><div>[\\1]</div>', // 6.4
+            // '<input type="checkbox" id="1" class="del" /><label for="1" class="del" align="left">\\1</label><div>[\\2]</div>', // 6.5
+            "<blockquote class='quote'>\\1</blockquote>", // 7
+            "<blockquote class='quote'><p>\\2</p><small>\\1</small></blockquote>", // 8
+            "<a href='\\1' target=\"_blank\" >\\2</a>", // 9
+            "<a href='\\1' target=\"_blank\" >\\1</a>", // 10
+            "<img src='\\1' alt='\\1' class='img'/>", // 11
+            "<img src='\\1' alt='\\1' class='img'/>", // 12
+            "<span style='font-size:\\1%'>\\2</span>", // 13
+            "<span style='color:\\1'>\\2</span>", // 14
+            "<ul class='ul'>\\1</ul>", // 15
+            "<ol class='ol'>\\1</ol>", // 16
+            "<li class='li'>\\1</li>" // 17
+        );
+        return preg_replace($str_search, $str_replace, $text_post);
+    }
+
+    /**
      * [test/в тесте] Поиск слова в тексте (строке) и вывод части текста вокруг искомого слова
      * 
      * ```php

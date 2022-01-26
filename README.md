@@ -129,7 +129,33 @@ ___
 | ru2Slug |  | преобразовать строку, на русском (схема А), в человекопонятный url |
 | getClassName |  | Получить имя класса |
 | slashes |  | экранирование |
+| replaceBBCode |  | Парсинг BB-кодов |
 
+## replaceBBCode
+Поддержка:
+- [b]жирный[/b]
+- \*\*жирный\*\*
+- [i]курсив[/i]
+- [u]подчеркнутый[/u]
+- \_\_Подчеркнутый\_\_
+- [s]зачеркнутый[/s]
+- \~\~зачеркнутый\~\~
+- [code]code[/code]
+- [code=php]code[/code]
+- \`\`\`code\`\`\`
+- ||spoiler||
+- [spoiler=спойлер]спойлер[/spoiler]
+- [quote][/quote]
+- [quote=][/quote]
+- [url=][/url]
+- [url][/url]
+- [img][/img]
+- [img=]
+- [size=2][/size] в %
+- [color=][/color]
+- [list][/list] - ul
+- [listn][/listn] - ol
+- [\*][\*] - li
 ___
 
 # FileHelper
@@ -318,7 +344,7 @@ class MyController extends StatusController
 ```
 
 ```php
-// получить всё сообщение полностью
+// получить все сообщение полностью
 $message = $this->post;
 // получить параметр из сообщения
 $phone = $this->getPost('phone');
