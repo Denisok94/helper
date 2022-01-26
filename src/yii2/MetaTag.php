@@ -8,8 +8,35 @@ use yii\helpers\Html;
 
 /**
  * MetaTag class
+ * 
+ * Установить MetaTag на страницу
+ * 
  * @author Denisok94
  * @link https://developers.facebook.com/tools/debug/
+ * 
+ * Установить MetaTag на страницу
+ * 
+ * @example Пример:
+ * ```php
+ * namespace app\controllers;
+ * use \denisok94\helper\yii2\MetaTag;
+ * class NewsController extends Controller
+ * {
+ *      public function actionView($id)
+ *      {
+ *          $model = $this->findModel($id);
+ *          MetaTag::tag($this->view, [
+ *              'title' => $model->title,
+ *              'description' => substr($model->text, 0, 100),
+ *              'keywords' => $model->tags, // string
+ *              'image' => $model->image->url,
+ *          ]);
+ *          return $this->render('view', [
+ *              'model' => $model,
+ *          ]);
+ *      }
+ * }
+ * ```
  */
 class MetaTag
 {
@@ -24,7 +51,7 @@ class MetaTag
         'title', 'description', 'url', 'domain', 'site', 'image', 'image:src', 'creator', 'card'
     ];
     private $ogTag = [
-        'title', 'description', 'url', 'locale', 'image', 'image:src', 'image:type', 'image:width', 'image:height', 'site_name', 'locale', 'type',
+        'title', 'description', 'url', 'locale', 'type', 'image', 'image:src', 'image:type', 'image:width', 'image:height', 'site_name',
     ];
 
     /**

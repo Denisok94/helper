@@ -6,6 +6,34 @@ use yii\web\Controller;
 use denisok94\helper\Helper as H;
 
 /**
+ * StatusController
+ * 
+ * Для общения по формату json. (REST API)
+ * 
+ * @example Пример:
+ * ```php
+ * // получить все сообщение полностью
+ * $message = $this->post;
+ * // получить параметр из сообщения
+ * $phone = $this->getPost('phone');
+ * ```
+ * 
+ * @example Пример:
+ * ```php
+ * // Сообщить об успешной обработки
+ * return $this->success(); // ['status' => 'OK', 'data' => []];
+ * // Вернуть результат работы
+ * return $this->success($data); // ['status' => 'OK', 'data' => $data];
+ * 
+ * // Сообщить об ошибке
+ * \Yii::$app->response->statusCode = 400; // or status http code
+ * return $this->error($error, $text, $data); // ['status' => 'FAIL', ...]
+ * 
+ * // Собственный формат ответа 
+ * $responses = [];
+ * return $this->send($responses);
+ * ```
+ * 
  * @author vitaliy-pashkov 
  */
 class StatusController extends Controller

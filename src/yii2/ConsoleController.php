@@ -5,7 +5,33 @@ namespace denisok94\helper\yii2;
 use yii\console\Controller;
 
 /**
+ * ConsoleController
+ * 
+ * 
+ * @example Пример:
+ * ```php
+ * // Вызвать `action` консольного контроллера:
+ * H::exec('сontroller/action', [params]);
+ * // Получить переданные параметры
+ * $init = $this->params;
+ * ```
+ * 
+ * @example Пример:
+ * ```php
+ * H::exec('my/test', ['test' => 'test']);
+ * 
+ * class MyController extends ConsoleController
+ * {
+ *      public function actionTest()
+ *      {
+ *          $init = $this->params;
+ * 		    $test = $this->params['test'];
+ *      }
+ * }
+ * 
+ * ```
  * @author vitaliy-pashkov 
+ * 
  */
 class ConsoleController extends Controller
 {
