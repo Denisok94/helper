@@ -19,7 +19,7 @@ use yii\console\Controller;
  * @example Пример:
  * ```php
  * H::exec('my/test', ['test' => 'test']);
- * 
+ * namespace app\commands;
  * class MyController extends ConsoleController
  * {
  *      public function actionTest()
