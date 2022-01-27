@@ -38,7 +38,7 @@ trait Other
     /**
      * Создать/Добавить/обновить кэш
      * @param string $name имя кэша,
-     * @param array $array данные, которые надо закэшировать,
+     * @param array $array данные, которые надо за кэшировать,
      * @return bool успех записи
      */
     public static function setCache($name, $array)
