@@ -95,6 +95,8 @@ ___
 | parse |  | Заменить шаблон |
 | implodeWrap |  | Объединяет элементы массива в строку + обернуть текст в кавычки |
 | implodeWith |  | Объединяет элементы массива в строку, с предпользовательской обработкой |
+| implodeByKey |  |  |
+| implodeByKeyWrap |  |  |
 | toJson |  | Преобразовать массив в json |
 | toArray |  | Преобразовать json в массив |
 | arrayOrderBy |  | Сортировка массива |
@@ -237,7 +239,8 @@ use \denisok94\helper\YiiHelper;
 | log |  | Записать данные в лог файл. Файлы хранятся в `runtime/logs/` |
 | setCache |  | Запомнить массив в кэш |
 | getCache |  | Взять массив из кэша |
-| clearCache |  | Удалить кэш |
+| deleteCache |  | Удалить кэш |
+| ~~clearCache~~ | | |
 
 Можно создать в папке `components` файл `H.php` с классом `H` и унаследовать его от `YiiHelper`.
 
@@ -255,10 +258,13 @@ class H extends YiiHelper {}
 use app\components\H;
 ```
 
+setCache/getCache
+
 В кэш можно сохранить результат запроса из бд, который часто запрашивается, например для фильтра.
 К тому же, этот фильтр, может быть, использоваться несколько раз на странице или сама страница с ним, может, многократно обновляться/перезагружаться.
 
 ```php
+namespace app\components;
 use app\components\H;
 
 class Filter
@@ -274,14 +280,11 @@ class Filter
             return $types;
         } else {
             $types = \app\models\Types::find()
-                ->select(['id', 'name'])
-                ->asArray()
-                ->all();
+                ->select(['id', 'name'])->all();
             $array = [];
             foreach ($types as $key => $value) {
-                $array[$value['id']] = ucfirst($value['name']);
+                $array[$value->id] = ucfirst($value->name);
             }
-
             H::setCache('types', $array);
             return $array;
         }
@@ -325,6 +328,23 @@ class NewsController extends Controller
         ]);
     }
     // ...
+    public function actionView($id)
+    {
+        $model = $this->findModel($id);
+        $this->view->title = $model->title;
+        list($width, $height, $type, $attr) = getimagesize(Yii::$app->getBasePath() . "/web/{$model->image->path}");
+        MetaTag::tag($this->view, [
+            'description' => $model->announce,
+            'keywords' => implode(', ', $model->tags), // if tags array
+            'image' => \yii\helpers\Url::to($model->image->path, true),
+            'image:src' => \yii\helpers\Url::to($model->image->path, true),
+            'image:width' => $width,
+            'image:height' => $height,
+        ]);
+        return $this->render('view', [
+            'model' => $model,
+        ]);
+    }
 }
 ```
 ___
