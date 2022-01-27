@@ -76,10 +76,19 @@ trait Other
      * @param string $name имя кэша,
      * @return bool
      */
-    public static function clearCache($name)
+    public static function deleteCache($name)
     {
         $fileCache = Yii::$app->getBasePath() . "/cache/$name.json";
         return \yii\helpers\FileHelper::unlink($fileCache);
+    }
+
+    /**
+     * Очистить кэш
+     * @return bool
+     */
+    public static function clearCache()
+    {
+        return false;
     }
 
     private static function createDirCache($dirCache)
