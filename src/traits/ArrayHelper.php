@@ -216,6 +216,49 @@ trait ArrayHelper
     }
 
     /**
+     * @param array $array
+     * @return object
+     */
+    public static function arrayToObject($array)
+    {
+        $object = new \stdClass();
+        foreach ($array as $key => $value) $object->$key = $value;
+        return $object;
+    }
+
+    /**
+     * @param array $array
+     * @return object
+     * json_decode + json_encode
+     */
+    public static function array2Object($array)
+    {
+        return json_decode(json_encode($array), false);
+    }
+
+    /**
+     *
+     * @param object $object
+     * @return array
+     */
+    public static function objectToArray($object)
+    {
+        $a = array();
+        foreach ($object as $k => $v) $a[$k] = (is_array($v) || is_object($v)) ? self::objectToArray($v) : $v;
+        return $a;
+    }
+
+    /**
+     * @param object $object
+     * @return array
+     * json_decode + json_encode
+     */
+    public static function object2Array($object)
+    {
+        return json_decode(json_encode($object), true);
+    }
+
+    /**
      * array order by
      * 
      * ```php
