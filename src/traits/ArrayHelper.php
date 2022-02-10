@@ -174,6 +174,30 @@ trait ArrayHelper
     }
 
     /**
+     *
+     * @param string $glue делитель
+     * @param array $array 
+     *
+     * 
+     * @example Пример:
+     * ```php
+     * $array = [
+     * 	    ['a','b','c'],
+     *   	['d','e','t']
+     * ];
+     * H::implodeMulti(', ', $array); // a, b, c, d, e, t
+     * ```
+     */
+    public static function implodeMulti($glue, $array)
+    {
+        $_array = [];
+        foreach ($array as $val) {
+            $_array[] = is_array($val) ? self::implodeMulti($glue, $val) : $val;
+        }
+        return implode($glue, $_array);
+    }
+
+    /**
      * @param array $array
      * @return string json
      */
