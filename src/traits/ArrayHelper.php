@@ -222,7 +222,7 @@ trait ArrayHelper
     public static function arrayToObject($array)
     {
         $object = new \stdClass();
-        foreach ($array as $key => $value) $object->$key = $value;
+        foreach ($array as $key => $value) $object->$key = is_array($value) ? self::arrayToObject($value) : $value;
         return $object;
     }
 
