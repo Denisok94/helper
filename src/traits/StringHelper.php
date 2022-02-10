@@ -172,6 +172,8 @@ trait StringHelper
      * $this->text = H::replaceBBCode($this->text);
      * ```
      * Поддержка:
+     * - [hr]
+     * - [h1-6]заголовок[/h1-6]
      * - [b]жирный[/b]
      * - \*\*жирный\*\*
      * - [i]курсив[/i]
@@ -182,10 +184,11 @@ trait StringHelper
      * - [code]code[/code]
      * - [code=php]code[/code]
      * - \`\`\`code\`\`\`
-     * - ||spoiler||
+     * - ||спойлер||
      * - ​[spoiler=спойлер]спойлер[/spoiler]
      * - [quote][/quote]
      * - [quote=][/quote]
+     * - [a href=][/a]
      * - [url=][/url]
      * - [url][/url]
      * - [img][/img]
@@ -193,68 +196,56 @@ trait StringHelper
      * - [size=2][/size] в %
      * - [color=][/color]
      * - [list][/list] - ul
+     * - [ul][/ul] - ul
      * - [listn][/listn] - ol
+     * - [ol][/ol] - ol
      * - [\*][\*] - li
+     * - [li][/li] - li
      * 
      * https://myrusakov.ru/php-parsing-bb.html
+     * https://www.hdsw.ru/?p=543
      */
     public static function replaceBBCode($text_post)
     {
-        $str_search = array(
-            "#\\\n#is",  // 1
-            "#\[b\](.+?)\[\/b\]#is", // 2
-            "#\*\*(.+?)\*\*#is", // 2.2
-            "#\[i\](.+?)\[\/i\]#is", // 3
-            "#\[u\](.+?)\[\/u\]#is", // 4
-            "#\_\_(.+?)\_\_#is", // 4.2
-            "#\[s\](.+?)\[\/s\]#is", // 5
-            "#\~\~(.+?)\~\~#is", // 5.2
-            "#\[code\](.+?)\[\/code\]#is", // 6
-            "#\[code=(.+?)\](.+?)\[\/code\]#is", // 6.2
-            "#\`\`\`(.+?)\`\`\`#is", // 6.3
-            "#\|\|(.+?)\|\|#is", // 6.4
-            "#\[spoiler=(.+?)\](.+?)\[\/spoiler\]#is", // 6.5
-            "#\[quote\](.+?)\[\/quote\]#is", // 7
-            "#\[quote=(.+?)\](.+?)\[\/quote\]#is", // 8
-            "#\[url=(.+?)\](.+?)\[\/url\]#is", // 9
-            "#\[url\](.+?)\[\/url\]#is", // 10
-            "#\[img\](.+?)\[\/img\]#is", // 11
-            "#\[img=(.+?)\]#is", // 12
-            "#\[size=(.+?)\](.+?)\[\/size\]#is", // 13
-            "#\[color=(.+?)\](.+?)\[\/color\]#is", // 14
-            "#\[list\](.+?)\[\/list\]#is", // 15
-            "#\[listn\](.+?)\[\/listn\]#is", // 16
-            "#\[\*\](.+?)\[\/\*\]#" // 17
-        );
-        $str_replace = array(
-            "<br />",  // 1
-            "<b>\\1</b>", // 2
-            "<b>\\1</b>", // 2.2
-            "<i>\\1</i>", // 3
-            "<span style='text-decoration:underline'>\\1</span>", // 4
-            "<span style='text-decoration:underline'>\\1</span>", // 4.2
-            "<span style='text-decoration:line-through'>\\1</span>", // 5
-            "<span style='text-decoration:line-through'>\\1</span>", // 5.2
-            "<code class='code'>\\1</code>", // 6
-            "<code class='code \\1'>\\2</code>", // 6.2
-            "<code class='code'>\\1</code>", // 6.3
-            // "<span class='spoiler'>\\1</span>", // 6.4
-            "<details class=\"spoiler\"><summary class=\"spoiler-title\"><span>спойлер</span></summary><p class=\"spoiler-text\">\\1</p></details>", // 6.4
-            "<details class=\"spoiler\"><summary class=\"spoiler-title\"><span>\\1</span></summary><p class=\"spoiler-text\">\\2</p></details>", // 6.5
-            // '<input type="checkbox" id="1" class="del" /><label for="1" class="del" align="left">спойлер</label><div>[\\1]</div>', // 6.4
-            // '<input type="checkbox" id="1" class="del" /><label for="1" class="del" align="left">\\1</label><div>[\\2]</div>', // 6.5
-            "<blockquote class='quote'>\\1</blockquote>", // 7
-            "<blockquote class='quote'><p>\\2</p><small>\\1</small></blockquote>", // 8
-            "<a href='\\1' target=\"_blank\" >\\2</a>", // 9
-            "<a href='\\1' target=\"_blank\" >\\1</a>", // 10
-            "<img src='\\1' alt='\\1' class='img'/>", // 11
-            "<img src='\\1' alt='\\1' class='img'/>", // 12
-            "<span style='font-size:\\1%'>\\2</span>", // 13
-            "<span style='color:\\1'>\\2</span>", // 14
-            "<ul class='ul'>\\1</ul>", // 15
-            "<ol class='ol'>\\1</ol>", // 16
-            "<li class='li'>\\1</li>" // 17
-        );
+        $bb_code = [
+            "#\\\n#is" => "<br />",
+            "#\[hr\]#is" => "<hr>",
+            "#\[h([1-6]?)\](.+?)\[\/h([1-6]?)\]#is" => "<h\\1>\\2</h\\3>",
+            "#\[b\](.+?)\[\/b\]#is" => "<b>\\1</b>",
+            "#\*\*(.+?)\*\*#is" => "<b>\\1</b>",
+            "#\[i\](.+?)\[\/i\]#is" => "<i>\\1</i>",
+            "#\[u\](.+?)\[\/u\]#is" => "<span style='text-decoration:underline'>\\1</span>",
+            "#\_\_(.+?)\_\_#is" => "<span style='text-decoration:underline'>\\1</span>",
+            "#\[s\](.+?)\[\/s\]#is" => "<span style='text-decoration:line-through'>\\1</span>",
+            "#\~\~(.+?)\~\~#is" => "<span style='text-decoration:line-through'>\\1</span>",
+            "#\[p\](.+?)\[\/p\]#is" => "<p>\\1</p>",
+            "#\[p=center\](.+?)\[\/p\]#is" => "<p style=\"text-align: center;\">\\1</p>",
+            "#\[p=right\](.+?)\[\/p\]#is" => "<p style=\"text-align: right;\">\\1</p>",
+            "#\[code\](.+?)\[\/code\]#is" => "<code class='code'>\\1</code>",
+            "#\[code=(.+?)\](.+?)\[\/code\]#is" => "<code class='code \\1'>\\2</code>",
+            "#\`\`\`(.+?)\`\`\`#is" => "<code class='code'>\\1</code>",
+            "#\|\|(.+?)\|\|#is" => "<details class=\"spoiler\"><summary class=\"spoiler-title\"><span>спойлер</span></summary><p class=\"spoiler-text\">\\1</p></details>",
+            "#\[spoiler=(.+?)\](.+?)\[\/spoiler\]#is" => "<details class=\"spoiler\"><summary class=\"spoiler-title\"><span>\\1</span></summary><p class=\"spoiler-text\">\\2</p></details>",
+            "#\[quote\](.+?)\[\/quote\]#is" => "<blockquote class='quote'>\\1</blockquote>",
+            "#\[quote=(.+?)\](.+?)\[\/quote\]#is" => "<blockquote class='quote'><p>\\2</p><small>\\1</small></blockquote>",
+            "#\[a href=(.+?)\](.+?)\[\/a\]#is" => "<a href='\\1' target=\"_blank\" >\\2</a>",
+            "#\[url=(.+?)\](.+?)\[\/url\]#is" => "<a href='\\1' target=\"_blank\" >\\2</a>",
+            "#\[url\](.+?)\[\/url\]#is" => "<a href='\\1' target=\"_blank\" >\\1</a>",
+            "#\[img\](.+?)\[\/img\]#is" => "<img loading='lazy' src='\\1' alt='\\1'/>",
+            "#\[img=(.+?)\]#is" => "<img loading='lazy' src='\\1' alt='\\1'/>",
+            "#\[size=(.+?)\](.+?)\[\/size\]#is" => "<span style='font-size:\\1%'>\\2</span>",
+            "#\[color=(.+?)\](.+?)\[\/color\]#is" => "<span style='color:\\1'>\\2</span>",
+            "#\[list\](.+?)\[\/list\]#is" => "<ul class='ul'>\\1</ul>",
+            "#\[ul\](.+?)\[\/ul\]#is" => "<ul class='ul'>\\1</ul>",
+            "#\[listn\](.+?)\[\/listn\]#is" => "<ol class='ol'>\\1</ol>",
+            "#\[ol\](.+?)\[\/ol\]#is" => "<ol class='ol'>\\1</ol>",
+            "#\[\*\](.+?)\[\/\*\]#" => "<li class='li'>\\1</li>",
+            "#\[li\](.+?)\[\/li\]#" => "<li class='li'>\\1</li>",
+        ];
+        foreach ($bb_code as $key => $value) {
+            $str_search[] = $key;
+            $str_replace[] = $value;
+        }
         return preg_replace($str_search, $str_replace, $text_post);
     }
 
