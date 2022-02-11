@@ -1,17 +1,17 @@
 <?php
 
-namespace denisok94\helper;
+namespace denisok94\helper\yii2;
 
 use denisok94\helper\yii2\traits\Other;
-use denisok94\helper\Helper;
+use denisok94\helper\Helper as H;
 
 /**
- * YiiHelper
+ * Helper
  * @author Denisok94
  * @link https://s-denis.ru/git/helper
  * @version 0.4.5
  */
-class YiiHelper extends Helper
+class Helper extends H
 {
     use Other;
 }
