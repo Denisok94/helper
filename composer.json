@@ -6,12 +6,15 @@
     "support": {
         "source": "https://github.com/Denisok94/"
     },
-    "version": "0.7.3",
+    "version": "0.7.4",
     "authors": [{
         "name": "Denisok94",
         "email": "denisok94@inbox.ru",
         "homepage": "https://s-denis.ru/git/helper"
     }],
+    "require": {
+        "denisok94/helper-composer": "*"
+    },
     "autoload": {
         "psr-4": {
             "denisok94\\helper\\": "src/"

@@ -1,2 +1,4 @@
 helper.code-workspace
 test/*
+composer.lock
+vendor/*
