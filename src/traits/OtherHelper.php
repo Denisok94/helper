@@ -24,7 +24,6 @@ trait OtherHelper
      * - `response`: тело ответа.
      * - `request`: тело запроса, если code не 200.
      * @author Denisok94
-     * @version 0.3
      */
     static public function curl($url, $params = null, $method = 'GET', $timeout = 2, $header = null, $cookie_file = null, $auth = null, $proxy = null)
     {

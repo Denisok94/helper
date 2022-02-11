@@ -20,7 +20,6 @@ use denisok94\helper\traits\StringHelper;
  * Helper
  * @author Denisok94
  * @link https://s-denis.ru/git/helper
- * @version 0.4.5
  */
 class Helper
 {
