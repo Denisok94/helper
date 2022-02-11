@@ -297,7 +297,40 @@ use \denisok94\helper\yii2\MetaTag;
 |----------------|:---------:|:----------------|
 | tag |  | Установить MetaTag на страницу |
 
+В в настройках(`config`), где находятся файлы `web.php` или `config.php` укажите название сайта и основной язык
+```php
+$config = [
+    'name' => 'Site Name',
+    'language' => 'en-EN', // ru-RU 
+    'basePath' => dirname(__DIR__),
+    //...
+```
+
 Указываются в `action` контроллере, перед `render()`.
+```php
+$meta = new MetaTag($this->view);
+```
+Установить изображение
+```php
+// Before 0.7.5
+list($width, $height, $type, $attr) = getimagesize(Yii::$app->getBasePath() . "/web/image.jpg");
+$meta = (new MetaTag($this->view))->tag([
+    'image' => Url::to('image.jpg', true),
+    'image:src' => Url::to('image.jpg', true),
+    'image:width' => $width,
+    'image:height' => $height,
+]);
+// Since 0.7.5 
+$meta = new MetaTag($this->view, "/image.jpg");
+```
+Индивидуальная иконка для страницы
+```php
+// Before
+$this->view->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => Url::to("/favicon.png", true)]);
+// Since MetaTag
+$meta = new MetaTag($this->view, null, "/favicon.png");
+```
+
 ```php
 namespace app\controllers;
 use \denisok94\helper\yii2\MetaTag;
@@ -308,33 +341,21 @@ class NewsController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
-        MetaTag::tag($this->view, [
+        //
+        (new MetaTag($this->view))->tag($this->view, [
             'title' => $model->title,
             'description' => substr($model->text, 0, 100),
             'keywords' => $model->tags, // string
-            'image' => $model->image->url,
         ]);
-        return $this->render('view', [
-            'model' => $model,
-        ]);
-    }
-    // ...
-    public function actionView($id)
-    {
-        $model = $this->findModel($id);
+        // or
         $this->view->title = $model->title;
-        list($width, $height, $type, $attr) = getimagesize(Yii::$app->getBasePath() . "/web/{$model->image->path}");
-        MetaTag::tag($this->view, [
+        $meta = new MetaTag($this->view, $model->image->url);
+        $meta->tag($this->view, [
             'description' => $model->announce,
             'keywords' => implode(', ', $model->tags), // if tags array
-            'image' => \yii\helpers\Url::to($model->image->path, true),
-            'image:src' => \yii\helpers\Url::to($model->image->path, true),
-            'image:width' => $width,
-            'image:height' => $height,
         ]);
-        return $this->render('view', [
-            'model' => $model,
-        ]);
+        //
+        return $this->render('view', ['model' => $model]);
     }
 }
 ```
@@ -400,7 +421,7 @@ class MyController extends ConsoleController
 
 Вызвать `action` консольного контроллера:
 ```php
-H::exec('сontroller/action', [params]);
+H::exec('controller/action', [params]);
 ```
 > Консольный контроллер, не подразумевает ответ. 
 Вся выводящая информация (echo, print и тд) будет записана в лог файл. 

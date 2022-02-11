@@ -13,9 +13,7 @@ use yii\helpers\Html;
  * 
  * @author Denisok94
  * @link https://developers.facebook.com/tools/debug/
- * 
- * Установить MetaTag на страницу
- * 
+ *  
  * @example Пример:
  * ```php
  * namespace app\controllers;
@@ -25,11 +23,11 @@ use yii\helpers\Html;
  *      public function actionView($id)
  *      {
  *          $model = $this->findModel($id);
- *          MetaTag::tag($this->view, [
+ *          $meta = new MetaTag($this->view, $model->image->url);
+ *          $meta->tag([
  *              'title' => $model->title,
  *              'description' => substr($model->text, 0, 100),
  *              'keywords' => $model->tags, // string
- *              'image' => $model->image->url,
  *          ]);
  *          return $this->render('view', [
  *              'model' => $model,
@@ -46,6 +44,8 @@ class MetaTag
         $language,
         $name,
         $domain,
+        $image,
+        $favicon,
         $init = false;
     private $twitterTag = [
         'title', 'description', 'url', 'domain', 'site', 'image', 'image:src', 'creator', 'card'
@@ -55,20 +55,61 @@ class MetaTag
     ];
 
     /**
-     *  @param mixed $view $this->view
+     * @param mixed $view $this->view
+     * @param string $image ~"/30.jpg",
+     * @param string $favicon ~"/favicon.png",
      */
-    function __construct($view)
+    public function __construct($view, $image = null, $favicon = null)
     {
-        $this->init($view);
+        $this->image = $image;
+        $this->favicon = $favicon;
+        $this->view = $view;
+        $this->init();
+        return $this;
     }
 
-    private function init($view)
+    /**
+     * @param mixed $view $this->view
+     * @param array $tags ['name' => 'content', 'name' => 'content', ...]
+     * 
+     * names: 
+     * - title - default: `$this->view->title` or `Yii::$app->name`
+     * - description
+     * - keywords
+     * - author/creator
+     * - card - summary or summary_large_image - default: `summary_large_image`
+     * - url - default: `Url::to([], true)`
+     * - locale - default: `Yii::$app->language` or `'en-EN'`
+     * - site - default: `Yii::$app->name`
+     * - domain - default: `Yii::$app->domain` or `Url::home(true)`
+     * - type - website or profile - default: `website`.
+     * @example 1:
+     * ```php
+     * class NewsController extends Controller {
+     * public function actionView($id) {
+     *    $model = $this->findModel($id);
+     *    $meta = new MetaTag($this->view, $model->image->url);
+     *    $meta->tag([
+     *        'title' => $model->title,
+     *        'description' => substr($model->text, 0, 100),
+     *        'keywords' => $model->tagsToString,
+     *    ]);
+     *    return $this->render('view', ['model' => $model]);
+     * }}
+     * ```
+     */
+    public function tag($tags = [])
     {
-        $this->view = $view;
+        $this->tags($tags);
+    }
 
+    //-----------------------------------------------
+
+    private function init()
+    {
         $this->title = isset($this->view->title) ? Html::encode($this->view->title) : Yii::$app->name;
         $this->name = Yii::$app->name;
-        $this->language = isset(Yii::$app->language) ? Yii::$app->language : 'en-EN';
+        $this->language = Yii::$app->language ?? 'en-EN';
 
         if (!isset(Yii::$app->domain)) {
             $urlData = parse_url(Url::home(true));
@@ -78,8 +119,6 @@ class MetaTag
         }
         $this->init = true;
 
-        // list($width, $height, $type, $attr) = getimagesize(Yii::$app->getBasePath() . "/web/30.jpg");
-
         $this->defaultTag = [
             'title' => $this->title,
             // 'description' => "",
@@ -88,51 +127,28 @@ class MetaTag
             'url' => Url::to([], true), // Url::base(true) ,
             'domain' => $this->domain, // 
             'site' => "@" . str_replace(' ', '_', ucwords($this->name)),
-            // 'image' => Url::to('30.jpg', true),
-            // 'image:src' => Url::to('30.jpg', true),
-            // 'image:width' => $width,
-            // 'image:height' => $height,
             // 'creator' => '@Denisok1494', // автор статьи
             'site_name' =>  ucwords($this->name), // 
             'card' => 'summary_large_image', // summary
             'type' => 'website', //website, profile
         ];
-    }
-    /**
-     * 
-     */
-    private function multineedle_stripos($haystack, $needles, $offset = 0, $flags = false)
-    {
-        if (is_array($needles)) {
-            foreach ($needles as $needle) {
-                // $found[$needle] = stripos($haystack, $needle, $offset);
-                if (stripos($haystack, $needle, $offset) !== false) {
-                    return $flags ? $needle : true;
-                }
-            }
-        } else {
-            if (stripos($haystack, $needles, $offset) !== false) {
-                return true;
-            }
+        if ($this->image && file_exists(Yii::$app->getBasePath() . '/web' . $this->image)) {
+            list($width, $height, $type, $attr) = getimagesize(Yii::$app->getBasePath() . '/web' . $this->image);
+            $this->defaultTag['image'] =  Url::to($this->image, true);
+            $this->defaultTag['image:src'] =  Url::to($this->image, true);
+            $this->defaultTag['image:width'] = $width;
+            $this->defaultTag['image:height'] = $height;
         }
-        return false;
-    }
-
-    /**
-     * 
-     */
-    private function setTeg($name, $content)
-    {
-        $this->view->registerMetaTag(
-            ['property' => $name, 'content' => $content]
-        );
+        if ($this->favicon) {
+            $this->setFavicon();
+        }
     }
 
     /**
      * @param array $tags [name => content]
      * name: title, description, keywords, author/creator, image(image:src, image:width, image:height), card: summary/summary_large_image, type: website/profile
      */
-    function tags($tags = [])
+    private function tags($tags = [])
     {
         $newTags = array_merge($this->defaultTag, $tags);
 
@@ -157,56 +173,44 @@ class MetaTag
     }
 
     /**
-     * @param mixed $view $this->view
-     * @param array $tags ['name' => 'content', 'name' => 'content', ...]
      * 
-     * names: 
-     * - title - default: `$this->view->title` or `Yii::$app->name`
-     * - description
-     * - keywords
-     * - author/creator
-     * - image, image:src, image:width, image:height
-     * 
-     * ```php
-     * list($width, $height, $type, $attr) = getimagesize(Yii::$app->getBasePath() . "/web/image.jpg");
-     * 'image' => Url::to('image.jpg', true),
-     * 'image:src' => Url::to('image.jpg', true),
-     * 'image:width' => $width,
-     * 'image:height' => $height,
-     * ```
-     * - card - summary or summary_large_image - default: `summary_large_image`
-     * - url - default: `Url::to([], true)`
-     * - locale - default: `Yii::$app->language` or `'en-EN'`
-     * - site - default: `Yii::$app->name`
-     * - domain - default: `Yii::$app->domain` or `Url::home(true)`
-     * - type - website or profile - default: `website`
-     * @example 1:
-     * in web.php or config.php
-     * ```php
-     *  $config = [
-     *      'name' => 'Site Name',
-     *      'language' => 'Site Base Language',
-     * ```
-     * 
-     * @example 2:
-     * ```php
-     * use \denisok94\helper\yii2\MetaTag;
-     * class NewsController extends Controller {
-     * public function actionView($id) {
-     *    $model = $this->findModel($id);
-     *    MetaTag::tag($this->view, [
-     *        'title' => $model->title,
-     *        'description' => substr($model->text, 0, 100),
-     *        'keywords' => $model->tagsToString,
-     *        'image' => $model->image->url,
-     *    ]);
-     *    return $this->render('view', ['model' => $model]);
-     * }}
-     * ```
      */
-    static function tag($view, $tags = [])
+    private function multineedle_stripos($haystack, $needles, $offset = 0, $flags = false)
     {
-        $new = new MetaTag($view);
-        $new->tags($tags);
+        if (is_array($needles)) {
+            foreach ($needles as $needle) {
+                // $found[$needle] = stripos($haystack, $needle, $offset);
+                if (stripos($haystack, $needle, $offset) !== false) {
+                    return $flags ? $needle : true;
+                }
+            }
+        } else {
+            if (stripos($haystack, $needles, $offset) !== false) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //-----------------------------------------------
+
+    /**
+     * 
+     */
+    private function setTeg($name, $content)
+    {
+        $this->view->registerMetaTag(
+            ['property' => $name, 'content' => $content]
+        );
+    }
+
+    /**
+     * 
+     */
+    private function setFavicon()
+    {
+        $this->view->registerLinkTag([
+            'rel' => 'icon', 'type' => 'image/png', 'href' => Url::to($this->favicon, true)
+        ]);
     }
 }

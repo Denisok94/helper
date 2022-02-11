@@ -2,20 +2,26 @@
 =========================================
 
 
+Upgrade from Helper 0.7.5
+-----------------------
+re `yii2/MetaTag`
+```php
+// Before 0.7.5
+MetaTag::tag($this->view, []);
+// Since 0.7.5
+(new MetaTag($this->view))->tag([]);
+```
+
 Upgrade from Helper 0.7.4
 -----------------------
-- add:
-    - ArrayHelper: 
-        - implodeMulti()
-        - arrayToObject()
-        - array2Object()
-        - objectToArray()
-        - object2Array()
-- edit:
-    - StringHelper::replaceBBCode() add: `hr, h1-6, ul, ol,li`
+- add in ArrayHelper: implodeMulti(), arrayToObject(), array2Object(), objectToArray(), object2Array().
+- edit in StringHelper: replaceBBCode() - add: `hr, h1-6, ul, ol,li`.
 
-If you use Yii2 and class YiiHelper 
-
+## If you use Yii2 and class YiiHelper
 - rename YiiHelper → Helper
-
-`denisok94\helper\YiiHelper` → `denisok94\helper\yii2\Helper`
+    ```php
+    // Before 0.7.4
+    use \denisok94\helper\YiiHelper;
+    // Since 0.7.4
+    use \denisok94\helper\yii2\Helper;
+    ```
