@@ -7,9 +7,9 @@ Upgrade from Helper 0.7.5
 re `yii2/MetaTag`
 ```php
 // Before 0.7.5
-MetaTag::tag($this->view, []);
+MetaTag::tag($this->view, [tags]);
 // Since 0.7.5
-(new MetaTag($this->view))->tag([]);
+(new MetaTag($this->view))->tag([tags]);
 ```
 
 Upgrade from Helper 0.7.4

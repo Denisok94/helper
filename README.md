@@ -342,7 +342,7 @@ class NewsController extends Controller
     {
         $model = $this->findModel($id);
         //
-        (new MetaTag($this->view))->tag($this->view, [
+        (new MetaTag($this->view))->tag([
             'title' => $model->title,
             'description' => substr($model->text, 0, 100),
             'keywords' => $model->tags, // string
@@ -350,7 +350,7 @@ class NewsController extends Controller
         // or
         $this->view->title = $model->title;
         $meta = new MetaTag($this->view, $model->image->url);
-        $meta->tag($this->view, [
+        $meta->tag([
             'description' => $model->announce,
             'keywords' => implode(', ', $model->tags), // if tags array
         ]);
