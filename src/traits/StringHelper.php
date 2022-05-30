@@ -40,6 +40,18 @@ trait StringHelper
     }
 
     /**
+     * Сгенерировать GUIDv4
+     * @return string
+     */
+    public static function guid()
+    {
+        if (function_exists('com_create_guid') === true) {
+            return com_create_guid();
+        }
+        return chr(123) . self::uuid() . chr(125);
+    }
+
+    /**
      * 
      * @param int $length
      * @param string $chars
