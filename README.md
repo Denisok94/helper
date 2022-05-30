@@ -20,7 +20,7 @@ ___
     6. [OtherHelper](#OtherHelper)
 2. [Other](#Other)
     1. [MicroTimer](#MicroTimer)
-    2. 
+    2. [Console](#Console)
 3. [Framework Integration](#Framework-Integration)
     1. [Yii2](#Yii2)
         - [MetaTag](#MetaTag)
@@ -232,7 +232,35 @@ $time = $queryTimer->elapsed();
 // or/and
 printf($queryTimer);
 ```
-> взято у [phpliteadmin](https://bitbucket.org/phpliteadmin/public/src/master/classes/MicroTimer.php)
+> взято у [phpLiteAdmin](https://bitbucket.org/phpliteadmin/public/src/master/classes/MicroTimer.php)
+
+## Console
+
+| Имя | Параметры | Описание |
+|----------------|:---------:|:----------------|
+| get |  | Получить аргумент/опцию |
+| getArgument |  | Получить аргумент |
+| getArguments |  | Получить аргументы |
+| getOption |  | Получить опцию |
+| getOptions |  |  Получить опции |
+| hasArgument |  | |
+| hasOption |  | |
+| show |  |  |
+
+```php
+// php console.php arg1 arg2=val -o -a5 --option --option1=6 --option1=3
+$console = new Console();
+$console->getArguments(); // [arg1,arg2=>val]
+$console->getArgument(0); // arg1
+$console->getArgument('arg2'); // val
+$console->getOptions(); // [o=>null,a=>5,option=>null,option1=>[6,3]]
+$console2 = new Console([], true);
+$console2->getOptions(); // [o=>true,option=>true,...]
+```
+
+ToDo:
+
+- [ ] required параметры
 ___
 
 # Framework Integration
