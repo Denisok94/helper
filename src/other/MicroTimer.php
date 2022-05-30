@@ -1,6 +1,6 @@
 <?php
 
-namespace denisok94\helper;
+namespace denisok94\helper\other;
 
 /**
  * wraps calls to microtime(), calculating the elapsed time and rounding output

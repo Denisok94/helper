@@ -18,7 +18,9 @@ ___
     4. [FileHelper](#FileHelper)
     5. [HtmlHelper](#HtmlHelper)
     6. [OtherHelper](#OtherHelper)
-2. [MicroTimer](#MicroTimer)
+2. [Other](#Other)
+    1. [MicroTimer](#MicroTimer)
+    2. 
 3. [Framework Integration](#Framework-Integration)
     1. [Yii2](#Yii2)
         - [MetaTag](#MetaTag)
@@ -213,12 +215,14 @@ ___
 Запрещая всё и всем, Вы можете лишится продвижения сайта в поисковых ресурсах и/или красивых привью в соц сетях =). 
 ___
 
-# MicroTimer
+# Other
+
+## MicroTimer
 
 Узнать, сколько времени выполняется код
 
 ```php
-use \denisok94\helper\MicroTimer;
+use \denisok94\helper\other\MicroTimer;
 $queryTimer = new MicroTimer(); // start
 // code ...
 $queryTimer->stop();
