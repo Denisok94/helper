@@ -261,6 +261,8 @@ trait ArrayHelper
     /**
      * array order by
      * 
+     * arrayOrderBy(array, key, sort_type)
+     * 
      * ```php
      * $data = [
      *  ['volume' => 67, 'edition' => 2],
