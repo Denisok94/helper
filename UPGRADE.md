@@ -1,6 +1,20 @@
 Инструкции по обновлению для Helper Class
 =========================================
 
+Upgrade from Helper 0.7.6
+-----------------------
+- `StringHelper` add guid()
+- `MicroTimer` namespace \helper → \helper\other
+    ```php
+    // Before 0.7.x
+    use \denisok94\helper\MicroTimer;
+    // Since 0.7.x
+    use \denisok94\helper\other\MicroTimer;
+    ```
+- add class `Console` in other
+    ```php
+    use \denisok94\helper\other\Console;
+    ```
 
 Upgrade from Helper 0.7.5
 -----------------------
