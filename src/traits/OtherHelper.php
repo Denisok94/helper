@@ -54,15 +54,12 @@ trait OtherHelper
         switch ($method) {
             case 'POST':
                 curl_setopt($ch, CURLOPT_POST, true);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
-                break;
-            case 'PUT':
-                curl_setopt($ch, CURLOPT_PUT, true);
                 break;
             default:
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
                 break;
         }
+        if ($method != 'GET' && $params) curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
         // ----------------------------------
         curl_setopt($ch, CURLOPT_HTTPHEADER, $curl_header);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
