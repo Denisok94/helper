@@ -64,7 +64,7 @@ trait StringHelper
      * $random = H::random(12, "0123456789");
      * ```
      */
-    public static function random($length, $chars = "abcdefghijklmnopqrstuvwxyz")
+    public static function random(int $length, string $chars = "abcdefghijklmnopqrstuvwxyz")
     {
         $text = '';
         for ($i = 0; $i < $length; $i++) {
@@ -79,7 +79,7 @@ trait StringHelper
      * @param array $titles ['персона', 'персоны', 'персон', ''];
      * @return string
      */
-    public static function spell($num, $titles)
+    public static function spell(int $num, array $titles)
     {
         $cases = [2, 0, 1, 1, 1, 2];
         return $titles[($num % 100 > 4 && $num % 100 < 20) ? 2 : $cases[min($num % 10, 5)]];
@@ -90,7 +90,7 @@ trait StringHelper
      * @param string $source
      * @return string
      */
-    public static function slug($source)
+    public static function slug(string $source)
     {
         // очистить от лишних пробелов, преобразовать в нижний регистр.
         $title = mb_strtolower(trim($source), 'UTF-8');
@@ -103,7 +103,7 @@ trait StringHelper
      * @param string $source
      * @return string
      */
-    public static function ru2Lat($source)
+    public static function ru2Lat(string $source)
     {
         if ($source) {
             $rus = [
@@ -123,7 +123,7 @@ trait StringHelper
      * @param string $source
      * @return string
      */
-    public static function ruToLat($source)
+    public static function ruToLat(string $source)
     {
         if ($source) {
             $rus = [
@@ -143,7 +143,7 @@ trait StringHelper
      * @param string $source
      * @return string
      */
-    public static function ru2Slug($source)
+    public static function ru2Slug(string $source)
     {
         return StringHelper::slug(StringHelper::ru2Lat($source));
     }
@@ -165,7 +165,7 @@ trait StringHelper
      * @param string $value
      * @return string
      */
-    public static function slashes($value)
+    public static function slashes(string $value)
     {
         $value = htmlspecialchars($value); // Заменяем символы ‘<’ и ‘>’на ASCII-код
         $value = trim($value); // Удаляем лишние пробелы
@@ -217,7 +217,7 @@ trait StringHelper
      * https://myrusakov.ru/php-parsing-bb.html
      * https://www.hdsw.ru/?p=543
      */
-    public static function replaceBBCode($text_post)
+    public static function replaceBBCode(string $text_post)
     {
         $bb_code = [
             "#\\\n#is" => "<br />",
@@ -280,7 +280,7 @@ trait StringHelper
      * @author almix
      * 
      */
-    public static function strchop($data, $word, $interval, $callback, $ci = true)
+    public static function strchop(string $data, string $word, int $interval, $callback, bool $ci = true)
     {
         $position = $ci ? mb_stripos($data, $word) : mb_strpos($data, $word);
         //ничего нет - вернули false

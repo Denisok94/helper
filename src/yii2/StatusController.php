@@ -38,7 +38,9 @@ use denisok94\helper\Helper as H;
  */
 class StatusController extends Controller
 {
-
+    /**
+     * @var array
+     */
     public $post = [];
 
     public function beforeAction($action)
@@ -47,7 +49,7 @@ class StatusController extends Controller
         $this->enableCsrfValidation = false;
 
         header('Access-Control-Allow-Origin: *');
-        $this->post = json_decode(\Yii::$app->request->rawBody, true);
+        $this->post = H::toArray(\Yii::$app->request->rawBody);
 
         return parent::beforeAction($action);
     }
@@ -56,14 +58,14 @@ class StatusController extends Controller
      * 
      * @param string $path
      */
-    public function getPost($path)
+    public function getPost(string $path)
     {
         return H::get($this->post, $path);
     }
 
     /**
      * custom responses
-     * 
+     * @param array|string $data
      * ```php
      * $responses = [];
      * // ...
@@ -101,7 +103,7 @@ class StatusController extends Controller
      * return $this->error($error, $text, $data);
      * ```
      * 
-	 * @example Пример:
+     * @example Пример:
      * ```php
      * $messages = $this->post;
      * if ($messages === null) {

@@ -2,3 +2,4 @@ helper.code-workspace
 test/*
 composer.lock
 vendor/*
+src/symfony/*

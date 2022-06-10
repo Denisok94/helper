@@ -25,7 +25,7 @@ trait OtherHelper
      * - `request`: тело запроса, если code не 200.
      * @author Denisok94
      */
-    static public function curl($url, $params = null, $method = 'GET', $timeout = 2, $header = null, $cookie_file = null, $auth = null, $proxy = null)
+    static public function curl(string $url, $params = null, string $method = 'GET', int $timeout = 2, $header = null, ?string $cookie_file = null, ?string $auth = null, ?string $proxy = null)
     {
         $curl_header = ($header != null) ? (is_array($header) ? $header : [$header]) : [
             "User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:71.0) Gecko/20100101 Firefox/71.0",
@@ -212,7 +212,7 @@ trait OtherHelper
      * 
      * Запрещая всё и всем, Вы можете лишится продвижения сайта в поисковых ресурсах и/или красивых привью в соц сетях. 
      */
-    public static function isBot(&$botname = '', $myBots = null)
+    public static function isBot(string &$botname = '', array $myBots = null)
     {
         // если есть USER_AGENT (нету у разных спам ботов)
         if (isset($_SERVER['HTTP_USER_AGENT'])) {

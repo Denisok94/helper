@@ -71,6 +71,8 @@ trait FileHelper
 
 	/**
 	 * поиск
+	 * @param string $ext
+	 * @return array|boolean
 	 */
 	private static function search($ext)
 	{
@@ -113,7 +115,7 @@ trait FileHelper
 	 * ```
 	 * 
 	 */
-	public static function ext($file)
+	public static function ext(string $file)
 	{
 		$extension = pathinfo(basename($file), PATHINFO_EXTENSION);
 		return strtolower($extension ?? ''); // нижний регистр (PNG → png)
@@ -126,9 +128,8 @@ trait FileHelper
 	 * https://www.iana.org/assignments/media-types/media-types.xhtml
 	 * https://www.php.net/manual/ru/function.mime-content-type.php
 	 */
-	public static function mimeType($file_path)
+	public static function mimeType(string $file_path)
 	{
-		
 	}
 
 	/**
@@ -165,7 +166,7 @@ trait FileHelper
 	 * ```
 	 * 
 	 */
-	public static function fileType($file)
+	public static function fileType(string $file)
 	{
 		$ext = self::ext($file);  // расширение файла
 		$type = 'file'; // базовая информация
@@ -195,7 +196,7 @@ trait FileHelper
 	 * echo "<i class='fas fa-$fa_5'></i>"; // Font Awesome 5
 	 * ```
 	 */
-	public static function fileIconFa($file, $pro = false)
+	public static function fileIconFa(string $file, bool $pro = false)
 	{
 		$ext = self::ext($file); // расширение файла
 		$fa = 'file'; // базовая иконка
@@ -237,7 +238,7 @@ trait FileHelper
 	 * }
 	 * ```
 	 */
-	public static function fileIcon($file)
+	public static function fileIcon(string $file)
 	{
 		$ext = self::ext($file); // расширение файла
 		$icon = 'file'; // базовая иконка
@@ -264,7 +265,7 @@ trait FileHelper
 	 * }
 	 * ```
 	 */
-	public static function fileRead($file_path)
+	public static function fileRead(string $file_path)
 	{
 		$fname = basename($file_path); // берём имя файла (name.ext)
 		if (!file_exists($file_path)) {
@@ -286,9 +287,11 @@ trait FileHelper
 	}
 
 	/**
-	 * 
+	 * @param string $file_path
+	 * @param string $toFormat
+	 * @return string
 	 */
-	public static function fileGetDt($file_path, $toFormat = 'd.m.Y H:i:s')
+	public static function fileGetDt(string $file_path, string $toFormat = 'd.m.Y H:i:s')
 	{
 		if (file_exists($file_path)) {
 			return (new \DateTime())->setTimestamp(filectime($file_path))->format($toFormat);
@@ -299,8 +302,11 @@ trait FileHelper
 
 	/**
 	 * короткий размер файла
+	 * @param string $file_path
+	 * @param array $si_prefix
+	 * @return string
 	 */
-	public static function fileShortSize($file_path, $si_prefix = ['B', 'KB', 'MB', 'GB', 'TB', 'EB', 'ZB', 'YB'])
+	public static function fileShortSize(string $file_path, array $si_prefix = ['B', 'KB', 'MB', 'GB', 'TB', 'EB', 'ZB', 'YB'])
 	{
 		if (file_exists($file_path)) {
 			$value = filesize($file_path);
@@ -312,8 +318,11 @@ trait FileHelper
 
 	/**
 	 * 2048 → 2.00 KB
+	 * @param float|integer $size
+	 * @param array $si_prefix
+	 * @return string
 	 */
-	public static function shortSize($size, $si_prefix = ['B', 'KB', 'MB', 'GB', 'TB', 'EB', 'ZB', 'YB'])
+	public static function shortSize($size, array $si_prefix = ['B', 'KB', 'MB', 'GB', 'TB', 'EB', 'ZB', 'YB'])
 	{
 		$base = 1024;
 		$class = min((int)log($size, $base), count($si_prefix) - 1);
@@ -323,9 +332,11 @@ trait FileHelper
 
 	/**
 	 * 2.00 KB → 2048
+	 * @param string $size
+	 * @return float|integer
 	 * @link https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Component%21Utility%21Bytes.php/function/Bytes%3A%3AtoInt/8.2.x
 	 */
-	public static function parseSize($size)
+	public static function parseSize(string $size)
 	{
 		// Remove the non-unit characters from the size.
 		$unit = preg_replace('/[^bkmgtpezy]/i', '', $size);
@@ -342,8 +353,10 @@ trait FileHelper
 
 	/**
 	 * Получить размер папки
+	 * @param string $path
+	 * @return float|integer
 	 */
-	public static function dirSize($path)
+	public static function dirSize(string $path)
 	{
 		$returnSize = 0;
 		if (!$h = opendir($path)) return false;

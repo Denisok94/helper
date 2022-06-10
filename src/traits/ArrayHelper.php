@@ -17,7 +17,7 @@ trait ArrayHelper
      * @param bool $nullValue
      * @return array|string|bool
      */
-    public static function get($array, $path, $nullValue = null)
+    public static function get(array $array, string $path, $nullValue = null)
     {
         $parts = explode('.', $path);
         $key = $parts[0];
@@ -42,7 +42,7 @@ trait ArrayHelper
      * @param string $path
      * @param mixed $value
      */
-    public static function set(&$array, $path, $value)
+    public static function set(array &$array, string $path, $value)
     {
         $parts = explode('.', $path);
         $key = $parts[0];
@@ -61,8 +61,13 @@ trait ArrayHelper
 
     /**
      * Заменить шаблон
+     * @param string $string
+     * @param array $context
+     * @param string $nullValue
+     * 
+     * @return string
      */
-    public static function parse($string, $context, $nullValue = '')
+    public static function parse(string $string, array $context, $nullValue = '')
     {
         $offset = 0;
 
@@ -95,7 +100,7 @@ trait ArrayHelper
      * ```
      * 
      */
-    public static function implodeWrap($glue, $array, $wrapper)
+    public static function implodeWrap(string $glue, array $array, string $wrapper)
     {
         $result = [];
         foreach ($array as $key => $value) {
@@ -122,7 +127,7 @@ trait ArrayHelper
      * }); // 1, 2, 3
      * ```
      */
-    public static function implodeWith($glue, $array, $callback)
+    public static function implodeWith(string $glue, array $array, $callback)
     {
         $clear = [];
         foreach ($array as $value) {
@@ -143,7 +148,7 @@ trait ArrayHelper
      * $ids = H::implodeByKey(', ', $items, 'id');  // 1, 2, 3
      * ```
      */
-    public static function implodeByKey($glue, $array, $key)
+    public static function implodeByKey(string $glue, array $array, string $key)
     {
         $clear = [];
         foreach ($array as $value) {
@@ -164,7 +169,7 @@ trait ArrayHelper
      * $ids = H::implodeByKeyWrap(', ', $items, 'id', "'");  // '1', '2', '3'
      * ```
      */
-    public static function implodeByKeyWrap($glue, $array, $key, $wrapper)
+    public static function implodeByKeyWrap(string $glue, array $array, string $key, string $wrapper)
     {
         $clear = [];
         foreach ($array as $value) {
@@ -188,7 +193,7 @@ trait ArrayHelper
      * H::implodeMulti(', ', $array); // a, b, c, d, e, t
      * ```
      */
-    public static function implodeMulti($glue, $array)
+    public static function implodeMulti(string $glue, array $array)
     {
         $_array = [];
         foreach ($array as $val) {
@@ -198,10 +203,10 @@ trait ArrayHelper
     }
 
     /**
-     * @param array $array
+     * @param mixed $array array or object
      * @return string json
      */
-    public static function toJson($array)
+    public static function toJson(mixed $array)
     {
         return json_encode($array, JSON_UNESCAPED_UNICODE);
     }
@@ -210,7 +215,7 @@ trait ArrayHelper
      * @param string $json
      * @return array
      */
-    public static function toArray($json)
+    public static function toArray(string $json)
     {
         return json_decode($json, true);
     }
@@ -219,7 +224,7 @@ trait ArrayHelper
      * @param array $array
      * @return object
      */
-    public static function arrayToObject($array)
+    public static function arrayToObject(array $array)
     {
         $object = new \stdClass();
         foreach ($array as $key => $value) $object->$key = is_array($value) ? self::arrayToObject($value) : $value;
@@ -231,7 +236,7 @@ trait ArrayHelper
      * @return object
      * json_decode + json_encode
      */
-    public static function array2Object($array)
+    public static function array2Object(array $array)
     {
         return json_decode(json_encode($array), false);
     }
@@ -241,7 +246,7 @@ trait ArrayHelper
      * @param object $object
      * @return array
      */
-    public static function objectToArray($object)
+    public static function objectToArray(object $object)
     {
         $a = array();
         foreach ($object as $k => $v) $a[$k] = (is_array($v) || is_object($v)) ? self::objectToArray($v) : $v;
@@ -253,7 +258,7 @@ trait ArrayHelper
      * @return array
      * json_decode + json_encode
      */
-    public static function object2Array($object)
+    public static function object2Array(object $object)
     {
         return json_decode(json_encode($object), true);
     }

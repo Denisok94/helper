@@ -15,7 +15,7 @@ trait HtmlHelper
      * @return string
      * @link http://htmlbook.ru/html/video
      */
-    public static function video($src, $attribution = null)
+    public static function video(string $src, $attribution = null)
     {
         $video = ' ';
         // ----------------------------------

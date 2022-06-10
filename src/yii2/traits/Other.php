@@ -15,11 +15,11 @@ trait Other
      * консольная команда
      * @param string $path commands Controller/action,
      * @param array $params параметры команды,
-     * @param bool $sync фоновая задача или нет,
+     * @param boolean $sync фоновая задача или нет,
      * @param string $out путь лог файла с результатом команды,
      * @param string $error путь лог файла с ошибками,
      */
-    public static function exec($path, $params, $sync = true, $out = 'runtime/logs/consoleOut', $error = 'runtime/logs/consoleError')
+    public static function exec(string $path, array $params, bool $sync = true, string $out = 'runtime/logs/consoleOut', string $error = 'runtime/logs/consoleError')
     {
         $dir = Yii::$app->getBasePath();
         $dt = DataHelper::currentDate("d.m.Y");
@@ -41,7 +41,7 @@ trait Other
      * @param array $array данные, которые надо за кэшировать,
      * @return bool успех записи
      */
-    public static function setCache($name, $array)
+    public static function setCache(string $name, array $array)
     {
         $fileCache = Yii::$app->getBasePath() . "/cache/$name.json";
         if ((file_exists($fileCache))) {
@@ -61,7 +61,7 @@ trait Other
      * @param string $name имя кэша,
      * @return array|bool
      */
-    public static function getCache($name)
+    public static function getCache(string $name)
     {
         $fileCache = Yii::$app->getBasePath() . "/cache/$name.json";
         if (file_exists($fileCache)) {
@@ -76,7 +76,7 @@ trait Other
      * @param string $name имя кэша,
      * @return bool
      */
-    public static function deleteCache($name)
+    public static function deleteCache(string $name)
     {
         $fileCache = Yii::$app->getBasePath() . "/cache/$name.json";
         return \yii\helpers\FileHelper::unlink($fileCache);
@@ -91,7 +91,10 @@ trait Other
         return false;
     }
 
-    private static function createDirCache($dirCache)
+    /**
+     * @param string $dirCache
+     */
+    private static function createDirCache(string $dirCache)
     {
         \yii\helpers\FileHelper::createDirectory($dirCache);
         file_put_contents($dirCache . "/.gitignore", "*\n!.gitignore\n");
@@ -102,7 +105,7 @@ trait Other
      * @param string $name имя файла
      * @param string $value текст лога
      */
-    public static function log($name, $value)
+    public static function log(string $name, string $value)
     {
         $dir = Yii::$app->getBasePath();
         $dt = DataHelper::currentDate("d.m.Y");

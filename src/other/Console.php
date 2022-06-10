@@ -226,7 +226,7 @@ class Console
      * Parses an argument.
      * @param string $token
      */
-    private function parseArgument($token)
+    private function parseArgument(string $token)
     {
         if (2 == count($a = explode("=", $token))) {
             $this->arguments[$a[0]] = $a[1];
@@ -259,7 +259,7 @@ class Console
      * }
      * ```
      */
-    public static function show($echo)
+    public static function show(string $echo)
     {
         echo "\r$echo ";
         flush();
