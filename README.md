@@ -423,9 +423,9 @@ class MyController extends StatusController
 
 ```php
 // получить все данные
-$message = $this->post;
+$message = $this->post; // array
 // получить параметр из данных
-$phone = $this->getPost('phone');
+$phone = $this->getPost('phone'); // phone or null
 ```
 
 Сообщить об успехе
@@ -442,10 +442,21 @@ return $this->buildSuccess($data);  // http status code 200
 Сообщить об ошибке
 
 ```php
-return $this->buildError('Error', $data);   // http status code 400
-// ['code' => '400', 'status' => 'FAIL', 'message' => 'Error', 'data' => $data]
-return $this->buildError('Error', $data, 401);   // http status code 401
+return $this->buildError(); // http status code 400
+// ['code' => '400', 'status' => 'FAIL', 'message' => 'Error', 'data' => []]
+return $this->buildError($message); // http status code 400
+// ['code' => '400', 'status' => 'FAIL', 'message' => $message, 'data' => []]
+return $this->buildError($message, $data); // http status code 400
+// ['code' => '400', 'status' => 'FAIL', 'message' => $message, 'data' => $data]
+return $this->buildError($message, $data, 401); // http status code 401
 // ['code' => '401', ...]
+
+// return ['code', 'status', 'message'];
+return $this->buildBadRequest(); // http status code 400
+return $this->buildUnauthorized(); // http status code 401
+return $this->buildForbidden(); // http status code 403
+return $this->buildNotFound(); // http status code 404
+return $this->buildInternalServerError(); // http status code 500
 
 if (!$this->post) {
     return $this->buildBadRequest("Request is null"); // http status code 400
@@ -457,7 +468,6 @@ try {
 } catch (\Exception $e) {
     return $this->buildInternalServerError($e->getMessage()); // http status code 500
     // ['code' => '500', 'status' => 'FAIL', 'message' => '...']
-    
 }
 ```
 

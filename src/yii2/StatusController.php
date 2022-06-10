@@ -12,8 +12,13 @@ use denisok94\helper\traits\ArrayHelper;
  * 
  * @example Пример:
  * ```php
+ * // получить все данные
+ * $message = $this->post; // array
+ * // получить параметр из данных
+ * $phone = $this->getPost('phone'); // phone or null
+ * 
  * // return ['code', 'status', 'message', 'data'];
- * return $this->buildSuccess(); // http code: 200
+ * return $this->buildSuccess(); // http status code 200
  * return $this->buildSuccess($data); // 200
  * return $this->buildResponse($data); // 200
  * return $this->buildError(); // 400
