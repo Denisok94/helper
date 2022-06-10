@@ -397,7 +397,19 @@ ___
 
 ### **StatusController**
 
-Для общения по формату json. (REST API)
+Для общения по формату json.
+
+| Имя | Параметры | default code | Описание |
+|----------------|:---------:|:---------:|:----------------|
+| send | $data | 200 | Собственный формат ответа |
+| buildResponse | $data, $message, $status, $code | 200 | Собственный формат ответа |
+| buildSuccess | $data | 200 | Сообщить об успехе |
+| buildError | $message, $status, $code | 400 | Сообщить об ошибке |
+| buildBadRequest | $message | 400 |  |
+| buildUnauthorized | $message | 401 |  |
+| buildForbidden | $message | 403 |  |
+| buildNotFound | $message | 404 |  |
+| buildInternalServerError | $message | 500 |  |
 
 ```php
 namespace app\controllers;
@@ -410,9 +422,9 @@ class MyController extends StatusController
 ```
 
 ```php
-// получить все сообщение полностью
+// получить все данные
 $message = $this->post;
-// получить параметр из сообщения
+// получить параметр из данных
 $phone = $this->getPost('phone');
 ```
 
@@ -420,24 +432,51 @@ $phone = $this->getPost('phone');
 
 ```php
 // Сообщить об успешной обработки
-return $this->success(); // ['status' => 'OK', 'data' => []];
+return $this->buildSuccess(); // http status code 200
+// ['code' => '200', 'status' => 'OK', 'data' => []];
 // Вернуть результат работы
-return $this->success($data); // ['status' => 'OK', 'data' => $data];
+return $this->buildSuccess($data);  // http status code 200
+// ['code' => '200', 'status' => 'OK', 'data' => $data];
 ```
 
 Сообщить об ошибке
 
 ```php
-\Yii::$app->response->statusCode = 400; // or status http code
-return $this->error($error, $text, $data); // ['status' => 'FAIL', ...]
+return $this->buildError('Error', $data);   // http status code 400
+// ['code' => '400', 'status' => 'FAIL', 'message' => 'Error', 'data' => $data]
+return $this->buildError('Error', $data, 401);   // http status code 401
+// ['code' => '401', ...]
+
+if (!$this->post) {
+    return $this->buildBadRequest("Request is null"); // http status code 400
+    // ['code' => '400', 'status' => 'FAIL', 'message' => 'Request is null']
+}
+
+try {
+    //code...
+} catch (\Exception $e) {
+    return $this->buildInternalServerError($e->getMessage()); // http status code 500
+    // ['code' => '500', 'status' => 'FAIL', 'message' => '...']
+    
+}
 ```
 
 Собственный формат ответа 
 ```php
 // custom responses
-$responses = [];
-// code
-return $this->send($responses);
+return $this->send([...]); // http status code 200
+// [...];
+return $this->send(['code' => 204]); // http status code 204
+// ['code' => '204'];
+return $this->send(['code' => 201, 'data' => $data]); // http status code 201
+// ['code' => '201', 'data' => $data];
+
+return $this->buildResponse($data); // http status code 200
+// ['code' => '200', 'status' => 'OK', 'message' => '', 'data' => $data]
+return $this->buildResponse($data, $message); // http status code 200
+// ['code' => '200', 'status' => 'OK', 'message' => $message, 'data' => $data]
+return $this->buildResponse($data, $message, $status, 999); // http status code 999
+// ['code' => '999', 'status' => $status, 'message' => $message, 'data' => $data]
 ```
 ___
 
