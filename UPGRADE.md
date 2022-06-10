@@ -1,6 +1,13 @@
 Инструкции по обновлению для Helper Class
 =========================================
 
+Upgrade from Helper 0.7.7
+-----------------------
+- add `H::guid()` and `H::isJson()`
+- `OtherHelper::curl` - fix post fields
+- update `yii2\StatusController`
+- fixed comments on methods
+
 Upgrade from Helper 0.7.6
 -----------------------
 - `StringHelper` add guid()
