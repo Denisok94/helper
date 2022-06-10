@@ -3,8 +3,10 @@
 namespace denisok94\helper\yii2;
 
 use Yii;
+use yii\web\View;
 use yii\helpers\Url;
 use yii\helpers\Html;
+use \denisok94\helper\traits\FileHelper;
 
 /**
  * MetaTag class
@@ -38,15 +40,19 @@ use yii\helpers\Html;
  */
 class MetaTag
 {
-    private $view,
-        $defaultTag,
+    /**
+     * @var View
+     */
+    private $view;
+
+    private $defaultTag,
         $title,
         $language,
         $name,
         $domain,
         $image,
-        $favicon,
-        $init = false;
+        $favicon;
+
     private $twitterTag = [
         'title', 'description', 'url', 'domain', 'site', 'image', 'image:src', 'creator', 'card'
     ];
@@ -55,11 +61,12 @@ class MetaTag
     ];
 
     /**
-     * @param mixed $view $this->view
-     * @param string $image ~"/30.jpg",
-     * @param string $favicon ~"/favicon.png",
+     * @param View $view $this->view
+     * @param string|null $image ~"/30.jpg"
+     * @param string|null $favicon ~"/favicon.png" or Url::to($favicon, true);
+     * @return self
      */
-    public function __construct($view, $image = null, $favicon = null)
+    public function __construct(View $view, ?string $image, ?string $favicon)
     {
         $this->image = $image;
         $this->favicon = $favicon;
@@ -68,8 +75,47 @@ class MetaTag
         return $this;
     }
 
+    private function init()
+    {
+        $this->title = isset($this->view->title) ? Html::encode($this->view->title) : Yii::$app->name;
+        $this->name = Yii::$app->name;
+        $this->language = Yii::$app->language ?? 'en-EN';
+
+        if (!isset(Yii::$app->domain)) {
+            $urlData = parse_url(Url::home(true));
+            $this->domain = $urlData['host'];
+        } else {
+            $this->domain = Yii::$app->domain;
+        }
+
+        $this->defaultTag = [
+            'title' => $this->title,
+            // 'description' => "",
+            // 'keywords' => "",
+            'locale' => $this->language,
+            'url' => Url::to([], true), // Url::base(true) ,
+            'domain' => $this->domain, // 
+            'site' => "@" . str_replace(' ', '_', ucwords($this->name)),
+            // 'creator' => '@Denisok1494', // автор статьи
+            'site_name' => ucwords($this->name), // 
+            'card' => 'summary_large_image', // summary
+            'type' => 'website', //website, profile
+        ];
+        if ($this->image && file_exists(Yii::$app->getBasePath() . '/web' . $this->image)) {
+            list($width, $height, $type, $attr) = getimagesize(Yii::$app->getBasePath() . '/web' . $this->image);
+            $this->defaultTag['image'] =  Url::to($this->image, true);
+            $this->defaultTag['image:src'] =  Url::to($this->image, true);
+            $this->defaultTag['image:width'] = $width;
+            $this->defaultTag['image:height'] = $height;
+        }
+        if ($this->favicon) {
+            $this->setFavicon();
+        }
+    }
+
+    //-----------------------------------------------
+
     /**
-     * @param mixed $view $this->view
      * @param array $tags ['name' => 'content', 'name' => 'content', ...]
      * 
      * names: 
@@ -98,57 +144,7 @@ class MetaTag
      * }}
      * ```
      */
-    public function tag($tags = [])
-    {
-        $this->tags($tags);
-    }
-
-    //-----------------------------------------------
-
-    private function init()
-    {
-        $this->title = isset($this->view->title) ? Html::encode($this->view->title) : Yii::$app->name;
-        $this->name = Yii::$app->name;
-        $this->language = Yii::$app->language ?? 'en-EN';
-
-        if (!isset(Yii::$app->domain)) {
-            $urlData = parse_url(Url::home(true));
-            $this->domain = $urlData['host'];
-        } else {
-            $this->domain = Yii::$app->domain;
-        }
-        $this->init = true;
-
-        $this->defaultTag = [
-            'title' => $this->title,
-            // 'description' => "",
-            // 'keywords' => "",
-            'locale' => $this->language,
-            'url' => Url::to([], true), // Url::base(true) ,
-            'domain' => $this->domain, // 
-            'site' => "@" . str_replace(' ', '_', ucwords($this->name)),
-            // 'creator' => '@Denisok1494', // автор статьи
-            'site_name' =>  ucwords($this->name), // 
-            'card' => 'summary_large_image', // summary
-            'type' => 'website', //website, profile
-        ];
-        if ($this->image && file_exists(Yii::$app->getBasePath() . '/web' . $this->image)) {
-            list($width, $height, $type, $attr) = getimagesize(Yii::$app->getBasePath() . '/web' . $this->image);
-            $this->defaultTag['image'] =  Url::to($this->image, true);
-            $this->defaultTag['image:src'] =  Url::to($this->image, true);
-            $this->defaultTag['image:width'] = $width;
-            $this->defaultTag['image:height'] = $height;
-        }
-        if ($this->favicon) {
-            $this->setFavicon();
-        }
-    }
-
-    /**
-     * @param array $tags [name => content]
-     * name: title, description, keywords, author/creator, image(image:src, image:width, image:height), card: summary/summary_large_image, type: website/profile
-     */
-    private function tags($tags = [])
+    public function tag(array $tags)
     {
         $newTags = array_merge($this->defaultTag, $tags);
 
@@ -158,11 +154,11 @@ class MetaTag
 
         foreach ($newTags as $key => $value) {
             $del = false;
-            if ($this->multineedle_stripos($key, $this->twitterTag) !== false) {
+            if ($this->multiNeedleStripos($key, $this->twitterTag) !== false) {
                 $del = true;
                 $this->setTeg("twitter:$key", $value);
             }
-            if ($this->multineedle_stripos($key, $this->ogTag) !== false) {
+            if ($this->multiNeedleStripos($key, $this->ogTag) !== false) {
                 $del = true;
                 $this->setTeg("og:$key", $value);
             }
@@ -172,10 +168,15 @@ class MetaTag
         }
     }
 
+    //-----------------------------------------------
+
     /**
-     * 
+     * @param string $haystack
+     * @param [type] $needles
+     * @param integer $offset
+     * @param boolean $flags
      */
-    private function multineedle_stripos($haystack, $needles, $offset = 0, $flags = false)
+    private function multiNeedleStripos(string $haystack, $needles, $offset = 0, $flags = false)
     {
         if (is_array($needles)) {
             foreach ($needles as $needle) {
@@ -192,12 +193,11 @@ class MetaTag
         return false;
     }
 
-    //-----------------------------------------------
-
     /**
-     * 
+     * @param string $name
+     * @param string $content
      */
-    private function setTeg($name, $content)
+    private function setTeg(string $name, string $content)
     {
         $this->view->registerMetaTag(
             ['property' => $name, 'content' => $content]
@@ -209,8 +209,9 @@ class MetaTag
      */
     private function setFavicon()
     {
+        $ext = FileHelper::ext($this->favicon);
         $this->view->registerLinkTag([
-            'rel' => 'icon', 'type' => 'image/png', 'href' => Url::to($this->favicon, true)
+            'rel' => 'icon', 'type' => "image/$ext", 'href' => Url::to($this->favicon, true)
         ]);
     }
 }
