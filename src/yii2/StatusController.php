@@ -18,33 +18,33 @@ use denisok94\helper\traits\ArrayHelper;
  * $phone = $this->getPost('phone'); // phone or null
  * 
  * // return ['code', 'status', 'message', 'data'];
- * return $this->buildSuccess(); // http status code 200
- * return $this->buildSuccess($data); // 200
- * return $this->buildResponse($data); // 200
- * return $this->buildError(); // 400
- * return $this->buildError($message); // 400
- * return $this->buildError($message, $data, 999); // 999
+ * return $this->sendSuccess(); // http status code 200
+ * return $this->sendSuccess($data); // 200
+ * return $this->sendResponse($data); // 200
+ * return $this->sendError(); // 400
+ * return $this->sendError($message); // 400
+ * return $this->sendError($message, $data, 999); // 999
  * 
  * // return ['code', 'status', 'message'];
- * return $this->buildBadRequest(); // 400
- * return $this->buildUnauthorized(); // 401
- * return $this->buildForbidden(); // 403
- * return $this->buildNotFound(); // 404
- * return $this->buildInternalServerError(); // 500
+ * return $this->sendBadRequest(); // 400
+ * return $this->sendUnauthorized(); // 401
+ * return $this->sendForbidden(); // 403
+ * return $this->sendNotFound(); // 404
+ * return $this->sendInternalServerError(); // 500
  * 
  * if (!$this->post) {
- *  return $this->buildBadRequest("Request is null"); // 400
+ *  return $this->sendBadRequest("Request is null"); // 400
  * }
  * 
  * try {
  *  //code...
  * } catch (\Exception $e) {
- *  return $this->buildInternalServerError($e->getMessage()); // 500
+ *  return $this->sendInternalServerError($e->getMessage()); // 500
  * }
  * 
  * // Собственный формат ответа / Custom responses
- * return $this->buildResponse($data, $message); // 200
- * return $this->buildResponse($data, $message, $status, 999); // 999
+ * return $this->sendResponse($data, $message); // 200
+ * return $this->sendResponse($data, $message, $status, 999); // 999
  * 
  * return $this->send([]); // 200
  * return $this->send(['code' => 204]); // 204
@@ -96,7 +96,7 @@ class StatusController extends Controller
     }
 
     //-------------------------------
-    // build
+    // send
 
     /**
      * Custom responses
@@ -108,12 +108,12 @@ class StatusController extends Controller
      * 
      * @example Пример:
      * ```php
-     * return $this->buildResponse($data); // 200
-     * return $this->buildResponse($data, $message); // 200
-     * return $this->buildResponse($data, $message, $status, 999); // 999
+     * return $this->sendResponse($data); // 200
+     * return $this->sendResponse($data, $message); // 200
+     * return $this->sendResponse($data, $message, $status, 999); // 999
      * ```
      */
-    protected function buildResponse($data = [], string $message = '', string $status = 'OK', int $code = StatusController::CODE_OK)
+    protected function sendResponse($data = [], string $message = '', string $status = 'OK', int $code = StatusController::CODE_OK)
     {
         return [
             'code' => $code,
@@ -128,7 +128,7 @@ class StatusController extends Controller
      * @param mixed $data
      * @return array
      */
-    protected function buildSuccess($data = [])
+    protected function sendSuccess($data = [])
     {
         return [
             'code' => self::CODE_OK,
@@ -143,7 +143,7 @@ class StatusController extends Controller
      * @param integer $code
      * @return array
      */
-    protected function buildError(string $message = 'Error', $data = [], int $code = StatusController::CODE_BAD_REQUEST)
+    protected function sendError(string $message = 'Error', $data = [], int $code = StatusController::CODE_BAD_REQUEST)
     {
         return [
             'code' => $code,
@@ -158,7 +158,7 @@ class StatusController extends Controller
      * @param string $message
      * @return array
      */
-    protected function buildBadRequest(string $message = 'Bad Request')
+    protected function sendBadRequest(string $message = 'Bad Request')
     {
         return [
             'code' => self::CODE_BAD_REQUEST,
@@ -172,7 +172,7 @@ class StatusController extends Controller
      * @param string $message
      * @return array
      */
-    protected function buildUnauthorized(string $message = "User not Authentication")
+    protected function sendUnauthorized(string $message = "User not Authentication")
     {
         return [
             'code' => self::CODE_UNAUTHORIZED,
@@ -186,7 +186,7 @@ class StatusController extends Controller
      * @param string $message
      * @return array
      */
-    protected function buildForbidden(string $message = 'Forbidden')
+    protected function sendForbidden(string $message = 'Forbidden')
     {
         return [
             'code' => self::CODE_FORBIDDEN,
@@ -200,7 +200,7 @@ class StatusController extends Controller
      * @param string $message
      * @return array
      */
-    protected function buildNotFound(string $message = 'Not Found')
+    protected function sendNotFound(string $message = 'Not Found')
     {
         return [
             'code' => self::CODE_NOT_FOUND,
@@ -219,11 +219,11 @@ class StatusController extends Controller
      * try {
      *  //code...
      * } catch (\Exception $e) {
-     *  return $this->buildInternalServerError($e->getMessage()); // 500
+     *  return $this->sendInternalServerError($e->getMessage()); // 500
      * }
      * ```
      */
-    protected function buildInternalServerError(string $message = 'Internal Server Error')
+    protected function sendInternalServerError(string $message = 'Internal Server Error')
     {
         return [
             'code' => self::CODE_INTERNAL_SERVER_ERROR,
@@ -232,7 +232,7 @@ class StatusController extends Controller
         ];
     }
 
-    // end build
+    // end send
     //-------------------------------
 
     /**
@@ -262,7 +262,7 @@ class StatusController extends Controller
      * return $this->success(); // ['status' => 'OK', 'data' => []];
      * return $this->success($data); // ['status' => 'OK', 'data' => $data];
      * ```
-     * --@deprecated Не актуален, используйте: `buildSuccess()`
+     * --@deprecated Не актуален, используйте: `sendSuccess()`
      * @author vitaliy-pashkov 
      */
     protected function success($data = [])
@@ -294,7 +294,7 @@ class StatusController extends Controller
      *  ]);
      * }
      * ```
-     * --@deprecated Не актуален, используйте: `buildError()` или `buildBadRequest()` или другой
+     * --@deprecated Не актуален, используйте: `sendError()` или `sendBadRequest()` или другой
      * @author vitaliy-pashkov 
      */
     protected function error($error = 'customError', $text = '', $data = [])
