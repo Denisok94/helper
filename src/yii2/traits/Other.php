@@ -3,6 +3,7 @@
 namespace denisok94\helper\yii2\traits;
 
 use Yii;
+use yii\helpers\FileHelper;
 use denisok94\helper\traits\ArrayHelper;
 use denisok94\helper\traits\DataHelper;
 
@@ -79,7 +80,7 @@ trait Other
     public static function deleteCache(string $name)
     {
         $fileCache = Yii::$app->getBasePath() . "/cache/$name.json";
-        return \yii\helpers\FileHelper::unlink($fileCache);
+        return FileHelper::unlink($fileCache);
     }
 
     /**
@@ -96,7 +97,7 @@ trait Other
      */
     private static function createDirCache(string $dirCache)
     {
-        \yii\helpers\FileHelper::createDirectory($dirCache);
+        FileHelper::createDirectory($dirCache);
         file_put_contents($dirCache . "/.gitignore", "*\n!.gitignore\n");
     }
 
