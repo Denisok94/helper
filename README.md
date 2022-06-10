@@ -10,7 +10,6 @@ It does not pretend to be ideal and the only correct solution.
 ___
 
 0. [Установка](#Установка)
-    1. [include](#include)
 1. [Использование](#Использование)
     1. [ArrayHelper](#ArrayHelper)
     2. [DataHelper](#DataHelper)
@@ -18,7 +17,7 @@ ___
     4. [FileHelper](#FileHelper)
     5. [HtmlHelper](#HtmlHelper)
     6. [OtherHelper](#OtherHelper)
-2. [Other](#Other)
+2. [Other Class](#Other-Class)
     1. [MicroTimer](#MicroTimer)
     2. [Console](#Console)
 3. [Framework Integration](#Framework-Integration)
@@ -51,35 +50,11 @@ composer update
 php composer.phar update
 ```
 
-## include
-
-Если вы скачали репозиторий архивом (zip/tar).
-
-```php
-include_once '{path to repository}/src/Helper.php';
-use \denisok94\helper\Helper;
-```
-
 ## Использование
 
 ```php
 use \denisok94\helper\Helper as H;
-```
----
-Можно создать в любом удобном месте своего приложения, например в папке `components`, файл `H.php` с классом `H` и унаследовать его от `Helper`.
-
-Внутри класса `H` добавить свои функции с повторяющемся действиями или перезаписать имеющиеся в `Helper`.
-
-```php
-namespace app\components;
-use \denisok94\helper\Helper;
-class H extends Helper {}
-```
-
-И в дальнейшем использовать его.
-
-```php
-use app\components\H;
+H::methodName($arg);
 ```
 ___
 
@@ -87,58 +62,58 @@ ___
 
 Работа с массивами
 
-| Имя | Параметры | Описание |
-|----------------|:---------:|:----------------|
-| get |  | Найти в массиве по пути |
-| set |  | Добавить/заменить элемент в массиве |
-| parse |  | Заменить шаблон |
-| implodeWrap |  | Объединяет элементы массива в строку + обернуть текст в кавычки |
-| implodeWith |  | Объединяет элементы массива в строку, с предпользовательской обработкой |
-| implodeByKey |  | Объединяет элементы массива в строку по ключу  |
-| implodeByKeyWrap |  | Объединяет элементы массива в строку по ключу  + обернуть текст в кавычки |
-| implodeMulti |  | Объединяет элементы многомерного массива в строку |
-| isJson |  | проверяет данные на json |
-| toJson |  | Преобразовать массив/объект в json |
-| toArray |  | Преобразовать json в массив |
-| arrayToObject |  | Преобразовать массив в объект |
-| array2Object |  | Преобразовать массив в объект, вариант 2 |
-| objectToArray |  | Преобразовать объект в массив |
-| object2Array |  | Преобразовать объект в массив, вариант 2 |
-| arrayOrderBy |  | Сортировка массива |
+| Имя| Описание |
+|----------------|:----------------|
+| get | Найти в массиве по пути |
+| set | Добавить/заменить элемент в массиве |
+| parse | Заменить шаблон |
+| implodeWrap | Объединяет элементы массива в строку + обернуть текст в кавычки |
+| implodeWith | Объединяет элементы массива в строку, с предпользовательской обработкой |
+| implodeByKey | Объединяет элементы массива в строку по ключу  |
+| implodeByKeyWrap | Объединяет элементы массива в строку по ключу  + обернуть текст в кавычки |
+| implodeMulti | Объединяет элементы многомерного массива в строку |
+| isJson | проверяет данные на json |
+| toJson | Преобразовать массив/объект в json |
+| toArray | Преобразовать json в массив |
+| arrayToObject | Преобразовать массив в объект |
+| array2Object | Преобразовать массив в объект, вариант 2 |
+| objectToArray | Преобразовать объект в массив |
+| object2Array | Преобразовать объект в массив, вариант 2 |
+| arrayOrderBy | Сортировка массива |
 
 > arrayToObject и objectToArray - работают быстрее, но могут возникнуть исключения. array2Object и object2Array - использую преобразование через json_decode + json_encode, это более ресурсозатратные, но надёжнее.
 ___
 
 # DataHelper
 
-| Имя | Параметры | Описание |
-|----------------|:---------:|:----------------|
-| currentDate |  | Сегодняшняя дата |
-| currentDt |  | Сегодняшняя дата и время |
-| toMysqlDate |  | Преобразовать дату в формат Mysql |
-| toMysqlDt |  | Преобразовать дату и время в формат Mysql |
-| toRuDate |  | Русский формат даты |
-| toRuDt |  | Русский формат даты и времени |
-| stampToDt |  | Преобразовать timestamp в формат даты и времени |
-| stampToDtU |  | Преобразовать timestamp в формат даты и времени с миллисекундами |
+| Имя| Описание |
+|----------------|:----------------|
+| currentDate | Текущая дата |
+| currentDt | Текущая дата и время |
+| toMysqlDate | Преобразовать дату в формат Mysql |
+| toMysqlDt | Преобразовать дату и время в формат Mysql |
+| toRuDate | Русский формат даты |
+| toRuDt | Русский формат даты и времени |
+| stampToDt | Преобразовать timestamp в формат даты и времени |
+| stampToDtU | Преобразовать timestamp в формат даты и времени с миллисекундами |
 
 ___
 
 # StringHelper
 
-| Имя | Параметры | Описание |
-|----------------|:---------:|:----------------|
-| uuid |  | Сгенерировать uuid v4 |
-| guid |  | Сгенерировать guid v4 |
-| random |  | Сгенерировать рандомную строку |
-| spell |  | падежи к числительным |
-| slug |  | преобразовать строку в человекопонятный url |
-| ru2Lat |  | Транслитирование, ГОСТ 7.79-2000, схема А |
-| ruToLat |  | Транслитирование, ГОСТ 7.79-2000, схема Б |
-| ru2Slug |  | преобразовать строку, на русском (схема А), в человекопонятный url |
-| getClassName |  | Получить имя класса |
-| slashes |  | экранирование |
-| replaceBBCode |  | Парсинг BB-кодов |
+| Имя| Описание |
+|----------------|:----------------|
+| uuid | Сгенерировать uuid v4 |
+| guid | Сгенерировать guid v4 |
+| random | Сгенерировать рандомную строку |
+| spell | падежи к числительным |
+| slug | преобразовать строку в человекопонятный url |
+| ru2Lat | Транслитирование, ГОСТ 7.79-2000, схема А |
+| ruToLat | Транслитирование, ГОСТ 7.79-2000, схема Б |
+| ru2Slug | преобразовать строку, на русском (схема А), в человекопонятный url |
+| getClassName | Получить имя класса |
+| slashes | экранирование |
+| replaceBBCode | Парсинг BB-кодов |
 
 ## replaceBBCode
 Поддержка:
@@ -176,18 +151,18 @@ ___
 
 Работа с файлами
 
-| Имя | Параметры | Описание |
-|----------------|:---------:|:----------------|
-| ext |  | Получить расширение файла |
-| fileRead |  | Показать содержимое файла |
-| fileGetDt |  | Получить дату последнего изменения |
-| fileType |  | Получить тип файла |
-| fileIcon |  | Получить название иконки для файла |
-| fileIconFa |  | Получить название иконки для файла в формате Font Awesome 4/5 |
-| fileShortSize |  | короткий размер файла |
-| shortSize |  | 2048 → 2.00 KB |
-| parseSize |  | 2.00 KB → 2048 |
-| dirSize |  | Получить размер папки |
+| Имя| Описание |
+|----------------|:----------------|
+| ext | Получить расширение файла |
+| fileRead | Показать содержимое файла |
+| fileGetDt | Получить дату последнего изменения |
+| fileType | Получить тип файла |
+| fileIcon | Получить название иконки для файла |
+| fileIconFa | Получить название иконки для файла в формате Font Awesome 4/5 |
+| fileShortSize | короткий размер файла |
+| shortSize | 2048 → 2.00 KB |
+| parseSize | 2.00 KB → 2048 |
+| dirSize | Получить размер папки |
 
 ___
 
@@ -196,28 +171,28 @@ ___
 Генерация html тегов
 > в разработке... 
 
-| Имя | Параметры | Описание |
-|----------------|:---------:|:----------------|
-| video |  | видео тег |
+| Имя| Описание |
+|----------------|:----------------|
+| video | видео тег |
 
 ___
 
 # OtherHelper
 
-| Имя | Параметры | Описание |
-|----------------|:---------:|:----------------|
-| curl |  | curl для большинства простых запросов |
-| getRequest |  | параметры запроса |
-| getUserIp |  | получить IP пользователя |
-| isBot |  | Проверка пользователя на бота |
-| msleep |  | уснуть на N секунд |
+| Имя| Описание |
+|----------------|:----------------|
+| curl | curl для большинства простых запросов |
+| getRequest | параметры запроса |
+| getUserIp | получить IP пользователя |
+| isBot | Проверка пользователя на бота |
+| msleep | уснуть на N секунд |
 
 > isBot() не даёт 100% гарантии.
 Кому разрешить/запретить доступ/функционал - решать исключительно Вам.
 Запрещая всё и всем, Вы можете лишится продвижения сайта в поисковых ресурсах и/или красивых привью в соц сетях =). 
 ___
 
-# Other
+# Other Class
 
 ## MicroTimer
 
@@ -238,18 +213,19 @@ printf($queryTimer);
 
 ## Console
 
-| Имя | Параметры | Описание |
-|----------------|:---------:|:----------------|
-| get |  | Получить аргумент/опцию |
-| getArgument |  | Получить аргумент |
-| getArguments |  | Получить аргументы |
-| getOption |  | Получить опцию |
-| getOptions |  |  Получить опции |
-| hasArgument |  | |
-| hasOption |  | |
-| show |  |  |
+| Имя| Описание |
+|----------------|:----------------|
+| get | Получить аргумент/опцию |
+| getArgument | Получить аргумент |
+| getArguments | Получить аргументы |
+| getOption | Получить опцию |
+| getOptions |  Получить опции |
+| hasArgument | |
+| hasOption | |
+| show |  |
 
 ```php
+use \denisok94\helper\other\Console;
 // php console.php arg1 arg2=val -o -a5 --option --option1=6 --option1=3
 $console = new Console();
 $console->getArguments(); // [arg1,arg2=>val]
@@ -275,13 +251,13 @@ use \denisok94\helper\yii2\Helper;
 
 `yii2\Helper` наследует все от `Helper`.
 
-| Имя | Параметры | Описание |
-|----------------|:---------:|:----------------|
-| exec |  | Выполнить консольную команду |
-| log |  | Записать данные в лог файл. Файлы хранятся в `runtime/logs/` |
-| setCache |  | Запомнить массив в кэш |
-| getCache |  | Взять массив из кэша |
-| deleteCache |  | Удалить кэш |
+| Имя| Описание |
+|----------------|:----------------|
+| exec | Выполнить консольную команду |
+| log | Записать данные в лог файл. Файлы хранятся в `runtime/logs/` |
+| setCache | Запомнить массив в кэш |
+| getCache | Взять массив из кэша |
+| deleteCache | Удалить кэш |
 | ~~clearCache~~ | | |
 
 > setCache/getCache.
@@ -327,9 +303,9 @@ use \denisok94\helper\yii2\MetaTag;
 ```
 > Пока, реализованы простые теги, позже, доработаю остальные.
 
-| Имя | Параметры | Описание |
-|----------------|:---------:|:----------------|
-| tag |  | Установить MetaTag на страницу |
+| Имя| Описание |
+|----------------|:----------------|
+| tag | Установить MetaTag на страницу |
 
 В в настройках(`config`), где находятся файлы `web.php` или `config.php` укажите название сайта и основной язык
 ```php
@@ -402,14 +378,14 @@ ___
 | Имя | Параметры | default code | Описание |
 |----------------|:---------:|:---------:|:----------------|
 | send | $data | 200 | Собственный формат ответа |
-| buildResponse | $data, $message, $status, $code | 200 | Собственный формат ответа |
-| buildSuccess | $data | 200 | Сообщить об успехе |
-| buildError | $message, $status, $code | 400 | Сообщить об ошибке |
-| buildBadRequest | $message | 400 |  |
-| buildUnauthorized | $message | 401 |  |
-| buildForbidden | $message | 403 |  |
-| buildNotFound | $message | 404 |  |
-| buildInternalServerError | $message | 500 |  |
+| sendResponse | $data, $message, $status, $code | 200 | Собственный формат ответа |
+| sendSuccess | $data | 200 | Сообщить об успехе |
+| sendError | $message, $status, $code | 400 | Сообщить об ошибке |
+| sendBadRequest | $message | 400 | |
+| sendUnauthorized | $message | 401 | |
+| sendForbidden | $message | 403 | |
+| sendNotFound | $message | 404 | |
+| sendInternalServerError | $message | 500 | |
 
 ```php
 namespace app\controllers;
@@ -432,41 +408,41 @@ $phone = $this->getPost('phone'); // phone or null
 
 ```php
 // Сообщить об успешной обработки
-return $this->buildSuccess(); // http status code 200
+return $this->sendSuccess(); // http status code 200
 // ['code' => '200', 'status' => 'OK', 'data' => []];
 // Вернуть результат работы
-return $this->buildSuccess($data);  // http status code 200
+return $this->sendSuccess($data);  // http status code 200
 // ['code' => '200', 'status' => 'OK', 'data' => $data];
 ```
 
 Сообщить об ошибке
 
 ```php
-return $this->buildError(); // http status code 400
+return $this->sendError(); // http status code 400
 // ['code' => '400', 'status' => 'FAIL', 'message' => 'Error', 'data' => []]
-return $this->buildError($message); // http status code 400
+return $this->sendError($message); // http status code 400
 // ['code' => '400', 'status' => 'FAIL', 'message' => $message, 'data' => []]
-return $this->buildError($message, $data); // http status code 400
+return $this->sendError($message, $data); // http status code 400
 // ['code' => '400', 'status' => 'FAIL', 'message' => $message, 'data' => $data]
-return $this->buildError($message, $data, 401); // http status code 401
+return $this->sendError($message, $data, 401); // http status code 401
 // ['code' => '401', ...]
 
 // return ['code', 'status', 'message'];
-return $this->buildBadRequest(); // http status code 400
-return $this->buildUnauthorized(); // http status code 401
-return $this->buildForbidden(); // http status code 403
-return $this->buildNotFound(); // http status code 404
-return $this->buildInternalServerError(); // http status code 500
+return $this->sendBadRequest(); // http status code 400
+return $this->sendUnauthorized(); // http status code 401
+return $this->sendForbidden(); // http status code 403
+return $this->sendNotFound(); // http status code 404
+return $this->sendInternalServerError(); // http status code 500
 
 if (!$this->post) {
-    return $this->buildBadRequest("Request is null"); // http status code 400
+    return $this->sendBadRequest("Request is null"); // http status code 400
     // ['code' => '400', 'status' => 'FAIL', 'message' => 'Request is null']
 }
 
 try {
     //code...
 } catch (\Exception $e) {
-    return $this->buildInternalServerError($e->getMessage()); // http status code 500
+    return $this->sendInternalServerError($e->getMessage()); // http status code 500
     // ['code' => '500', 'status' => 'FAIL', 'message' => '...']
 }
 ```
@@ -481,11 +457,11 @@ return $this->send(['code' => 204]); // http status code 204
 return $this->send(['code' => 201, 'data' => $data]); // http status code 201
 // ['code' => '201', 'data' => $data];
 
-return $this->buildResponse($data); // http status code 200
+return $this->sendResponse($data); // http status code 200
 // ['code' => '200', 'status' => 'OK', 'message' => '', 'data' => $data]
-return $this->buildResponse($data, $message); // http status code 200
+return $this->sendResponse($data, $message); // http status code 200
 // ['code' => '200', 'status' => 'OK', 'message' => $message, 'data' => $data]
-return $this->buildResponse($data, $message, $status, 999); // http status code 999
+return $this->sendResponse($data, $message, $status, 999); // http status code 999
 // ['code' => '999', 'status' => $status, 'message' => $message, 'data' => $data]
 ```
 ___
