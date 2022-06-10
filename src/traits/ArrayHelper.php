@@ -203,6 +203,16 @@ trait ArrayHelper
     }
 
     /**
+     * @param string $json
+     * @return boolean
+     */
+    public static function isJson(string $json)
+    {
+        json_decode($json, true);
+        return json_last_error() === JSON_ERROR_NONE;
+    }
+
+    /**
      * @param mixed $array array or object
      * @return string json
      */
