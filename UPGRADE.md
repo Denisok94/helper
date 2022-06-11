@@ -1,6 +1,13 @@
 Инструкции по обновлению для Helper Class
 =========================================
 
+Upgrade from Helper 0.7.8
+-----------------------
+remove yii2 (12.06.2022)
+New separate repository:
+- [MetaTag](https://github.com/Denisok94/yii-metatag)
+- [ConsoleController and StatusController](https://github.com/Denisok94/yii-helper)
+
 Upgrade from Helper 0.7.7
 -----------------------
 - add `H::guid()` and `H::isJson()`
