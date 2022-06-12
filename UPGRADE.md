@@ -6,18 +6,21 @@ Upgrade from Helper 0.8.0
 remove yii2 (12.06.2022)
 A new separate repository has been created:
 - class [MetaTag](https://github.com/Denisok94/yii-metatag)
+    ```bash
+    composer require --prefer-dist denisok94/yii-metatag
+    ```
 - class [ConsoleController and StatusController](https://github.com/Denisok94/yii-helper)
+    ```bash
+    composer require --prefer-dist denisok94/yii-helper
+    ```
 
 Upgrade from Helper 0.7.7
 -----------------------
-- add `H::guid()` and `H::isJson()`
 - `OtherHelper::curl` - fix post fields
 - update `yii2\StatusController`
-- fixed comments on methods
 
 Upgrade from Helper 0.7.6
 -----------------------
-- `StringHelper` add guid()
 - `MicroTimer` namespace \helper → \helper\other
     ```php
     // Before 0.7.6
@@ -25,14 +28,10 @@ Upgrade from Helper 0.7.6
     // Since 0.7.6
     use \denisok94\helper\other\MicroTimer;
     ```
-- add class `Console` in other
-    ```php
-    use \denisok94\helper\other\Console;
-    ```
 
 Upgrade from Helper 0.7.5
 -----------------------
-re `yii2/MetaTag`
+update `yii2/MetaTag`
 ```php
 // Before 0.7.5
 MetaTag::tag($this->view, [tags]);
@@ -42,9 +41,6 @@ MetaTag::tag($this->view, [tags]);
 
 Upgrade from Helper 0.7.4
 -----------------------
-- add in ArrayHelper: implodeMulti(), arrayToObject(), array2Object(), objectToArray(), object2Array().
-- edit in StringHelper: replaceBBCode() - add: `hr, h1-6, ul, ol,li`.
-
 ## If you use Yii2 and class YiiHelper
 - rename YiiHelper → Helper
     ```php
