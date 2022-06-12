@@ -242,8 +242,8 @@ ___
 
 ## Yii2
 
-Deletes in v0.7.8 (12.06.2022)
+Deletes in version 0.8.0 (12.06.2022)
 
-New separate repository:
-- [MetaTag](https://github.com/Denisok94/yii-metatag)
-- [ConsoleController and StatusController](https://github.com/Denisok94/yii-helper)
+A new separate repository has been created:
+- class [MetaTag](https://github.com/Denisok94/yii-metatag)
+- class [ConsoleController and StatusController](https://github.com/Denisok94/yii-helper)

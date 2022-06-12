@@ -1,12 +1,12 @@
 Инструкции по обновлению для Helper Class
 =========================================
 
-Upgrade from Helper 0.7.8
+Upgrade from Helper 0.8.0
 -----------------------
 remove yii2 (12.06.2022)
-New separate repository:
-- [MetaTag](https://github.com/Denisok94/yii-metatag)
-- [ConsoleController and StatusController](https://github.com/Denisok94/yii-helper)
+A new separate repository has been created:
+- class [MetaTag](https://github.com/Denisok94/yii-metatag)
+- class [ConsoleController and StatusController](https://github.com/Denisok94/yii-helper)
 
 Upgrade from Helper 0.7.7
 -----------------------
