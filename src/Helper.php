@@ -19,7 +19,12 @@ use denisok94\helper\traits\StringHelper;
 /**
  * Helper
  * @author Denisok94
- * @link https://s-denis.ru/git/helper
+ * @version 0.8.1
+ * 
+ * ```php
+ * use \denisok94\helper\Helper as H;
+ * H::methodName($arg);
+ * ```
  */
 class Helper
 {

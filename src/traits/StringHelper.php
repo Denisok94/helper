@@ -57,7 +57,7 @@ trait StringHelper
      * @param string $chars
      * @return string
      * 
-     * @example Пример:
+     * @example:
      * ```php
      * $random = H::random(12);
      * $random = H::random(12, "abcdefghijklmnopqrstuvwxyzABCDEFGHI JKLMNOPRQSTUVWXYZ0123456789");
@@ -86,7 +86,7 @@ trait StringHelper
     }
 
     /**
-     * человекопонятный URL
+     * Человекопонятный URL
      * @param string $source
      * @return string
      */
@@ -139,7 +139,7 @@ trait StringHelper
     }
 
     /**
-     * человекопонятный URL
+     * Человекопонятный URL
      * @param string $source
      * @return string
      */
@@ -164,6 +164,11 @@ trait StringHelper
      * экранирование
      * @param string $value
      * @return string
+     * 
+     * @example:
+     * ```php 
+     * $text = H::slashes($text);
+     * ```
      */
     public static function slashes(string $value)
     {
@@ -180,8 +185,9 @@ trait StringHelper
      * @return string
      * 
      * ```php
-     * $this->text = H::slashes($this->text);
-     * $this->text = H::replaceBBCode($this->text);
+     * $text = H::replaceBBCode($text);
+     * // or
+     * $text = H::replaceBBCode(H::slashes($text));
      * ```
      * Поддержка:
      * - [hr]
@@ -217,7 +223,7 @@ trait StringHelper
      * https://myrusakov.ru/php-parsing-bb.html
      * https://www.hdsw.ru/?p=543
      */
-    public static function replaceBBCode(string $text_post)
+    public static function replaceBBCode(string $text)
     {
         $bb_code = [
             "#\\\n#is" => "<br />",
@@ -258,7 +264,7 @@ trait StringHelper
             $str_search[] = $key;
             $str_replace[] = $value;
         }
-        return preg_replace($str_search, $str_replace, $text_post);
+        return preg_replace($str_search, $str_replace, $text);
     }
 
     /**

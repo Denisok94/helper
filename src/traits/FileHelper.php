@@ -94,7 +94,7 @@ trait FileHelper
 	 * @param string $file файл,
 	 * @return string расширение файла
 	 * 
-	 * @example Пример:
+	 * @example:
 	 * ```php
 	 * $ext = H::ext('example.xml'); // xml
 	 * echo "<div class='my-ico'><i class='$ext'></i></div>";
@@ -145,7 +145,7 @@ trait FileHelper
 	 * @param string $file файл,
 	 * @return string тип файла
 	 * 
-	 * @example Пример:
+	 * @example:
 	 * ```php
 	 * $type = H::type('example.xml'); // excel
 	 * echo "<div class='office'><i class='$type'></i></div>";
@@ -181,7 +181,7 @@ trait FileHelper
 	 * @param bool $pro 
 	 * @return string
 	 * 
-	 * @example Пример:
+	 * @example:
 	 * ```php
 	 * $fa = H::fileIconFa('example.xml'); // file-excel-o
 	 * $fa_5 = H::fileIconFa('example.xml', true); // file-excel
@@ -210,7 +210,7 @@ trait FileHelper
 	 * @param string $file файл,
 	 * @return string
 	 * 
-	 * @example Пример:
+	 * @example:
 	 * ```php
 	 * $icon = H::fileIcon('example.xml'); // excel
 	 * $icon = H::fileIcon('example.PDF'); // pdf
@@ -254,7 +254,7 @@ trait FileHelper
 	 * @param string $file_path ,
 	 * @return string
 	 * 
-	 * @example Пример:
+	 * @example:
 	 * ```php
 	 * $file_path = __DIR__.'/files/file.txt';
 	 * // Выводим информацию из файла

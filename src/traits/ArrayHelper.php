@@ -94,11 +94,10 @@ trait ArrayHelper
      * @param string $wrapper кавычки
      * @return string
      * 
-     * @example Пример:
+     * @example:
      * ```php
      * $items = H::implodeWrap(',', $ids, "'");  // '1','2','3'
      * ```
-     * 
      */
     public static function implodeWrap(string $glue, array $array, string $wrapper)
     {
@@ -120,7 +119,7 @@ trait ArrayHelper
      * @param mixed $callback функция обработки
      * @return string
      * 
-     * @example Пример:
+     * @example:
      * ```php
      * $ids = H::implodeWith(", ", $items, function ($item) {
      *  return "{$item['id']}";
@@ -143,9 +142,10 @@ trait ArrayHelper
      * @param array $array 
      * @param string $key
      *
-     * @example Пример:
+     * @example:
      * ```php
-     * $ids = H::implodeByKey(', ', $items, 'id');  // 1, 2, 3
+     * $ids = H::implodeByKey(', ', $items, 'id'); 
+     * // return: 1, 2, 3
      * ```
      */
     public static function implodeByKey(string $glue, array $array, string $key)
@@ -164,9 +164,9 @@ trait ArrayHelper
      * @param string $key
      * @param string $wrapper кавычки
      *
-     * @example Пример:
+     * @example:
      * ```php
-     * $ids = H::implodeByKeyWrap(', ', $items, 'id', "'");  // '1', '2', '3'
+     * $ids = H::implodeByKeyWrap(', ', $items, 'id', "'"); // '1', '2', '3'
      * ```
      */
     public static function implodeByKeyWrap(string $glue, array $array, string $key, string $wrapper)
@@ -184,7 +184,7 @@ trait ArrayHelper
      * @param array $array 
      *
      * 
-     * @example Пример:
+     * @example:
      * ```php
      * $array = [
      * 	    ['a','b','c'],

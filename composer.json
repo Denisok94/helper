@@ -6,11 +6,10 @@
     "support": {
         "source": "https://github.com/Denisok94/"
     },
-    "version": "0.8.0",
+    "version": "0.8.1",
     "authors": [{
         "name": "Denisok94",
-        "email": "denisok94@inbox.ru",
-        "homepage": "https://s-denis.ru/git/helper"
+        "email": "denisok94@inbox.ru"
     }],
     "require": {
         "denisok94/helper-composer": "*"
