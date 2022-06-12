@@ -6,7 +6,13 @@ Upgrade from Helper 0.8.0
 remove yii2 (12.06.2022)
 A new separate repository has been created:
 - class [MetaTag](https://github.com/Denisok94/yii-metatag)
+    ```bash
+    composer require --prefer-dist denisok94/yii-metatag
+    ```
 - class [ConsoleController and StatusController](https://github.com/Denisok94/yii-helper)
+    ```bash
+    composer require --prefer-dist denisok94/yii-helper
+    ```
 
 Upgrade from Helper 0.7.7
 -----------------------
