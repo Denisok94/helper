@@ -216,7 +216,7 @@ trait ArrayHelper
      * @param mixed $array array or object
      * @return string json
      */
-    public static function toJson(mixed $array)
+    public static function toJson($array)
     {
         return json_encode($array, JSON_UNESCAPED_UNICODE);
     }
