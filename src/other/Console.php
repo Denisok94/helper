@@ -21,7 +21,7 @@ if (!function_exists('str_starts_with')) {
  * $console->getArgument(0); // arg1
  * $console->getArgument('arg2'); // val
  * $console->getOptions(); // [o=>null,a=>5,option=>null,option1=>[6,3]]
- * // default value
+ * // set default value 'true'
  * $console2 = new Console(null, true);
  * $console2->getOptions(); // [o=>true,option=>true,...]
  * // required parameters
