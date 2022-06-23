@@ -208,18 +208,21 @@ printf($queryTimer);
 ```
 > взято у [phpLiteAdmin](https://bitbucket.org/phpliteadmin/public/src/master/classes/MicroTimer.php)
 
+___
+
 ## Console
 
-| Method | Description |
-|----------------|:----------------|
-| get | Получить аргумент/опцию |
-| getArgument | Получить аргумент |
-| getArguments | Получить аргументы |
-| getOption | Получить опцию |
-| getOptions |  Получить опции |
-| hasArgument | |
-| hasOption | |
-| show |  |
+| Method | Parameters | Return | Description |
+|----------------|:---------:|:---------:|:----------------|
+| __construct | ?array, ?mixed | throws | set required parameters and/or default value |
+| get | string, ?default | value/default | get argument or option |
+| getArgument | string, ?default | value/default | get argument |
+| getArguments | - | array | get arguments |
+| getOption | string, ?default | value/default | get option |
+| getOptions | - | array | get options |
+| hasArgument | string | true/false |  |
+| hasOption | string | true/false |  |
+| show | string | string |  |
 
 ```php
 use \denisok94\helper\other\Console;
@@ -229,13 +232,26 @@ $console->getArguments(); // [arg1,arg2=>val]
 $console->getArgument(0); // arg1
 $console->getArgument('arg2'); // val
 $console->getOptions(); // [o=>null,a=>5,option=>null,option1=>[6,3]]
-$console2 = new Console([], true);
-$console2->getOptions(); // [o=>true,option=>true,...]
 ```
-
-ToDo:
-
-- [ ] required параметры
+Required parameters
+```php
+use \denisok94\helper\other\Console;
+try {
+    $console = new Console([
+        'test', // required arguments and/or options
+        'options' => ['test', ],  // required options
+        'arguments' => ['test', ],  // required arguments
+    ]);
+} catch (\Exception $th) {
+    die($th->getMessage());
+}
+```
+Default value
+```php
+use \denisok94\helper\other\Console;
+$console = new Console(null, true);
+$console->getOptions(); // [o=>true,option=>true,...]
+```
 ___
 
 # Framework Integration

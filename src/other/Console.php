@@ -2,6 +2,8 @@
 
 namespace denisok94\helper\other;
 
+use \denisok94\helper\Helper as H;
+
 if (!function_exists('str_starts_with')) {
     function str_starts_with(?string $haystack, ?string $needle): bool
     {
@@ -19,9 +21,19 @@ if (!function_exists('str_starts_with')) {
  * $console->getArgument(0); // arg1
  * $console->getArgument('arg2'); // val
  * $console->getOptions(); // [o=>null,a=>5,option=>null,option1=>[6,3]]
- * $console2 = new Console([], true);
+ * // default value
+ * $console2 = new Console(null, true);
  * $console2->getOptions(); // [o=>true,option=>true,...]
- * 
+ * // required parameters
+ * try {
+ *  $console3 = new Console([
+ *   'test', // required arguments and/or options
+ *   'options' => ['test', ],  // required options
+ *   'arguments' => ['test', ],  // required arguments
+ *  ]);
+ * } catch (\Exception $th) {
+ *  die($th->getMessage());
+ * }
  * ```
  * 
  * show():
@@ -38,17 +50,20 @@ class Console
     private $parsed;
     private $options = [];
     private $arguments = [];
-    private $required = [];
     private $defaultValue;
+    /**
+     * @var array|null
+     */
+    private $required;
 
     /**
      * $argv An array of parameters from the CLI (in the argv format)
      * 
-     * @param array $required todo
+     * @param array|null $required todo
      * @param mixed $defaultOptionsValue
-     * 
+     * @throws \Exception
      */
-    public function __construct($required = [], $defaultOptionsValue = null)
+    public function __construct(?array $required = null, $defaultOptionsValue = null)
     {
         $argv = $argv ?? $_SERVER['argv'] ?? [];
 
@@ -62,7 +77,7 @@ class Console
     }
 
     /**
-     * {@inheritdoc}
+     * @throws \Exception
      */
     private function parse()
     {
@@ -79,6 +94,43 @@ class Console
                 $this->parseShortOption($token);
             } else {
                 $this->parseArgument($token);
+            }
+        }
+        $this->getRequired();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function getRequired()
+    {
+        if ($this->required != null) {
+            $errors = [];
+
+            if (isset($this->required['options']) && is_array($this->required['options'])) {
+                foreach ($this->required['options'] as $option) {
+                    if (!$this->hasOption($option)) $errors['options'][] = $option;
+                }
+                unset($this->required['options']);
+            }
+            if (isset($this->required['arguments']) && is_array($this->required['arguments'])) {
+                foreach ($this->required['arguments'] as $argument) {
+                    if (!$this->hasArgument($argument)) $errors['arguments'][] = $argument;
+                }
+                unset($this->required['arguments']);
+            }
+            if (count($this->required) > 0) {
+                foreach ($this->required as $get) {
+                    if ($this->get($get, 'required') == 'required') $errors['get'][] = $get;
+                }
+            }
+
+            if (count($errors) > 0) {
+                $error = "required parameters: ";
+                $error .= isset($errors['options']) ? 'options: ' . H::implodeWrap(', ', $errors['options'], "'") . '. ' : '';
+                $error .= isset($errors['arguments']) ? 'arguments: ' . H::implodeWrap(', ', $errors['arguments'], "'") . '. ' : '';
+                $error .= isset($errors['get']) ? H::implodeWrap(', ', $errors['get'], "'") . '. ' : '';
+                throw new \Exception($error);
             }
         }
     }
