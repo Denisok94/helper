@@ -27,6 +27,51 @@ trait DataHelper
     }
 
     /**
+     * createFromDateString
+     * https://www.php.net/manual/ru/dateinterval.createfromdatestring.php
+     * @param string $dateString
+     * @param string $toFormat
+     * @return string
+     * 
+     * ```php
+     * H::createDate('yesterday'); // yesterday
+     * H::createDate('-1 day'); // yesterday
+     * H::createDate('1 day'); // tomorrow
+     * 
+     * ```
+     */
+    public static function createDate(string $dateString = 'yesterday', string $toFormat = 'Y-m-d')
+    {
+        return (new \DateTime())->add(\DateInterval::createFromDateString($dateString))->format($toFormat);
+    }
+
+    /**
+     * @param string $toFormat
+     * @return string
+     */
+    public static function yesterdayDate(string $toFormat = 'Y-m-d')
+    {
+        return DataHelper::createDate('yesterday', $toFormat);
+    }
+
+    /**
+     * @param string $date
+     * @param string $dateString
+     * @param string $toFormat
+     * @return string
+     * 
+     * ```php
+     * H::modifyDate('2006-12-12', '-1 day'); // 2006-12-13
+     * H::modifyDate(H::currentDate(), '+1 day'); // tomorrow
+     * H::modifyDate(H::currentDt(), '-1 day', 'Y-m-d H:i:s'); // yesterday
+     * ```
+     */
+    public static function modifyDate(string $date, string $dateString = '+1 day', string $toFormat = 'Y-m-d')
+    {
+        return (new \DateTime($date))->modify($dateString)->format($toFormat);
+    }
+
+    /**
      * @param string $date
      * @param string $fromFormat
      * @param string $toFormat
@@ -110,5 +155,21 @@ trait DataHelper
     public static function stampToDt(int $timestamp, string $toFormat = 'Y-m-d H:i:s')
     {
         return (new \DateTime())->setTimestamp($timestamp)->format($toFormat);
+    }
+
+    /**
+     * @param string $date
+     * @param string $fromFormat
+     * @param string $toFormat
+     * @return string
+     * 
+     * ```php
+     * H::getStamp('22-09-2008 00:00:00', 'd-m-Y H:i:s'); // 1222093324 (This will differ depending on your server time zone...)
+     * H::getStamp('22-09-2008 00:00:00', 'd-m-Y H:i:s', 'UTC'); // 1222093289
+     * ```
+     */
+    public static function getStamp(string $date, string $fromFormat = 'Y-m-d H:i:s', string $timeZone = null)
+    {
+        return (\DateTime::createFromFormat($fromFormat, $date, $timeZone ? new \DateTimeZone($timeZone) : null))->getTimestamp();
     }
 }
