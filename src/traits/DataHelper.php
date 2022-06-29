@@ -164,8 +164,9 @@ trait DataHelper
      * @return string
      * 
      * ```php
-     * H::getStamp('22-09-2008 00:00:00', 'd-m-Y H:i:s'); // 1222093324 (This will differ depending on your server time zone...)
-     * H::getStamp('22-09-2008 00:00:00', 'd-m-Y H:i:s', 'UTC'); // 1222093289
+     * H::getStamp('22-09-2008 00:00:00', 'd-m-Y H:i:s'); // 1222030800 (This will differ depending on your server time zone...)
+     * H::getStamp('22-09-2008 00:00:00', 'd-m-Y H:i:s', 'UTC'); // 1222041600
+     * H::getStamp(H::currentDt())
      * ```
      */
     public static function getStamp(string $date, string $fromFormat = 'Y-m-d H:i:s', string $timeZone = null)
