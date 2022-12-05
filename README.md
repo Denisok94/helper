@@ -22,6 +22,7 @@ ___
     2. [Console](#Console)
 3. [Framework Integration](#Framework-Integration)
     1. [Yii2](#Yii2)
+    2. [Symfony](#Symfony)
 
 ___
 
@@ -93,7 +94,25 @@ ___
 | toRuDt | Русский формат даты и времени |
 | stampToDt | Преобразовать timestamp в формат даты и времени |
 | stampToDtU | Преобразовать timestamp в формат даты и времени с миллисекундами |
-
+| yesterdayDate | Получить вчерашнюю дату |
+| createDate |  |
+| modifyDate |  |
+| getStamp |  |
+```php
+H::createDate('yesterday'); // yesterday
+H::createDate('-1 day'); // yesterday
+H::createDate('1 day'); // tomorrow 
+```
+```php
+H::modifyDate('2006-12-12', '-1 day'); // 2006-12-11
+H::modifyDate(H::currentDate(), '+1 day'); // tomorrow
+H::modifyDate(H::currentDt(), '-1 day', 'Y-m-d H:i:s'); // yesterday
+```
+```php
+H::getStamp('22-09-2008 00:00:00', 'd-m-Y H:i:s'); // 1222030800 (This will differ depending on your server time zone...)
+H::getStamp('22-09-2008 00:00:00', 'd-m-Y H:i:s', 'UTC'); // 1222041600
+H::getStamp(H::currentDt())
+```
 ___
 
 # StringHelper
@@ -263,3 +282,7 @@ Deletes in version 0.8.0 (12.06.2022)
 A new separate repository has been created:
 - class [MetaTag](https://github.com/Denisok94/yii-metatag)
 - class [ConsoleController and StatusController](https://github.com/Denisok94/yii-helper)
+
+## Symfony
+
+[Symfony Helper](https://github.com/Denisok94/symfony-helper)

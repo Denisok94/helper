@@ -3,6 +3,7 @@
     "description": "A class with a set of functions to facilitate programming",
     "keywords": ["php helper class", "php console", "yii2-extension", "yii2 Meta Tag"],
     "license": "BSD-3-Clause",
+    "type": "library",
     "support": {
         "source": "https://github.com/Denisok94/"
     },
