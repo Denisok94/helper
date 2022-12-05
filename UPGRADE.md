@@ -1,6 +1,11 @@
 Инструкции по обновлению для Helper Class
 =========================================
 
+Upgrade from Helper 0.8.4
+-----------------------
+- in `DataHelper` added: createDate(), modifyDate(), getStamp()
+- Framework Integration: [Symfony](https://github.com/Denisok94/symfony-helper)
+
 Upgrade from Helper 0.8.0
 -----------------------
 remove yii2 (12.06.2022)
