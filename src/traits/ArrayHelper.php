@@ -309,4 +309,48 @@ trait ArrayHelper
         call_user_func_array('array_multisort', $args);
         return array_pop($args);
     }
+
+    /**
+     * array- unique
+     * @param   array   $array
+     * @param   string  $key
+     * @return  array   [$unique_addresses, $duplicates, $unique_keys]
+     * 
+     * ```php
+     * $details = [
+     *  ["id"=>"1", "name"=>"Mike",    "num"=>"9876543210"],
+     *  ["id"=>"2", "name"=>"Carissa", "num"=>"08548596258"],
+     *  ["id"=>"1", "name"=>"Mathew",  "num"=>"784581254"],
+     * ];
+     * list($unique_addresses, $duplicates, $unique_keys) = unique_multidim_array($details,'id');
+     * // in $unique_addresses [["id"=>"1", "name"=>"Mike","num"=>"9876543210"],["id"=>"2", "name"=>"Carissa", "num"=>"08548596258"]]
+     * // in $duplicates [["id"=>"1", "name"=>"Mathew",  "num"=>"784581254"]]
+     * ```
+     * @link https://www.php.net/manual/ru/function.array-unique.php
+     */
+    public static function unique_multidim_array(array $array, string $key): array
+    {
+        $uniq_array = [];
+        $dup_array = [];
+        $key_array = [];
+
+        foreach ($array as $val) {
+            if (!in_array($val[$key], $key_array)) {
+                $key_array[] = $val[$key];
+                $uniq_array[] = $val;
+                /**
+                 * 1st list to check:
+                 * echo "ID or sth: " . $val['building_id'] . "; Something else: " . $val['nodes_name'] . (...) "\n";
+                 */
+            } else {
+                $dup_array[] = $val;
+                /**
+                 *  2nd list to check:
+                 *  echo "ID or sth: " . $val['building_id'] . "; Something else: " . $val['nodes_name'] . (...) "\n";
+                 */
+            }
+        }
+        return [$uniq_array, $dup_array, $key_array];
+    }
+
 }

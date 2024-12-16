@@ -1,6 +1,13 @@
 Инструкции по обновлению для Helper Class
 =========================================
 
+Upgrade from Helper 0.8.6
+-----------------------
+Cumulative changes
+- add class Session, CloneObject, S3DataService
+- in `ArrayHelper` added: unique_multidim_array()
+- in `OtherHelper` added: percent(), float()
+
 Upgrade from Helper 0.8.4
 -----------------------
 - in `DataHelper` added: createDate(), modifyDate(), getStamp()

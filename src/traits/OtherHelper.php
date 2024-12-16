@@ -265,4 +265,27 @@ trait OtherHelper
     {
         usleep($time * 1000000);
     }
+
+    /**
+     * @param float $divisible
+     * @param float $divisor
+     * @return float
+     */
+    public static function percent(float $divisible, float $divisor, int $scale = 2): float
+    {
+        $percent = $divisor > 0 ? (($divisible * 100) / $divisor) : 0;
+        return self::float($percent, $scale);
+    }
+
+    /**
+     * @param integer|float $value
+     * @param integer $scale
+     * @param integer $mode
+     * @return float
+     */
+    public static function float(int|float $value, int $scale = 1, int $mode = PHP_ROUND_HALF_UP): float
+    {
+        $float = round($value, $scale, $mode);
+        return $float;
+    }
 }

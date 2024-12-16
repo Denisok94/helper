@@ -9,20 +9,23 @@ It does not pretend to be ideal and the only correct solution.
 ![https://img.shields.io/badge/license-BSD-green](https://img.shields.io/badge/license-BSD-green)
 ___
 
-0. [Установка](#Установка)
-1. [Использование](#Использование)
-    1. [ArrayHelper](#ArrayHelper)
-    2. [DataHelper](#DataHelper)
-    3. [StringHelper](#StringHelper)
-    4. [FileHelper](#FileHelper)
-    5. [HtmlHelper](#HtmlHelper)
-    6. [OtherHelper](#OtherHelper)
-2. [Other Class](#Other-Class)
-    1. [MicroTimer](#MicroTimer)
-    2. [Console](#Console)
-3. [Framework Integration](#Framework-Integration)
-    1. [Yii2](#Yii2)
-    2. [Symfony](#Symfony)
+0. [Установка](#установка)
+1. [Использование](#использование)
+    1. [ArrayHelper](#arrayhelper)
+    2. [DataHelper](#datahelper)
+    3. [StringHelper](#stringhelper)
+    4. [FileHelper](#filehelper)
+    5. [HtmlHelper](#htmlhelper)
+    6. [OtherHelper](#otherhelper)
+2. [Other Class](#other-class)
+    1. [MicroTimer](#microtimer)
+    2. [Console](#console)
+    3. [Session](#session)
+    4. [S3DataService](#s3dataservice)
+    5. [CloneObject](#cloneobject)
+3. [Framework Integration](#framework-integration)
+    1. [Yii2](#yii2)
+    2. [Symfony](#symfony)
 
 ___
 
@@ -78,6 +81,7 @@ ___
 | objectToArray | Преобразовать объект в массив |
 | object2Array | Преобразовать объект в массив, вариант 2 |
 | arrayOrderBy | Сортировка массива |
+| unique_multidim_array | получить уникальные значения |
 
 > arrayToObject и objectToArray - работают быстрее, но могут возникнуть исключения. array2Object и object2Array - использую преобразование через json_decode + json_encode, это более ресурсозатратные, но надёжнее.
 ___
@@ -98,6 +102,7 @@ ___
 | createDate |  |
 | modifyDate |  |
 | getStamp |  |
+
 ```php
 H::createDate('yesterday'); // yesterday
 H::createDate('-1 day'); // yesterday
@@ -132,6 +137,7 @@ ___
 | replaceBBCode | Парсинг BB-кодов |
 
 ## replaceBBCode
+
 Поддержка:
 - [hr]
 - [h1-6]заголовок[/h1-6]
@@ -202,10 +208,12 @@ ___
 | getUserIp | получить IP пользователя |
 | isBot | Проверка пользователя на бота |
 | msleep | уснуть на N секунд |
+| percent | Высчитать процент |
+| float | округлить до N знака |
 
 > isBot() не даёт 100% гарантии.
 Кому разрешить/запретить доступ/функционал - решать исключительно Вам.
-Запрещая всё и всем, Вы можете лишится продвижения сайта в поисковых ресурсах и/или красивых привью в соц сетях =). 
+Запрещая всё и всем, Вы можете лишится продвижения сайта в поисковых ресурсах и/или красивых привью в соц сетях =).
 ___
 
 # Other Class
@@ -271,6 +279,21 @@ use \denisok94\helper\other\Console;
 $console = new Console(null, true);
 $console->getOptions(); // [o=>true,option=>true,...]
 ```
+___
+
+## Session
+
+Класс по работе с сессиями
+___
+
+## S3DataService
+
+Класс по работе с S3 хранилкой
+___
+
+## CloneObject
+
+Класс по... хз зачем делал, но сохраню =)
 ___
 
 # Framework Integration
