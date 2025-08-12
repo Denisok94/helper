@@ -14,7 +14,7 @@ trait ArrayHelper
      * Взять в массиве элемент по ключу
      * @param array $array
      * @param string $path
-     * @param bool $nullValue
+     * @param mixed|bool $nullValue
      * @return array|string|bool
      */
     public static function get(array $array, string $path, $nullValue = null)

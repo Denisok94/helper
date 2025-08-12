@@ -102,6 +102,7 @@ ___
 | createDate |  |
 | modifyDate |  |
 | getStamp |  |
+| humanTiming | Summary of humanTiming |
 
 ```php
 H::createDate('yesterday'); // yesterday
@@ -135,6 +136,7 @@ ___
 | getClassName | Получить имя класса |
 | slashes | экранирование |
 | replaceBBCode | Парсинг BB-кодов |
+| truncate | Сократить текст... |
 
 ## replaceBBCode
 

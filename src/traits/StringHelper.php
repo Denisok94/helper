@@ -304,4 +304,24 @@ trait StringHelper
         $kusok = '...' . mb_substr($data, $start_position, $length, 'UTF-8') . '...';
         return str_replace($word, $callback($word), $kusok);
     }
+
+    /**
+     * Сократить текст...
+     * @param string $string
+     * @param int $length
+     * @param string $append
+     * @return string
+     */
+    public static function truncate(string $string, int $length = 100, string $append = "..."): string
+    {
+        $string = trim($string);
+
+        if (strlen($string) > $length) {
+            $string = wordwrap($string, $length);
+            $string = explode("\n", $string, 2);
+            $string = $string[0] . $append;
+        }
+
+        return $string;
+    }
 }
