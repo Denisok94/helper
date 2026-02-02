@@ -149,6 +149,18 @@ trait StringHelper
     }
 
     /**
+     * https://stackoverflow.com/questions/41475937/replacing-german-chars-with-umlaute-to-simple-latin-chars-php
+     * @param string $source
+     * @return string
+     */
+    public static function deNormalize(string $source)
+    {
+        // $source = "Á,Â,Ã,Ä,Å,Æ,Ç,È,É,Ê,Ë,Ì,Í,Î,Ï,Ð,Ñ,Ò,Ó,Ô,Õ,Ö,×,Ù,Ú,Û,Ü,Ý,Þ,ß,à,á,â,ã,ä,å,æ,ç,è,é,ê,ë,ì,í,î,ï,ð,ñ,ò,ó,ô,õ,ö,ù,ú,û,ü,ý,þ,ÿ";
+        return str_replace(["\"", "'", "`", "^", "~"], "", iconv("utf-8", "ASCII//TRANSLIT", $source));
+        // A,A,A,A,A,AE,C,E,E,E,E,I,I,I,I,D,N,O,O,O,O,O,x,U,U,U,U,Y,Th,ss,a,a,a,a,a,a,ae,c,e,e,e,e,i,i,i,i,d,n,o,o,o,o,o,u,u,u,u,y,th,y
+    }
+
+    /**
      * Get the class through basename
      *
      * @param string|object $class
@@ -306,10 +318,10 @@ trait StringHelper
     }
 
     /**
-     * Сократить текст...
+     * Сократить простой ASCII текст (по байтам, быстро)
      * @param string $string
      * @param int $length
-     * @param string $append
+     * @param string $append `… | ... | &hellip;`
      * @return string
      */
     public static function truncate(string $string, int $length = 100, string $append = "..."): string
@@ -323,5 +335,57 @@ trait StringHelper
         }
 
         return $string;
+    }
+
+    /**
+     * Сократить текст (с экранированием)
+     * @param string $text
+     * @param int $maxLength
+     * @param string $append `… | ... | &hellip;`
+     * @return string
+     */
+    public static function truncatePro(string $text, int $maxLength = 150, string $append = "…"): string
+    {
+        $text = strip_tags(trim($text));
+        $text = htmlspecialchars($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $text = preg_replace('/\s+/', ' ', $text);
+        $text = trim($text);
+        if (mb_strlen($text) <= $maxLength) {
+            return $text;
+        }
+        $text = mb_substr($text, 0, $maxLength);
+        $lastSpace = mb_strrpos($text, ' ');
+        if ($lastSpace !== false) {
+            $text = mb_substr($text, 0, $lastSpace);
+        }
+        $text = $text . $append;
+        return $text;
+    }
+
+    /**
+     * Сократить текст с экзотическими символами (если есть grapheme)
+     * @param string $text
+     * @param int $maxLength
+     * @return string
+     */
+    public static function truncateGrapheme(string $text, int $maxLength = 150, string $append = "…"): string
+    {
+        if (!function_exists('grapheme_substr')) {
+            $text = strip_tags($text);
+            $text = htmlspecialchars($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $text = trim($text);
+            if (mb_strlen($text, 'UTF-8') > $maxLength) {
+                return mb_substr($text, 0, $maxLength, 'UTF-8') . $append;
+            } else {
+                return $text;
+            }
+        }
+
+        $truncated = grapheme_substr($text, 0, $maxLength) ?? '';
+        if (grapheme_strlen($text) > $maxLength) {
+            $truncated .= $append;
+        }
+
+        return $truncated;
     }
 }

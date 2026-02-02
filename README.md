@@ -1,4 +1,4 @@
-<h1 align = "center"> Helper Class </h1>
+# Helper Class
 
 Класс с набором полезных функций, по мнению автора.
 Не претендует на идеальность и единственное верное решение.
@@ -29,7 +29,7 @@ ___
 
 ___
 
-# Установка
+## Установка
 
 Run:
 
@@ -39,19 +39,7 @@ composer require --prefer-dist denisok94/helper
 php composer.phar require --prefer-dist denisok94/helper
 ```
 
-or add to the `require` section of your `composer.json` file:
-
-```json
-"denisok94/helper": "*"
-```
-
-```bash
-composer update
-# or
-php composer.phar update
-```
-
-## Использование
+### Использование
 
 ```php
 use \denisok94\helper\Helper as H;
@@ -59,12 +47,12 @@ H::methodName($arg);
 ```
 ___
 
-# ArrayHelper
+## ArrayHelper
 
 Работа с массивами
 
 | Method | Description |
-|----------------|:----------------|
+| --------- | --------- |
 | get | Найти в массиве по пути |
 | set | Добавить/заменить элемент в массиве |
 | parse | Заменить шаблон |
@@ -86,10 +74,10 @@ ___
 > arrayToObject и objectToArray - работают быстрее, но могут возникнуть исключения. array2Object и object2Array - использую преобразование через json_decode + json_encode, это более ресурсозатратные, но надёжнее.
 ___
 
-# DataHelper
+## DataHelper
 
 | Method | Description |
-|----------------|:----------------|
+| --------- | --------- |
 | currentDate | Текущая дата |
 | currentDt | Текущая дата и время |
 | toMysqlDate | Преобразовать дату в формат Mysql |
@@ -121,10 +109,10 @@ H::getStamp(H::currentDt())
 ```
 ___
 
-# StringHelper
+## StringHelper
 
 | Method | Description |
-|----------------|:----------------|
+| --------- | --------- |
 | uuid | Сгенерировать uuid v4 |
 | guid | Сгенерировать guid v4 |
 | random | Сгенерировать рандомную строку |
@@ -133,12 +121,15 @@ ___
 | ru2Lat | Транслитирование, ГОСТ 7.79-2000, схема А |
 | ruToLat | Транслитирование, ГОСТ 7.79-2000, схема Б |
 | ru2Slug | преобразовать строку, на русском (схема А), в человекопонятный url |
+| deNormalize | Нормализация немецкого текста |
 | getClassName | Получить имя класса |
 | slashes | экранирование |
 | replaceBBCode | Парсинг BB-кодов |
-| truncate | Сократить текст... |
+| truncate | Сократить простой ASCII текст (быстро) |
+| truncatePro | Сократить текст (с экранированием) |
+| truncateGrapheme | Сократить текст с экзотическими символами (если есть grapheme) |
 
-## replaceBBCode
+### replaceBBCode()
 
 Поддержка:
 - [hr]
@@ -171,12 +162,12 @@ ___
 - [li][/li] - li
 ___
 
-# FileHelper
+## FileHelper
 
 Работа с файлами
 
 | Method | Description |
-|----------------|:----------------|
+| --------- | --------- |
 | ext | Получить расширение файла |
 | fileRead | Показать содержимое файла |
 | fileGetDt | Получить дату последнего изменения |
@@ -190,21 +181,21 @@ ___
 
 ___
 
-# HtmlHelper
+## HtmlHelper
 
 Генерация html тегов
-> в разработке... 
+> в разработке...
 
 | Method | Description |
-|----------------|:----------------|
+| --------- | --------- |
 | video | видео тег |
 
 ___
 
-# OtherHelper
+## OtherHelper
 
 | Method | Description |
-|----------------|:----------------|
+| --------- | --------- |
 | curl | curl для большинства простых запросов |
 | getRequest | параметры запроса |
 | getUserIp | получить IP пользователя |
@@ -218,9 +209,9 @@ ___
 Запрещая всё и всем, Вы можете лишится продвижения сайта в поисковых ресурсах и/или красивых привью в соц сетях =).
 ___
 
-# Other Class
+## Other Class
 
-## MicroTimer
+### MicroTimer
 
 Узнать, сколько времени выполняется код
 
@@ -239,19 +230,21 @@ printf($queryTimer);
 
 ___
 
-## Console
+### Console
+
+Получение параметров для консольного скрипта
 
 | Method | Parameters | Return | Description |
-|----------------|:---------:|:---------:|:----------------|
+| --------- | :---------: | :---------: | --------- |
 | __construct | ?array, ?mixed | throws | set required parameters and/or default value |
 | get | string, ?default | value/default | get argument or option |
 | getArgument | string, ?default | value/default | get argument |
 | getArguments | - | array | get arguments |
 | getOption | string, ?default | value/default | get option |
 | getOptions | - | array | get options |
-| hasArgument | string | true/false |  |
-| hasOption | string | true/false |  |
-| show | string | string |  |
+| hasArgument | string | true/false | |
+| hasOption | string | true/false | |
+| show | string | string | |
 
 ```php
 use \denisok94\helper\other\Console;
@@ -283,24 +276,24 @@ $console->getOptions(); // [o=>true,option=>true,...]
 ```
 ___
 
-## Session
+### Session
 
 Класс по работе с сессиями
 ___
 
-## S3DataService
+### S3DataService
 
 Класс по работе с S3 хранилкой
 ___
 
-## CloneObject
+### CloneObject
 
 Класс по... хз зачем делал, но сохраню =)
 ___
 
-# Framework Integration
+## Framework Integration
 
-## Yii2
+### Yii2
 
 Deletes in version 0.8.0 (12.06.2022)
 
@@ -308,6 +301,6 @@ A new separate repository has been created:
 - class [MetaTag](https://github.com/Denisok94/yii-metatag)
 - class [ConsoleController and StatusController](https://github.com/Denisok94/yii-helper)
 
-## Symfony
+### Symfony
 
 [Symfony Helper](https://github.com/Denisok94/symfony-helper)
