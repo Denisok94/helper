@@ -35,6 +35,14 @@ class Session
      * @var int|null
      */
     private $cookieTime;
+    /**
+     * @var string
+     */
+    private $serverName;
+    /**
+     * @var bool
+     */
+    private $write = true;
 
     /**
      * задаем время жизни сессионных кук
@@ -43,7 +51,8 @@ class Session
     public function __construct(string $cookieTime = '+30 days')
     {
         $this->cookieTime = strtotime($cookieTime);
-        session_cache_limiter(false);
+        $this->serverName = $_SERVER['HTTP_HOST'];
+        if (!$this->getIsActive()) session_cache_limiter('public');
     }
 
     /**
@@ -74,7 +83,7 @@ class Session
         return $this;
     }
 
-    private function session_valid_id(string $session_id)
+    private function session_valid_id(string $session_id): bool
     {
         return preg_match('/^[-,a-zA-Z0-9]{1,128}$/', $session_id) > 0;
     }
@@ -91,8 +100,25 @@ class Session
      */
     public function start(bool $start = false): self
     {
-        if (!self::getId() || $start) session_start();
+        if (!$this->getIsActive() || $start) session_start();
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsActive(): bool
+    {
+        return session_status() === PHP_SESSION_ACTIVE;
+    }
+
+    /**
+     * @return void
+     */
+    public function writeСlose(): void
+    {
+        session_write_close();
+        $this->write = false;
     }
 
     /**
@@ -101,28 +127,48 @@ class Session
      */
     public function startCrossPodDomain()
     {
-        $currentCookieParams = session_get_cookie_params();
+        // если имя сайта не совпадает с его ip и не *localhost
+        if ($_SERVER['HTTP_HOST'] != $_SERVER['REMOTE_HOST'] && stripos($_SERVER['HTTP_HOST'], 'localhost') === false) {
+            $currentCookieParams = session_get_cookie_params();
+            $serverParts = explode('.', $this->serverName);
+            $serverPartsCount = sizeof($serverParts);
 
-        $serverParts = explode('.', $_SERVER['HTTP_HOST']);
-        $serverPartsCount = sizeof($serverParts);
+            if ($serverPartsCount > 1) {
+                $serverName = '.' . $serverParts[$serverPartsCount - 2] . '.' . $serverParts[$serverPartsCount - 1]; // equates to '.myDomain.com'
 
-        if ($serverPartsCount > 1) {
-            $serverName = '.' . $serverParts[$serverPartsCount - 2] . '.' . $serverParts[$serverPartsCount - 1];
+                setcookie('serverParts', $serverName, time() + 86400, '/');
 
-            setcookie('serverParts', $serverName, time() + 86400, '/');
+                $this->serverName = $serverName;
+            } else {
+                $serverName = $this->serverName;
+            }
 
             session_set_cookie_params(
-                time() + 315360000, //(10 * 365 * 24 * 60 * 60),
+                $this->cookieTime,
                 '/',
-                $serverName, // equates to '.myDomain.com'
+                $serverName,
                 FALSE,
                 $currentCookieParams["httponly"]
             );
         }
+        return $this;
+    }
 
-        $visited = $this->start()->get('visitedDomains', []);
+    /**
+     * @return string
+     */
+    public function getServerName(): string
+    {
+        return $this->serverName;
+    }
+
+    /**
+     * @return self
+     */
+    public function setDomainVisited()
+    {
+        $visited = $this->get('visitedDomains', []);
         $visited[$_SERVER['HTTP_HOST']] = 'visited';
-
         $this->set('visitedDomains', $visited);
         return $this;
     }
@@ -144,7 +190,9 @@ class Session
      */
     public function set(string $name, $value): self
     {
-        $_SESSION[$name] = $value;
+        if ($this->write) {
+            $_SESSION[$name] = $value;
+        }
         return $this;
     }
 
@@ -156,8 +204,10 @@ class Session
      */
     public function setArray(array $vars): self
     {
-        foreach ($vars as $name => $value) {
-            $this->set($name, $value);
+        if ($this->write) {
+            foreach ($vars as $name => $value) {
+                $this->set($name, $value);
+            }
         }
         return $this;
     }
@@ -175,11 +225,13 @@ class Session
     }
 
     /**
-     * @param string $name - Уничтожаем сессию с именем $name
+     * @param string $name - Уничтожаем переменную с именем $name
      */
     public function unset(string $name)
     {
-        unset($_SESSION[$name]);
+        if ($this->write) {
+            unset($_SESSION[$name]);
+        }
     }
 
     /**
@@ -201,7 +253,7 @@ class Session
      */
     public static function encode()
     {
-        return session_encode();
+        return self::getId() ? session_encode() : false;
     }
 
     /**
@@ -233,16 +285,11 @@ class Session
     public static function unserialize(string $session_data)
     {
         $method = ini_get("session.serialize_handler");
-        switch ($method) {
-            case "php":
-                return self::unserialize_php($session_data);
-                break;
-            case "php_binary":
-                return self::unserialize_phpbinary($session_data);
-                break;
-            default:
-                throw new \Exception("Unsupported session.serialize_handler: " . $method . ". Supported: php, php_binary");
-        }
+        return match ($method) {
+            'php' => self::unserialize_php($session_data),
+            'php_binary' => self::unserialize_phpbinary($session_data),
+            default => new \Exception("Unsupported session.serialize_handler: " . $method . ". Supported: php, php_binary"),
+        };
     }
 
     /**
@@ -305,11 +352,13 @@ class Session
      *
      * @param string $name
      * @param mixed $value
+     * @param int|null $time
+     * @param string $path
      * @return self
      */
-    public function setCookie(string $name, $value)
+    public function setCookie(string $name, $value, ?int $time, string $path = "/")
     {
-        setcookie($name, $value, $this->cookieTime);
+        setcookie($name, $value, $time ?? $this->cookieTime, $path, $this->serverName);
         return $this;
     }
 
