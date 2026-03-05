@@ -30,10 +30,7 @@ class PreviewHelper
     public static function getLinkData(string $text): array
     {
         try {
-            $manager = new OEmbedProviderManager();
-            $providers = $manager->getProviders();
-
-            $previews = PreviewHelper::analyzeLinks($text, $providers);
+            $previews = PreviewHelper::analyzeLinks($text);
 
             return $previews;
         } catch (Throwable $th) {
@@ -44,19 +41,19 @@ class PreviewHelper
 
     /**
      * @param string $text
-     * @param array $providers
      * @return array<array|array{domain: string|null, preview: array|null, type: string, url: string>
      */
-    protected static function analyzeLinks(string $text, array $providers): array
+    protected static function analyzeLinks(string $text): array
     {
         $pattern = '/https?:\/\/[^\s<>"{}|\\^`\[\]]+/i';
         preg_match_all($pattern, $text, $matches);
         $urls = array_unique($matches[0]);
         $results = [];
         $pp = new PP();
+        $oEmbed = new OEmbedProviderManager();
 
         foreach ($urls as $url) {
-            $isFile = $isYouTube = false;
+            $isFile = $isYouTube = $isX = false;
             $type = 'site';
             $preview = null;
             try {
@@ -119,6 +116,15 @@ class PreviewHelper
                         $type = 'site';
                     }
                 }
+                // === x / twitter ===
+                elseif (
+                    strpos($domain, 'vxtwitter.com') !== false ||
+                    strpos($domain, 'twitter.com') !== false ||
+                    strpos($domain, 'x.com') !== false
+                ) {
+                    $url = preg_replace('~^https?://vxtwitter\.com~', 'https://twitter.com', $url);
+                    $isX = true;
+                }
                 // === остальное ===
                 elseif (preg_match('/\.(jpe?g|png|gif|webp|bmp|svg)$/i', $url)) {
                     $isFile = true;
@@ -178,29 +184,7 @@ class PreviewHelper
                 // === остальное ===
                 else {
                     // === Поиск в oEmbed-реестре ===
-                    $providerEndpoint = null;
-                    $useDiscovery = false;
-                    foreach ($providers as $p) {
-                        foreach ($p['endpoints'] as $ep) {
-                            if (isset($ep['schemes'])) {
-                                foreach ($ep['schemes'] as $scheme) {
-                                    $s = str_replace('*', '.*', preg_quote($scheme, '/'));
-                                    if (preg_match("/^$s$/i", $url)) {
-                                        $providerEndpoint = $ep['url'];
-                                        break 3;
-                                    }
-                                }
-                            } elseif (isset($ep['discovery']) && $ep['discovery'] === true) {
-                                // Проверим, совпадает ли домен
-                                $providerHost = parse_url($p['provider_url'], PHP_URL_HOST);
-                                if ($host === $providerHost || 'www.' . $host === $providerHost || $host === 'www.' . $providerHost) {
-                                    $providerEndpoint = $ep['url'];
-                                    $useDiscovery = true;
-                                    break 2;
-                                }
-                            }
-                        }
-                    }
+                    $providerEndpoint = $oEmbed->findProviderEndpoint($url);
                     // === oEmbed, если нашли endpoint ===
                     if ($providerEndpoint) {
                         try {

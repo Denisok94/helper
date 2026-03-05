@@ -4,84 +4,6 @@ namespace denisok94\helper\other\Services;
 
 class PreviewParsing
 {
-
-    /**
-     * @param string $youtube_url
-     * @return string|null
-     */
-    public static function getYoutubeId(string $youtube_url): ?string
-    {
-        // http://youtu.be/dQw4w9WgXcQ
-        // http://www.youtube.com/embed/dQw4w9WgXcQ
-        // http://www.youtube.com/watch?v=dQw4w9WgXcQ
-        // http://www.youtube.com/?v=dQw4w9WgXcQ
-        // http://www.youtube.com/v/dQw4w9WgXcQ
-        // http://www.youtube.com/e/dQw4w9WgXcQ
-        // http://www.youtube.com/user/username#p/u/11/dQw4w9WgXcQ
-        // http://www.youtube.com/sandalsResorts#p/c/54B8C800269D7C1B/0/dQw4w9WgXcQ
-        // http://www.youtube.com/watch?feature=player_embedded&v=dQw4w9WgXcQ
-        // http://www.youtube.com/?feature=player_embedded&v=dQw4w9WgXcQ
-        // http://youtube.com/shorts/-sIs2C7wvuU
-        preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?|shorts)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $youtube_url, $match);
-        if (isset($match[1])) {
-            return $match[1];
-        }
-        // https://stackoverflow.com/questions/2936467/parse-youtube-video-id-using-preg-match
-        return null;
-    }
-
-    /**
-     * @param string $url
-     * @return array
-     */
-    public static function getFileInfo(string $url): array
-    {
-        ob_start(); // Начинаем буферизацию
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_NOBODY, true); // Только заголовки
-        curl_setopt($ch, CURLOPT_HEADER, true); // Включить заголовки
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; HorslyPreviewBot/1.0)');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); //  подавляем вывод
-        curl_setopt($ch, CURLOPT_HEADERFUNCTION, function ($ch, $header) use (&$filename) {
-            if (preg_match('/Content-Disposition:.*filename="?([^";]+)"?/i', $header, $matches)) {
-                $filename = urldecode($matches[1]);
-            }
-            return strlen($header); // Обязательно
-        });
-
-        $filename = null;
-        curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
-        $contentLength = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
-        curl_close($ch);
-
-        ob_end_clean(); // Очищаем буфер после cURL
-
-        if ($httpCode === 200) {
-            return [
-                'exists' => true,
-                'content_type' => $contentType,
-                'size_bytes' => (int)$contentLength,
-                'size_kb' => round($contentLength / 1024, 2),
-                'size_mb' => round($contentLength / (1024 * 1024), 2),
-                'filename' => $filename
-            ];
-        } else {
-            return [
-                'exists' => false,
-                'http_code' => $httpCode,
-                'filename' => $filename
-            ];
-        }
-    }
-
-    //-----------------------
-
-    
     public function getPreviewFromUrl($url): array
     {
         $result = [
@@ -201,15 +123,29 @@ class PreviewParsing
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; HorslyPreviewBot/1.0)');
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36');
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept-Language: ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+            'Accept-Encoding: gzip, deflate',
+            'Connection: keep-alive',
+            'Upgrade-Insecure-Requests: 1',
+        ]);
+        try {
+            $cookieFile = tempnam(sys_get_temp_dir(), 'cookie');
+            curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieFile);
+            curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieFile);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $finalUrl = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
         $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         curl_close($ch);
+        if ($cookieFile && file_exists($cookieFile)) unlink($cookieFile);
 
         if ($httpCode >= 300 || !$response) {
             return null;
