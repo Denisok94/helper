@@ -19,7 +19,7 @@ use denisok94\helper\traits\StringHelper;
 /**
  * Helper
  * @author Denisok94
- * @version 0.8.1
+ * @version 0.8.8
  * 
  * ```php
  * use \denisok94\helper\Helper as H;
