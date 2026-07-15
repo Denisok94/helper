@@ -7,7 +7,8 @@ namespace denisok94\helper\other;
  */
 class MicroTimer
 {
-    private $startTime, $stopTime;
+    private float $startTime;
+    private float $stopTime;
 
     /**
      * creates and starts a timer
@@ -32,8 +33,9 @@ class MicroTimer
      */
     public function elapsed()
     {
-        if ($this->stopTime)
+        if ($this->stopTime) {
             return round($this->stopTime - $this->startTime, 4);
+        }
 
         return round(microtime(true) - $this->startTime, 4);
     }
