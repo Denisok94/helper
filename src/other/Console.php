@@ -107,14 +107,24 @@ class Console
         if ($this->required != null) {
             $errors = [];
 
-            if (isset($this->required['options']) && is_array($this->required['options'])) {
-                foreach ($this->required['options'] as $option) {
+            if (isset($this->required['options'])) {
+                if (is_array($this->required['options'])) {
+                    foreach ($this->required['options'] as $option) {
+                        if (!$this->hasOption($option)) $errors['options'][] = $option;
+                    }
+                } else {
+                    $option = $this->required['options'];
                     if (!$this->hasOption($option)) $errors['options'][] = $option;
                 }
                 unset($this->required['options']);
             }
-            if (isset($this->required['arguments']) && is_array($this->required['arguments'])) {
-                foreach ($this->required['arguments'] as $argument) {
+            if (isset($this->required['arguments'])) {
+                if (is_array($this->required['arguments'])) {
+                    foreach ($this->required['arguments'] as $argument) {
+                        if (!$this->hasArgument($argument)) $errors['arguments'][] = $argument;
+                    }
+                } else {
+                    $argument = $this->required['arguments'];
                     if (!$this->hasArgument($argument)) $errors['arguments'][] = $argument;
                 }
                 unset($this->required['arguments']);
