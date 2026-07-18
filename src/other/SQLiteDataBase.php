@@ -55,7 +55,7 @@ class SQLiteDataBase
 
     /**
      * @param string $table Название таблицы
-     * @param array $columns 
+     * @param array<string> $columns 
      * @param string|array $where
      * @param string $order
      * @throws Exception
@@ -68,14 +68,12 @@ class SQLiteDataBase
     public function select(string $table, array $columns = ['*'], $where = null, ?string $order = null): array
     {
         $query = "SELECT " . implode(', ', $columns) . " FROM $table";
+        $parse = [];
 
         if ($where) {
             if (is_array($where)) {
-                $wheres = [];
-                foreach ($where as $column => $value) {
-                    $wheres[] = "$column = $value";
-                }
-                $query .= " WHERE " . implode(' AND ', $wheres);
+                $parse = $this->whereArrayParse($where);
+                $query .= " WHERE " . implode(' AND ', $parse['wheres']);
             } else if (is_string($where)) {
                 $query .= " WHERE $where";
             }
@@ -85,7 +83,18 @@ class SQLiteDataBase
             $query .= " ORDER BY $order";
         }
 
-        $result = $this->db->query($query);
+        $stmt = $this->db->prepare($query);
+        if (!$stmt) {
+            throw new Exception('Ошибка подготовки запроса: ' . $this->db->lastErrorMsg());
+        }
+
+        if (isset($parse['params'])) {
+            foreach ($parse['params'] as $key => $value) {
+                $stmt->bindValue("$key", $value);
+            }
+        }
+
+        $result = $stmt->execute();
 
         if ($result) {
             $rows = [];
@@ -134,18 +143,17 @@ class SQLiteDataBase
      * Универсальное обновление записей с условием WHERE
      * @param string $table Название таблицы
      * @param array $data Данные для обновления: 'имя_столбца' => 'значение'
-     * @param string $where Условие WHERE
-     * @param array $params Параметры для подготовленного запроса
+     * @param string|array $where Условие WHERE
      * @return bool Успешность операции
      * @throws Exception
      */
-    public function update(string $table, array $data, string $where = '', array $params = []): bool
+    public function update(string $table, array $data, $where = ''): bool
     {
         if (empty($data)) {
             return false;
         }
 
-        $setParts = [];
+        $setParts = $parse = [];
         foreach ($data as $column => $value) {
             $setParts[] = "$column = :update_$column";
         }
@@ -153,8 +161,13 @@ class SQLiteDataBase
 
         $query = "UPDATE $table SET $setClause";
 
-        if (!empty($where)) {
-            $query .= " WHERE $where";
+        if ($where) {
+            if (is_array($where)) {
+                $parse = $this->whereArrayParse($where);
+                $query .= " WHERE " . implode(' AND ', $parse['wheres']);
+            } else if (is_string($where)) {
+                $query .= " WHERE $where";
+            }
         }
 
         $stmt = $this->db->prepare($query);
@@ -166,10 +179,11 @@ class SQLiteDataBase
         foreach ($data as $column => $value) {
             $stmt->bindValue(":update_$column", $value);
         }
-
         // Привязываем параметры для условия WHERE
-        foreach ($params as $key => $value) {
-            $stmt->bindValue($key, $value);
+        if (isset($parse['params'])) {
+            foreach ($parse['params'] as $key => $value) {
+                $stmt->bindValue("$key", $value);
+            }
         }
 
         if ($stmt->execute()) {
@@ -181,17 +195,45 @@ class SQLiteDataBase
 
     /**
      * @param string $table Название таблицы
-     * @param string $where
+     * @param string|array $where
      * @throws Exception
      * @return bool
      */
-    public function delete(string $table, string $where): bool
+    public function delete(string $table, $where = ''): bool
     {
-        $query = "DELETE FROM $table WHERE $where";
+        $parse = [];
+        $query = "DELETE FROM $table";
 
-        if ($this->exec($query)) {
-            return true;
+        if ($where) {
+            if (is_array($where)) {
+                $parse = $this->whereArrayParse($where);
+                $query .= " WHERE " . implode(' AND ', $parse['wheres']);
+            } else if (is_string($where)) {
+                $query .= " WHERE $where";
+            }
         }
+
+        $stmt = $this->db->prepare($query);
+        if (!$stmt) {
+            throw new Exception('Ошибка подготовки запроса: ' . $this->db->lastErrorMsg());
+        }
+
+        if (isset($parse['params'])) {
+            foreach ($parse['params'] as $key => $value) {
+                $stmt->bindValue("$key", $value);
+            }
+        }
+        
+        if ($stmt->execute()) {
+            return $this->db->changes() > 0;
+        }
+
+
+        // $sql = $stmt->getSQL();
+        
+        // if ($this->exec($sql)) {
+        //     return true;
+        // }
 
         throw new Exception('Ошибка удаления данных: ' . $this->db->lastErrorMsg());
     }
@@ -358,6 +400,13 @@ class SQLiteDataBase
      * 
      * $db->close();
      * ```
+     * 
+     * type affinity:
+     * - `INTEGER` - целые числа (1–8 байт). INT, INTEGER, TINYINT, SMALLINT, MEDIUMINT, BIGINT, UNSIGNED BIG INT 
+     * - `REAL` - числа с плавающей точкой (8 байт, формат IEEE). REAL, DOUBLE, FLOAT, DOUBLE PRECISION
+     * - `TEXT` - строки в UTF‑8/UTF‑16. CHAR, VARCHAR, TEXT, CLOB 
+     * - `BLOB` - бинарные данные «как есть». BLOB 
+     * - `NUMERIC` - NUMERIC, DECIMAL, BOOLEAN, DATE, DATETIME
      */
     public function createTable(string $tableName, array $columns, bool $ifNotExists = true): bool
     {
@@ -395,5 +444,99 @@ class SQLiteDataBase
     public function close(): void
     {
         $this->db->close();
+    }
+
+
+    /**
+     * Summary of whereArrayParse
+     * @param array $criteria
+     * @return array{params: array, wheres: array|array{params: array, wheres: string[]}}
+     * ```php
+     * $criteria = [name => value];
+     * $criteria = ['enabled' => true];
+     * 
+     * $criteria = [name => [operator, value]];
+     * $criteria = ['roles' => ['like', '%ROLE_PARTICIPANT%'];
+     * 
+     * $criteria = [[name, operator, value]];
+     * $criteria = [['id', '!=', 999]];
+     * 
+     * $criteria = [[where, [parameter => value]]];
+     * $criteria = [["u.firstName like :name", ['name' => '%Ivanov%']];
+     * 
+     * $this->manager->search($criteria, 'u');
+     * ```
+     */
+    private function whereArrayParse(array $criteria): array
+    {
+        $wheres = $params = [];
+        $p = 0; // prefix, чтоб избежать перезапись двух условий для одного поля
+        foreach ($criteria as $name => $value) {
+            $p++;
+            // [name => value]
+            // ~ ['title' => $title]
+            if (is_string($name) && !is_array($value)) {
+                $wheres[] = "$name = :$name$p";
+                $params[$name . $p] = $value;
+                continue;
+            }
+            // [name => [operator, value]
+            // ~ ['title' => ['like', "%$title%"]]
+            if (is_string($name) && is_array($value) && count($value) == 2) {
+                $name = trim($name);
+                $operator = trim($value[0]);
+                $where = $value[1];
+                switch ($operator) {
+                    case 'like':
+                        $wheres[] = "lower($name) like lower(:$name$p)";
+                        break;
+                        // case 'orLike':
+                        //     $wheres[] = "lower($name) like lower(:$name$p)";
+                        break;
+                    case 'in':
+                        $wheres[] = "$name in (:$name$p)";
+                        break;
+                    case 'not in':
+                        $wheres[] = "$name not in (:$name$p)";
+                        break;
+                    default:
+                        $wheres[] = "$name $operator (:$name$p)";
+                        break;
+                }
+                $params[$name . $p] = $value;
+                continue;
+            }
+            // [[name, operator, value]]
+            // ~ ['id', '!=', $user->getId()] 
+            // todo: ['select', 'u.id', 'pp'] ['join', 'profileParticipant', 'p']
+            if (is_numeric($name) && is_array($value) && count($value) == 3) {
+                $name = trim($value[0]);
+                $operator = trim($value[1]);  // =, >, >=, <, <=, <>/!=
+                $where = $value[2];
+                switch ($operator) {
+                    // case 'select':
+                    //     $queryBuilder->select("$name, $where");
+                    //     break;
+                    // case 'join':
+                    //     $queryBuilder->join("u.$name", "$where");
+                    //     break;
+                    default:
+                        $wheres[] = "$name $operator :$name$p";
+                        $params[$name . $p] = $value;
+                        break;
+                }
+                continue;
+            }
+            // [[where, [parameter => value]]]
+            // ~ ["u.lastName like :fio OR u.firstName like :fio", ['fio' => "%$term%"]]
+            if (is_numeric($name) && is_array($value) && count($value) == 2) {
+                $where = trim($value[0]);
+                $wheres[] = "$where";
+                foreach ($value[1] as $parameter => $parameterValue) {
+                    $params["$parameter"] = $parameterValue;
+                }
+            }
+        }
+        return ['wheres' => $wheres, 'params' => $params];
     }
 }
