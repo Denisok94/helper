@@ -2,13 +2,14 @@
 
 namespace denisok94\helper\other;
 
-use Throwable;
+use Exception, Throwable;
 use Aws\Result;
 use Aws\S3\S3Client;
 use Aws\S3\MultipartUploader;
 use Aws\Exception\AwsException;
 use Aws\Exception\MultipartUploadException;
 use Aws\Exception\IncalculablePayloadException;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class S3DataService
@@ -21,52 +22,110 @@ use Aws\Exception\IncalculablePayloadException;
  */
 class S3DataService
 {
+    private string $aws_url, $access_key, $secret_access_key, $default_region;
+    private bool $aws_use_path_style_endpoint;
     /** @var S3Client|null  */
-    private $s3Client;
+    private $s3Client = null;
     /** @var string|null  */
     private $bucket;
+    /** @var LoggerInterface|null */
+    private $logger;
 
     /**
-     *
-     * @param string|null $bucket AWS_BUCKET|S3_BUCKET_PHOTO
+     * Summary of __construct
+     * @param string $aws_url
+     * @param string $access_key
+     * @param string $secret_access_key
+     * @param string $default_region
+     * @param bool $aws_use_path_style_endpoint
      */
-    public function __construct(?string $bucket = null)
-    {
-        $this->bucket = ($bucket != null) ? $bucket : $_ENV('AWS_BUCKET');
-        try {
-            $this->s3Client = new S3Client([
-                'version'   => 'latest',
-                'region'    => $_ENV['S3_REGION'] ?? 'us-east-1',
-                'endpoint'  => $_ENV['S3_HOST'],
-                'use_path_style_endpoint' => $_ENV['S3_USE_PATH_STYLE_ENDPOINT'] ? true : false,
-                'credentials' => [
-                    'key'       => $_ENV['S3_ACCESS_KEY'],
-                    'secret'    => $_ENV['S3_SECRET_KEY'],
-                ]
-            ]);
-        } catch (Throwable $e) {
-            error_log('warning|' . sprintf("S3DataService::connect %s - %s(%s:%s)", $_ENV['S3_HOST'], $e->getMessage(), $e->getFile(), $e->getLine()));
-            $this->s3Client = null;
-            //throw $th;
-        }
+    public function __construct(
+        string $aws_url,
+        string $access_key,
+        string $secret_access_key,
+        string $default_region = 'us-east-1',
+        bool $aws_use_path_style_endpoint = true
+    ) {
+        $this->aws_url = $aws_url;
+        $this->access_key = $access_key;
+        $this->secret_access_key = $secret_access_key;
+        $this->default_region = $default_region;
+        $this->aws_use_path_style_endpoint = $aws_use_path_style_endpoint;
     }
 
     /**
-     * @return string
-     */
-    public function getBucket(): string
-    {
-        return $this->bucket;
-    }
-
-    /**
-     * @param string $bucket 
+     * @param string $bucket AWS_BUCKET|S3_BUCKET
      * @return self
      */
     public function setBucket(string $bucket): self
     {
         $this->bucket = $bucket;
         return $this;
+    }
+
+    /**
+     * @param LoggerInterface $logger
+     * @return S3DataService
+     */
+    public function setLogger(LoggerInterface $logger): self
+    {
+        $this->logger = $logger;
+        return $this;
+    }
+
+    private function getClient(): ?S3Client
+    {
+        // Если уже есть — возвращаем
+        if ($this->s3Client !== null) {
+            return $this->s3Client;
+        }
+        if ($this->bucket == null) {
+            throw new Exception('задайте bucket к которому нужно обращаться setBucket($bucket)');
+        }
+
+        try {
+            $this->s3Client = new S3Client([
+                'version'   => 'latest',
+                'region'    => $this->default_region,
+                'endpoint'  => $this->aws_url,
+                'use_path_style_endpoint' => $this->aws_use_path_style_endpoint,
+                'credentials' => [
+                    'key'       => $this->access_key,
+                    'secret'    => $this->secret_access_key,
+                ]
+            ]);
+            return $this->s3Client;
+        } catch (Throwable $e) {
+            $this->log('connect', $this->aws_url,  $e);
+            $this->s3Client = null;
+            return null;
+        }
+    }
+
+    /**
+     * @param string $method
+     * @param string $params
+     * @param AwsException|MultipartUploadException|IncalculablePayloadException|Throwable $e
+     * @return void
+     */
+    private function log(string $method, string $params, $e)
+    {
+        $msg = sprintf("S3DataService::%s(%s) - %s(%s:%s)", $method, $params, $e->getMessage(), $e->getFile(), $e->getLine());
+        if ($this->logger) {
+            $this->logger->error($msg);
+        } else {
+            error_log('error|' . $msg);
+        }
+    }
+
+    //------------------------
+
+    /**
+     * @return string|null
+     */
+    public function getBucket(): ?string
+    {
+        return $this->bucket;
     }
 
     /**
@@ -87,6 +146,9 @@ class S3DataService
     {
         $objects = [];
         try {
+            if (!$this->getClient()) {
+                return [];
+            }
             /** @var Result $result */
             $result = $this->s3Client->listObjects([
                 'Bucket' => $this->bucket,
@@ -97,7 +159,7 @@ class S3DataService
                 $objects = $result->get('Contents');
             }
         } catch (AwsException | IncalculablePayloadException $e) {
-            error_log('warning|' . sprintf("S3DataService::getList(%s) - %s(%s:%s)", $prefix, $e->getMessage(), $e->getFile(), $e->getLine()));
+            $this->log('getList', $prefix,  $e);
         }
         return $objects;
     }
@@ -111,6 +173,9 @@ class S3DataService
     {
         $objects = [];
         try {
+            if (!$this->getClient()) {
+                return [];
+            }
             /** @var Result $result */
             $result = $this->s3Client->listObjects([
                 'Bucket' => $this->bucket,
@@ -123,7 +188,7 @@ class S3DataService
                 }
             }
         } catch (AwsException | IncalculablePayloadException $e) {
-            error_log('warning|' . sprintf("S3DataService::getListObjects(%s) - %s(%s:%s)", $prefix, $e->getMessage(), $e->getFile(), $e->getLine()));
+            $this->log('getListObjects', $prefix,  $e);
         }
         return $objects;
     }
@@ -135,6 +200,9 @@ class S3DataService
     public function getObject(?string $key = null): ?Result
     {
         try {
+            if (!$this->getClient()) {
+                return null;
+            }
             /** @var Result $result */
             $result = $this->s3Client->getObject([
                 'Bucket'    => $this->bucket,
@@ -142,7 +210,7 @@ class S3DataService
             ]);
             return $result;
         } catch (AwsException | IncalculablePayloadException $e) {
-            error_log('warning|' . sprintf("S3DataService::getObject(%s) - %s(%s:%s)", $key, $e->getMessage(), $e->getFile(), $e->getLine()));
+            $this->log('getObject', $key,  $e);
         }
         return null;
     }
@@ -153,6 +221,9 @@ class S3DataService
      */
     public function doesObjectExists(?string $key): bool
     {
+        if (!$this->getClient()) {
+            return false;
+        }
         if (!empty($key) || $key != '') {
             return $this->s3Client->doesObjectExist($this->bucket, $key);
         } else {
@@ -168,6 +239,9 @@ class S3DataService
     public function setObject(?string $key = null, $body): ?Result
     {
         try {
+            if (!$this->getClient()) {
+                return null;
+            }
             /** @var Result $result */
             $result = $this->s3Client->putObject([
                 'Bucket'    => $this->bucket,
@@ -176,7 +250,7 @@ class S3DataService
             ]);
             return $result;
         } catch (AwsException | IncalculablePayloadException $e) {
-            error_log('warning|' . sprintf("S3DataService::setObject(%s) - %s(%s:%s)", $key, $e->getMessage(), $e->getFile(), $e->getLine()));
+            $this->log('setObject', $key,  $e);
         }
         return null;
     }
@@ -189,6 +263,9 @@ class S3DataService
     public function copyObject(?string $oldKey = null, ?string $newKey = null): ?Result
     {
         try {
+            if (!$this->getClient()) {
+                return null;
+            }
             /** @var Result $result */
             $result = $this->s3Client->copyObject([
                 'Bucket'        => $this->bucket,
@@ -197,7 +274,7 @@ class S3DataService
             ]);
             return $result;
         } catch (AwsException | IncalculablePayloadException $e) {
-            error_log('warning|' . sprintf("S3DataService::copyObject(%s,%s) - %s(%s:%s)", $oldKey, $newKey, $e->getMessage(), $e->getFile(), $e->getLine()));
+            $this->log('setObject', "$oldKey, $newKey",  $e);
         }
         return null;
     }
@@ -209,6 +286,9 @@ class S3DataService
     public function deleteObject(?string $key = null): ?Result
     {
         try {
+            if (!$this->getClient()) {
+                return null;
+            }
             /** @var Result $result */
             $result = $this->s3Client->deleteObject([
                 'Bucket'    => $this->bucket,
@@ -216,7 +296,7 @@ class S3DataService
             ]);
             return $result;
         } catch (AwsException | IncalculablePayloadException $e) {
-            error_log('warning|' . sprintf("S3DataService::deleteObject(%s) - %s(%s:%s)", $key, $e->getMessage(), $e->getFile(), $e->getLine()));
+            $this->log('deleteObject', $key,  $e);
         }
         return null;
     }
@@ -232,13 +312,16 @@ class S3DataService
     public function setFile(string $filePath, ?string $key = null): ?Result
     {
         try {
+            if (!$this->getClient()) {
+                return null;
+            }
             $uploader = new MultipartUploader($this->s3Client, $filePath, [
                 'Bucket' => $this->bucket,
                 'Key' => $key
             ]);
             return $uploader->upload();
         } catch (AwsException | MultipartUploadException | IncalculablePayloadException $e) {
-            error_log('warning|' . sprintf("S3DataService::setFile() - %s(%s:%s)", $e->getMessage(), $e->getFile(), $e->getLine()));
+            $this->log('setFile', $key,  $e);
         }
         return null;
     }
@@ -251,6 +334,9 @@ class S3DataService
     public function setFile2(string $filePath, ?string $key = null): ?Result
     {
         try {
+            if (!$this->getClient()) {
+                return null;
+            }
             $result = $this->s3Client->putObject([
                 'Bucket' => $this->bucket,
                 'Key' => $key,
@@ -259,7 +345,7 @@ class S3DataService
             ]);
             return $result;
         } catch (AwsException | MultipartUploadException | IncalculablePayloadException $e) {
-            error_log('warning|' . sprintf("S3DataService::setFile2() - %s(%s:%s)", $e->getMessage(), $e->getFile(), $e->getLine()));
+            $this->log('setFile2', $key,  $e);
         }
         return null;
     }
@@ -290,10 +376,20 @@ class S3DataService
             if ($this->downloadFile($fileUrl, $newFile)) {
                 return $newFile;
             } else {
-                error_log('warning|' . "не удалось скачать файл по ссылке 's3://$fileUrl'");
+                $msg = "не удалось скачать файл по ссылке 's3://$fileUrl'";
+                if ($this->logger) {
+                    $this->logger->error($msg);
+                } else {
+                    error_log('error|' . $msg);
+                }
             }
         } else {
-            error_log('warning|' . sprintf('объект файла не найден: key-%s bucket-%s', $key, $this->bucket));
+            $msg = sprintf('объект файла не найден: key-%s bucket-%s', $key, $this->bucket);
+            if ($this->logger) {
+                $this->logger->error($msg);
+            } else {
+                error_log('error|' . $msg);
+            }
         }
         return false;
     }
@@ -330,6 +426,4 @@ class S3DataService
             return false;
         }
     }
-
-    //---------------------
 }
