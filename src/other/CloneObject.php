@@ -8,8 +8,8 @@ use stdClass, Closure, ReflectionClass, ReflectionProperty;
 /**
  * Class CloneObject
  * @property object $object
- * @method self createGetterAndSetter
- * @method array showAll
+ * @method self createGetterAndSetter()
+ * @method array showAll()
  */
 class CloneObject
 {
@@ -19,8 +19,8 @@ class CloneObject
     public $object;
 
     /**
-     *
-     * @param array|object $arguments
+     * Создать объект из массива или клонировать объект
+     * @param array|object $object
      */
     public function __construct($object = [])
     {
@@ -55,7 +55,7 @@ class CloneObject
     }
 
     /**
-     * Добавить динамическое свойство
+     * Добавить значение для свойства или создать новое
      * @param string $property
      * @param mixed $value
      */
@@ -88,9 +88,9 @@ class CloneObject
     }
 
     /**
-     * Получить значения приватных свойств
+     * Получить значения приватных свойств объекта
      * @param string $property
-     * @param mixed $value
+     * @return mixed
      * https://habr.com/ru/articles/186718/
      */
     private function reader($property)
@@ -102,7 +102,7 @@ class CloneObject
     }
 
     /**
-     * 
+     * Сгенерировать для каждого свойства геттер и сеттер
      * ```php
      * $clone = new CloneObject(['name'=>'test']);
      * $clone->name = 'test1';
@@ -134,6 +134,7 @@ class CloneObject
     }
 
     /**
+     * Массив всех свойств
      * @return array
      */
     public function showAll(): array
